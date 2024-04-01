@@ -28,7 +28,7 @@ nav {
     border-radius: 8px;
     background-color: #F7F7F7;
     margin: 10px;
-    margin-bottom:48px;
+    margin-bottom: 48px;
 }
 
 .explore-detail-btn {
@@ -39,9 +39,10 @@ nav {
     margin-bottom: 20px;
 }
 
-.explore-btn-wrapper{
+.explore-btn-wrapper {
     margin-bottom: 24px;
 }
+
 .explore-btn {
     box-sizing: border-box;
 
@@ -57,13 +58,13 @@ nav {
     color: #909090;
 }
 
-.explore-videos{
+.explore-videos {
     display: flex;
     overflow-x: auto;
     width: 380px;
 }
 
-.explore-video-content{
+.explore-video-content {
     width: 250px;
     height: 165px;
     background-color: #e4e4e4;
@@ -72,23 +73,23 @@ nav {
 }
 
 
-.explore-video-title{
+.explore-video-title {
     margin-bottom: 10px;
 }
 
-.bottom-navbar{
+.bottom-navbar {
     position: fixed;
     top: 700px;
 }
 
-.bottom-navbar-btn{
+.bottom-navbar-btn {
     font-size: 12px;
     font-weight: 600;
-padding: 0px;
-gap: 4px;
+    padding: 0px;
+    gap: 4px;
 
-width: 125px;
-height: 64px;
-background: #FFFFFF;
-border: none;
+    width: 125px;
+    height: 64px;
+    background: #FFFFFF;
+    border: none;
 }
