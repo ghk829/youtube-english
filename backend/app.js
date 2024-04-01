@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const port = process.env.PORT || 3001;
+const user_controller = require('./userManage/user_controller');
+const youtube_controller = require('./youtubeAPI/youtube_controller');
 
 
-app.get('/', (req, res)=>{
-    res.send('Hello World');
-})
-app.listen(PORT, ()=>{
-    console.log(`Server is running at port ${PORT}`);
-})
+app.get("/user/all", user_controller.getUserInfo);
+app.get("/search", youtube_controller.getSearchResult);
+
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
+});
