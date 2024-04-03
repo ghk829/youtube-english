@@ -9,6 +9,10 @@ const MainPage = () => {
         navigate("/login");
       };
 
+      const goToDetail = () => {
+        navigate("/detail");
+      };
+
     const username = "Messi"
     const buttonList =["시사/교양", "영어 인터뷰", "동기부여"]
     const videoList = [{link:"", title:"Lonliness"}, {link:"", title:"Change You"}]
@@ -48,7 +52,7 @@ const MainPage = () => {
             {
                     videoList.map((item)=>(
                         <div className='explore-video'>
-                            <div className='explore-video-content'></div>
+                            <div className='explore-video-content' onClick={goToDetail}></div>
                             <div className='explore-video-title'>{item.title}</div>
                             </div>
                     ))
@@ -57,8 +61,7 @@ const MainPage = () => {
 
             <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn'>홈</button>
-                <button className='bottom-navbar-btn'>복습하기</button>
-                <button className='bottom-navbar-btn'>프로필</button>
+                <button className='bottom-navbar-btn'>학습 내용</button>
             </footer>
         </div>
     )

@@ -1,31 +1,37 @@
-.logo-wrapper{
+.logo-wrapper {
     display: block;
+    margin: auto;
+    width: 200px;
     margin-top: 88px;
 }
 
-.logo-image{
+.logo-image {
     width: 200px;
     height: 200px;
-    margin: auto;
 
-    background-color: #F7F7F7;
 }
 
-.logo-text{
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-    font-size: 32px;
-    font-weight: bold;
-    color: #1C1C1C;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Zen+Dots&display=swap');
+
+.logo-text {
+    width: 200px;
     text-align: center;
+    font-family: 'Zen Dots';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 24px;
+    color: #9F59F8;
     margin-top: 20px;
 }
 
-.login-btn-wrapper{
+.login-btn-wrapper {
     margin: auto;
     margin-top: 130px;
     width: 300px;
 }
-.kakao-login-btn{
+
+.kakao-login-btn {
     cursor: pointer;
     margin-bottom: 5px;
 }

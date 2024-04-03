@@ -70,6 +70,8 @@ nav {
     background-color: #e4e4e4;
     margin-left: 20px;
     margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 20px;
 }
 
 
@@ -88,7 +90,7 @@ nav {
     padding: 0px;
     gap: 4px;
 
-    width: 125px;
+    width: 187.5px;
     height: 64px;
     background: #FFFFFF;
     border: none;

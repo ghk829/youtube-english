@@ -2,6 +2,7 @@ import React from 'react'
 import { GoogleLogin } from "@react-oauth/google";
 import kakaoLogin from '../img/kakao_login.png';
 import { useNavigate } from "react-router-dom";
+import mainIllust from '../img/Illustration.png';
 import './loginPage.css'
 
 const LoginPage = () => {
@@ -14,8 +15,8 @@ const LoginPage = () => {
     return (
         <div className='login-page'>
             <div className='logo-wrapper'>
-                <div className='logo-image'></div>
-                <div className='logo-text'>Logo</div>
+                <img src={mainIllust} className='logo-image'></img>
+                <div className='logo-text'>Mimos</div>
             </div>
             <div className='login-btn-wrapper'>
                 <img src={kakaoLogin} 
