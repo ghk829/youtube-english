@@ -1,5 +1,8 @@
 import React from 'react';
 import './modal.css'
+import LongButton from './LongButton';
+import Chip from './Chip';
+
 
 const Modal = ({ onClose, state }) => {
     const buttons = ["이해하지 못함", "30%", "50%", "70%", "90% 이상"];
@@ -16,13 +19,17 @@ const Modal = ({ onClose, state }) => {
                 <div className='modal-content'>
                     {
                         buttons.map((item,) => (
-                            <div className='modal-content-btn'>{item}</div>
+                            <Chip
+                            content={item}
+                            ></Chip>
                         ))
                     }
                 </div>
-                <div className='modal-footer' onClick={onClose}>
-                    확인하기
-                </div>
+                <LongButton
+                colour="purple"
+                content="확인하기"
+                onClick = {onClose}
+                />
             </div>
         </div>
     );

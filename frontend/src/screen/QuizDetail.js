@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import '../screen/detailPage.css'
+import '../page/detailPage.css'
 
 const QuizDetail = () => {
     const scripts =

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import LoginPage from './screen/LoginPage';
-import MainPage from './screen/MainPage';
-import DetailPage from './screen/DetailPage';
+import LoginPage from './page/LoginPage';
+import MainPage from './page/MainPage';
+import DetailPage from './page/DetailPage';
+import ReviewPage from './page/ReviewPage';
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +26,11 @@ function App() {
           element={<DetailPage />}
         />
 
+<Route
+          exact
+          path='/review'
+          element={<ReviewPage />}
+        />
 
         {/* <Route
         exact

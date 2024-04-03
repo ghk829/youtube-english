@@ -41,6 +41,7 @@ nav {
 
 .explore-btn-wrapper {
     margin-bottom: 24px;
+    display: flex;
 }
 
 .explore-btn {

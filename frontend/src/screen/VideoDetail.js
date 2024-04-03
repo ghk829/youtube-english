@@ -1,5 +1,5 @@
 import React from 'react'
-import '../screen/detailPage.css'
+import '../page/detailPage.css'
 
 const VideoDetail = () => {
     const scripts =
