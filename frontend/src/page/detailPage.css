@@ -1,0 +1,160 @@
+.detail-page{
+    width: 375px;
+}
+.steps-header{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: 10px;
+    text-align: center;
+}
+.step-num{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: auto;
+    border-radius: 1000px;
+    width: 40px;
+    height: 40px;
+    background-color: #903FF6;
+    color: white;
+}
+
+.video-detail{
+    width: 375px;
+}
+.script-num{
+    color: #ABABAB;
+    margin-top:10px;
+}
+
+.script-content-translated{
+    color: #5F5F5F;
+    margin-bottom: 10px;
+}
+
+.return-btn{
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+position: fixed;
+width: 40px;
+height: 40px;
+top: 700px;
+background: #000000;
+opacity: 0.3;
+border-radius: 1000px;
+
+}
+
+.quiz-detail{
+    background-color: #F7F7F7;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 28px 0px 40px;
+gap: 56px;
+
+position: absolute;
+width: 375px;
+left: calc(50% - 375px/2);
+top: 128px;
+
+
+}
+
+.quiz-progress{
+box-sizing: border-box;
+
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 4px 8px;
+gap: 10px;
+
+width: 37px;
+height: 25px;
+
+border: 1px solid #919191;
+border-radius: 100px;
+
+}
+
+.quiz-question{
+
+width: 263px;
+height: 24px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 24px;
+
+color: #1C1C1C;
+
+
+}
+
+.quiz-question-translated{
+width: 287px;
+height: 26px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 26px;
+text-align: center;
+
+color: #777777;
+
+}
+
+.quiz-question-empty{
+
+box-sizing: border-box;
+
+width: 283px;
+height: 32px;
+
+border-bottom: 1px solid #919191;
+
+
+}
+
+.quiz-btns{
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+align-content: center;
+padding: 0px 20px;
+gap: 20px;
+
+width: 375px;
+height: 100px;
+cursor: pointer;
+
+}
+
+.quiz-btn{
+box-sizing: border-box;
+
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 12px 18px;
+gap: 4px;
+
+height: 40px;
+
+background: #FFFFFF;
+border: 1px solid #C7C7C7;
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+border-radius: 100px;
+
+}

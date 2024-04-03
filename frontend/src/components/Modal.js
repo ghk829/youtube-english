@@ -1,0 +1,38 @@
+import React from 'react';
+import './modal.css'
+import LongButton from './LongButton';
+import Chip from './Chip';
+
+
+const Modal = ({ onClose, state }) => {
+    const buttons = ["이해하지 못함", "30%", "50%", "70%", "90% 이상"];
+
+    return (
+        <div className='modal'>
+            <div className='modal-bg' >
+            </div>
+            <div className='modal-body'>
+                <div className='modal-header'>
+                    학습 {state} <br />
+                    내용을 얼마나 이해하셨나요?
+                </div>
+                <div className='modal-content'>
+                    {
+                        buttons.map((item,) => (
+                            <Chip
+                            content={item}
+                            ></Chip>
+                        ))
+                    }
+                </div>
+                <LongButton
+                colour="purple"
+                content="확인하기"
+                onClick = {onClose}
+                />
+            </div>
+        </div>
+    );
+}
+
+export default Modal;

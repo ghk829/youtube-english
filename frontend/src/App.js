@@ -1,21 +1,43 @@
-import {  BrowserRouter,  Routes,   Route  } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import LoginPage from './screen/LoginPage';
-import MainPage from './screen/MainPage';
+import LoginPage from './page/LoginPage';
+import MainPage from './page/MainPage';
+import DetailPage from './page/DetailPage';
+import ReviewPage from './page/ReviewPage';
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
-        exact
-        path='/'
-        element={<MainPage/>}
+          exact
+          path='/'
+          element={<MainPage />}
         />
+
         <Route
-        exact
-        path='/login'
-        element={<LoginPage/>}
+          exact
+          path='/login'
+          element={<LoginPage />}
         />
+
+        <Route
+          exact
+          path='/detail'
+          element={<DetailPage />}
+        />
+
+<Route
+          exact
+          path='/review'
+          element={<ReviewPage />}
+        />
+
+        {/* <Route
+        exact
+        path='/detail/:id'
+        element={<DetailPage/>}
+        /> */}
+
       </Routes>
     </BrowserRouter>
   );
