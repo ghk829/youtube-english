@@ -1,4 +1,3 @@
-const fs = require('fs');
 const ytdl = require('ytdl-core');
 const xml2js = require('xml2js');
 const he = require('he');
@@ -13,7 +12,7 @@ async function getSubtitles(videoUrl) {
             if (englishTrack) {
                 const subtitlesUrl = englishTrack.baseUrl;
                 const subtitlesXml = await fetch(subtitlesUrl).then(res => res.text());
-
+  
                 // Convert XML to JSON
                 const parser = new xml2js.Parser();
                 const subtitlesJson = await parser.parseStringPromise(subtitlesXml);
@@ -22,10 +21,8 @@ async function getSubtitles(videoUrl) {
                     dur: textObj.$.dur,
                     text: he.decode(textObj._)
                 }));
-
-
-                fs.writeFileSync('subtitles.json', JSON.stringify(subtitles, null, 4), 'utf-8');
-                console.log('Subtitles downloaded and saved as subtitles.json');
+  
+                return subtitles;  // Return the subtitles instead of writing to a file
             } else {
                 console.log('No English captions found for this video.');
             }
@@ -34,9 +31,10 @@ async function getSubtitles(videoUrl) {
         }
     } catch (error) {
         console.error('Error downloading subtitles:', error);
+        throw error;  // Throw the error to be handled by the caller
     }
-}
+  }
 
-// Example video URL
-const videoUrl = 'https://www.youtube.com/watch?v=T4CB5RPbtCk';
-getSubtitles(videoUrl);
+module.exports = {
+    getSubtitles : getSubtitles
+}
