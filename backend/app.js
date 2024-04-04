@@ -1,10 +1,16 @@
 const express = require('express');
+const path = require('path');
+const cors = require('cors');
+
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const user_controller = require('./userManage/user_controller');
 const youtube_controller = require('./youtubeAPI/youtube_controller');
 
 app.use(express.json());
+app.use(cors());
+app.use(express.static(path.join(__dirname, './build')));
+
 
 app.get("/login", user_controller.decodeToken);
 app.get("/user/all", user_controller.getUserInfo);
