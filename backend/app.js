@@ -17,6 +17,8 @@ app.get("/user/all", user_controller.getUserInfo);
 app.get("/search", youtube_controller.getSearchResult);
 app.post('/subtitles', youtube_controller.getSubtitles);
 app.post('/quizFromSubtitle', youtube_controller.getQuizFromSubtitles);
+app.post('/getQuizFromVideo', youtube_controller.getQuizFromVideo)
+
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
