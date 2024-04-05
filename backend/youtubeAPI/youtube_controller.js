@@ -41,6 +41,22 @@ getQuizFromSubtitles: async (req, res, next) => {
   } catch (err) {
       next(err);
   }
+},
+getQuizFromVideo: async (req, res, next) => {
+  try {
+    const videoUrl = req.body.videoUrl;
+    if (!videoUrl) {
+      return res.status(400).send({ error: "videoUrl is required" });
+    }
+    const subtitles = await youtube_subtitles.getSubtitles(videoUrl);
+    const subtitlesText = subtitles.map(sub => sub.text.replace('\n',' ')).join('\n'); // Convert the subtitles array into a single string
+    const slicedText = subtitlesText.slice(0, 15000);
+    const quizJson = await openaiAPI.renderQuizSentences(slicedText); // Pass the string to the OpenAI API
+    res.json({ subtitles:subtitles, quiz: quizJson });
+  } catch (err) {
+    next(err);
+  }
 }
+
 
 }
