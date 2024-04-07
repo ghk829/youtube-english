@@ -1,25 +1,36 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, } from "react-router-dom";
 import './mainPage.css'
 import Chip from '../components/Chip';
 
 const MainPage = () => {
     const navigate = useNavigate();
+    const [customUrl, setCustomUrl] = useState(''); 
 
     const goToLogin = () => {
         navigate("/login");
     };
 
-    const goToDetail = () => {
-        navigate("/detail");
+    const goToDetail = (link) => {
+        navigate('/detail', { state: { link } });
     };
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault(); 
+        goToDetail(customUrl); 
+    };
+
+    const handleInputChange = (e) => {
+        setCustomUrl(e.target.value); 
+    };
+
 
     const username = "Messi"
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
     //Title 은 youtube API로 가져와야함 
-    const videoList = [{ link: "https://www.youtube.com/watch?v=jBis8fC8NS4", title: "Optimistic Nihilism" },
-    { link: "https://www.youtube.com/watch?v=U5L22eeGQUc", title: "Change You" }]
+    const videoList = [{ link: "https://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
+    { link: "https://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
 
 
     return (
@@ -63,7 +74,7 @@ const MainPage = () => {
                 {
                     videoList.map((item) => (
                         <div className='explore-video'>
-                            <div className='explore-video-content' onClick={goToDetail}>
+                            <div className='explore-video-content' onClick={() => goToDetail(item.link)}>
 
                                 <img
                                     src={`https://img.youtube.com/vi/${item.link.split('=')[1]}/0.jpg`}
@@ -71,13 +82,21 @@ const MainPage = () => {
                                     width="250"
                                     height="165"
                                     style={{ borderRadius: "20px" }}
-                                />                            
-                                </div>
+                                />
+                            </div>
                             <div className='explore-video-title'>{item.title}</div>
                         </div>
                     ))
                 }
             </div>
+            <label>
+                다른 링크로 테스트하기
+            </label>
+
+            <form onSubmit={handleFormSubmit}>
+                <input type="text" name="custom-url" value={customUrl} onChange={handleInputChange}></input>
+                <button type="submit">제출</button>
+            </form>
 
             {/* 푸터 */}
             <footer className='bottom-navbar'>
