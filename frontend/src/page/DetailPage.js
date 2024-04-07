@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import './detailPage.css'
 import Modal from '../components/Modal';
@@ -9,7 +10,7 @@ const DetailPage = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(true);
     const [detailType, setDetailType] = useState("video");
-
+    const [quiz, setQuiz] = useState(null);
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -27,6 +28,23 @@ const stages=    [
         navigate("/review");
     };
 
+    
+  // 퀴즈 생성 함수
+//   const generateQuiz = async () => {
+//     if (!subtitles) {
+//       alert('먼저 자막을 가져와주세요.');
+//       return;
+//     }
+//     try {
+//       const response = await axios.post('/api/getQuizFromSubtitles', { subtitles });
+//       setQuiz(response.data);
+//       alert('퀴즈를 성공적으로 생성했습니다.');
+//     } catch (error) {
+//       console.error('Error generating quiz:', error);
+//       alert('퀴즈를 생성하는 데 실패했습니다.');
+//     }
+//   };
+
     return (
         <div className='detail-page'>
             <div className='steps-header'>
@@ -41,11 +59,13 @@ const stages=    [
                 }
             </div>
 
-            {detailType==="quiz"?<QuizDetail/>:<VideoDetail/>}
-            
+            <div className='detail-type-wrapper'>
+                {detailType==="quiz"?<QuizDetail/>:<VideoDetail youtubeLink="https://www.youtube.com/watch?v=MBRqu0YOH14&list=PL9KSWz8ORh27nsWtPTVBiGDBq9TgQB22i"/>
+}
+            </div>
             <div className='return-btn' onClick={goToMain}>
                 <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 1.5L1.5 7L7 12.5" stroke="white" stroke-width="2" />
+                    <path d="M7 1.5L1.5 7L7 12.5" stroke="white" strokeWidth="2" />
                 </svg>
 
             </div>
