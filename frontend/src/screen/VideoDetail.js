@@ -2,35 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import '../page/detailPage.css'
 
-const VideoDetail = ({youtubeLink}) => {
+const VideoDetail = ({scripts}) => {
 
-    const [scripts, setScripts] = useState([""])
+  
 
-    useEffect(() => {
-        fetchSubtitles();
-   }, []); 
+  useEffect(() => {
+}, []); 
 
-
-    const fetchSubtitles = async () => {
-        if (!youtubeLink) {
-          alert('YouTube URL을 입력해주세요.');
-          return;
-        }
-        try {
-          const response = await axios.post('http://localhost:3000/subtitles', { videoUrl: youtubeLink });
-          let textArray = response.data.map(x=> x.text);
-          textArray = textArray.slice(0, Math.min(10, textArray.length));
-
-          console.log(textArray)
-          setScripts(textArray);
-
-          alert('자막을 성공적으로 가져왔습니다.');
-        } catch (error) {
-          console.error('Error fetching subtitles:', error);
-          alert('자막을 가져오는 데 실패했습니다.');
-        }
-      };
-      
     return (
         <div className='video-detail'>
             <div className='video-wrapper' style={{width: "370px", height:"219px"}}>

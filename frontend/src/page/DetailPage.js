@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import './detailPage.css'
@@ -9,11 +9,15 @@ import QuizDetail from '../screen/QuizDetail';
 const DetailPage = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(true);
-    const [detailType, setDetailType] = useState("video");
+    const [detailType, setDetailType] = useState("video");    
+    const [scripts, setScripts] = useState([""])
+    const [youtubeLink, setYoutubeLink] = useState("https://www.youtube.com/watch?v=MBRqu0YOH14&list=PL9KSWz8ORh27nsWtPTVBiGDBq9TgQB22i");
     const [quiz, setQuiz] = useState(null);
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
+    
 const stages=    [
         { title: '자막없이 풀기', type: "video" },
         { title: '쉐도잉하기', type: "video" },
@@ -28,7 +32,29 @@ const stages=    [
         navigate("/review");
     };
 
-    
+    useEffect(() => {
+        fetchSubtitles();
+   }, []); 
+
+
+    const fetchSubtitles = async () => {
+        if (!youtubeLink) {
+          alert('YouTube URL을 입력해주세요.');
+          return;
+        }
+        try {
+          const response = await axios.post('http://localhost:3000/subtitles', { videoUrl: youtubeLink });
+          let textArray = response.data.map(x=> x.text);
+          textArray = textArray.slice(0, Math.min(10, textArray.length));
+          setScripts(textArray);
+
+          alert('자막을 성공적으로 가져왔습니다.');
+        } catch (error) {
+          console.error('Error fetching subtitles:', error);
+          alert('자막이 없는 영상입니다. 다른 영상을 선태갷 주세요.');
+        }
+      };
+      
   // 퀴즈 생성 함수
 //   const generateQuiz = async () => {
 //     if (!subtitles) {
@@ -60,7 +86,7 @@ const stages=    [
             </div>
 
             <div className='detail-type-wrapper'>
-                {detailType==="quiz"?<QuizDetail/>:<VideoDetail youtubeLink="https://www.youtube.com/watch?v=MBRqu0YOH14&list=PL9KSWz8ORh27nsWtPTVBiGDBq9TgQB22i"/>
+                {detailType==="quiz"?<QuizDetail/>:<VideoDetail scripts={scripts}/>
 }
             </div>
             <div className='return-btn' onClick={goToMain}>

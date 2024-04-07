@@ -16,9 +16,12 @@ const MainPage = () => {
 
     const username = "Messi"
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
-    const videoList = [{ link: "", title: "Lonliness" }, { link: "", title: "Change You" }]
 
-    
+    //Title 은 youtube API로 가져와야함 
+    const videoList = [{ link: "https://www.youtube.com/watch?v=jBis8fC8NS4", title: "Optimistic Nihilism" },
+    { link: "https://www.youtube.com/watch?v=U5L22eeGQUc", title: "Change You" }]
+
+
     return (
         <div className='main-page'>
 
@@ -51,7 +54,7 @@ const MainPage = () => {
             <div className='explore-btn-wrapper'>
                 {
                     buttonList.map((item) => (
-                        <Chip content={item} /> ))
+                        <Chip content={item} />))
                 }
             </div>
 
@@ -60,7 +63,16 @@ const MainPage = () => {
                 {
                     videoList.map((item) => (
                         <div className='explore-video'>
-                            <div className='explore-video-content' onClick={goToDetail}></div>
+                            <div className='explore-video-content' onClick={goToDetail}>
+
+                                <img
+                                    src={`https://img.youtube.com/vi/${item.link.split('=')[1]}/0.jpg`}
+                                    alt={item.title}
+                                    width="250"
+                                    height="165"
+                                    style={{ borderRadius: "20px" }}
+                                />                            
+                                </div>
                             <div className='explore-video-title'>{item.title}</div>
                         </div>
                     ))
