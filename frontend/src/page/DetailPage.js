@@ -15,7 +15,6 @@ const DetailPage = () => {
     const [detailType, setDetailType] = useState("video");
     const [scripts, setScripts] = useState([""])
     const [youtubeLink, setYoutubeLink] = useState("");
-    const [quiz, setQuiz] = useState(null);
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -47,7 +46,8 @@ const DetailPage = () => {
         }
         setYoutubeLink(selected); 
         try {
-            const response = await axios.post('http://localhost:3000/subtitles', { videoUrl: selected });
+            // const response = await axios.post('http://localhost:3000/subtitles', { videoUrl: selected });
+            const response = await axios.post('/subtitles', { videoUrl: selected });
             let textArray = response.data.map(x => x.text);
             textArray = textArray.slice(0, Math.min(10, textArray.length));
             setScripts(textArray);

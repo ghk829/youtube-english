@@ -85,7 +85,7 @@ const shuffleArray = (array) => {
 //       for (let i=0; i<scripts.length; i++){
 //         wholescript += scripts[i];
 //       }
-//       const response = await axios.post('http://localhost:3000/quizFromSubtitle', { subtitles: wholescript });
+//       const response = await axios.post('/quizFromSubtitle', { subtitles: wholescript });
 //       const quiz_json = response.data;
 
 //       setQuiz();
