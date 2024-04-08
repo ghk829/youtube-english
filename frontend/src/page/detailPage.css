@@ -48,6 +48,13 @@ border-radius: 1000px;
 
 }
 
+.detail-type-wrapper{
+height: 560px;
+overflow-y:auto;
+overflow-x: hidden;
+margin-bottom: 15px;
+}
+
 .quiz-detail{
     background-color: #F7F7F7;
 display: flex;
