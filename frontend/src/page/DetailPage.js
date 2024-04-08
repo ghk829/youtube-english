@@ -57,21 +57,7 @@ const DetailPage = () => {
         }
     };
     
-    
-    //   const generateQuiz = async () => {
-    //     if (!subtitles) {
-    //       alert('먼저 자막을 가져와주세요.');
-    //       return;
-    //     }
-    //     try {
-    //       const response = await axios.post('/api/getQuizFromSubtitles', { subtitles });
-    //       setQuiz(response.data);
-    //       alert('퀴즈를 성공적으로 생성했습니다.');
-    //     } catch (error) {
-    //       console.error('Error generating quiz:', error);
-    //       alert('퀴즈를 생성하는 데 실패했습니다.');
-    //     }
-    //   };
+
 
     return (
         <div className='detail-page'>
@@ -88,7 +74,7 @@ const DetailPage = () => {
             </div>
 
             <div className='detail-type-wrapper'>
-                {detailType === "quiz" ? <QuizDetail /> : (youtubeLink &&<VideoDetail scripts={scripts} url={youtubeLink}/>)
+                {detailType === "quiz" ? <QuizDetail scripts={scripts} /> : (youtubeLink &&<VideoDetail scripts={scripts} url={youtubeLink}/>)
                 }
             </div>
             <div className='return-btn' onClick={goToMain}>

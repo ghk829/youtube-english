@@ -10,6 +10,7 @@ const VideoDetail = ({ scripts, url }) => {
 
   return (
     <div className='video-detail'>
+    <h3>제목제목</h3>
       <div className='video-wrapper' style={{ width: "370px", height: "219px" }}>
         <iframe
           width="370"
@@ -17,12 +18,10 @@ const VideoDetail = ({ scripts, url }) => {
           style={{}}
           src={`https://www.youtube.com/embed/${url.split('=')[1]}`}
           title="YouTube video player"
-          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="unsafe-url"
           allowFullScreen>
         </iframe>
-
       </div>
 
       <div className='scripts-wrapper'>
