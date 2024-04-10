@@ -15,3 +15,9 @@
 
     height: 32px;
 }
+
+.chip.clicked {
+    border: 1px solid #913FF7;
+    color: #913FF7;
+
+}

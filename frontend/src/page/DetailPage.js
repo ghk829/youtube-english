@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { useNavigate, useLocation  } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './detailPage.css'
 import Modal from '../components/Modal';
 import VideoDetail from '../screen/VideoDetail';
@@ -11,14 +11,24 @@ const DetailPage = () => {
     const location = useLocation();
 
 
-    const [isModalOpen, setIsModalOpen] = useState(true);
-    const [detailType, setDetailType] = useState("video");
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [scripts, setScripts] = useState([""])
     const [youtubeLink, setYoutubeLink] = useState("");
+
+    const [step, setStep] = useState(0);
+    const [understand, setUnderstand] = useState(0);
+    const [understand_after, setUnderstand_after] = useState(0);
+
     const closeModal = () => {
         setIsModalOpen(false);
+        if(step<3)
+        {
+            setStep(step + 1)
+        }
+        else{
+            goToReview();
+        }
     };
-
 
     const stages = [
         { title: '자막없이 풀기', type: "video" },
@@ -31,7 +41,7 @@ const DetailPage = () => {
     };
 
     const goToReview = () => {
-        navigate("/review");
+        navigate("/review", { state: { understand, understand_after } });
     };
 
     useEffect(() => {
@@ -44,10 +54,9 @@ const DetailPage = () => {
             alert('YouTube URL이 없습니다.');
             return;
         }
-        setYoutubeLink(selected); 
+        setYoutubeLink(selected);
         try {
-            // const response = await axios.post('http://localhost:3000/subtitles', { videoUrl: selected });
-            const response = await axios.post('/subtitles', { videoUrl: selected });
+            const response = await axios.post(`${process.env.REACT_APP_MOD||""}/subtitles`, { videoUrl: selected });
             let textArray = response.data.map(x => x.text);
             textArray = textArray.slice(0, Math.min(10, textArray.length));
             setScripts(textArray);
@@ -56,7 +65,7 @@ const DetailPage = () => {
             alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
         }
     };
-    
+
 
 
     return (
@@ -66,7 +75,7 @@ const DetailPage = () => {
                 {
                     stages.map((item, key) => (
                         <div className='step'>
-                            <div className='step-num' onClick={() => setDetailType(item.type)}>{key + 1}</div>
+                            <div className='step-num' onClick={() => { setStep(key) }}>{key + 1}</div>
                             <div className='step-content'>{item.title}</div>
                         </div>
                     ))
@@ -74,7 +83,11 @@ const DetailPage = () => {
             </div>
 
             <div className='detail-type-wrapper'>
-                {detailType === "quiz" ? <QuizDetail scripts={scripts} /> : (youtubeLink &&<VideoDetail scripts={scripts} url={youtubeLink}/>)
+                {step === 2 ? 
+                <QuizDetail scripts={scripts} 
+                setStep = {()=>setStep(step + 1)} /> :
+                    (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink}
+                        step={step} isModalOpen={setIsModalOpen} />)
                 }
             </div>
             <div className='return-btn' onClick={goToMain}>
@@ -83,8 +96,13 @@ const DetailPage = () => {
                 </svg>
 
             </div>
-            <button onClick={goToReview}>임시 리뷰하기 버튼</button>
-            {isModalOpen && <Modal onClose={closeModal} state="전" />}
+            {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
+                if (step === 0) {
+                    setUnderstand(index);
+                } else if (step === 3) {
+                    setUnderstand_after(index);
+                }
+            }} />}
         </div>
     )
 }

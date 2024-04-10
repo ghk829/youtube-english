@@ -1,16 +1,29 @@
 import React from 'react'
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, useLocation } from "react-router-dom";
 import mainIllust from '../img/Illustration.png';
 import './reviewPage.css'
 import LongButton from '../components/LongButton'
 
 const ReviewPage = () => {
+    const buttons = ["0%", "30%", "50%", "70%", "90% 이상"];
     const navigate= useNavigate();
 
     const goToMain = () => {
         navigate("/");
       };
 
+
+      const goToDetail = () => {
+        navigate(-1);
+      };
+
+      const location = useLocation();
+      const und = location.state?.understand;
+      const und_after = location.state?.understand_after;
+
+      const und_text = `내용을 ${buttons[und]} 이해했어요.`
+      const und_after_text = `내용을 ${buttons[und_after]} 이해했어요.`
 
     return (
         <div className='login-page'>
@@ -23,20 +36,20 @@ const ReviewPage = () => {
             <div className='result-wrapper'>
 
                 <LongButton
-                content="내용을 70% 이상 이해했어요."
+                content= {und_text}
                 colour= "white"
                 >
                     <div className='label'>학습 전</div>
                 </LongButton>
 
                 <LongButton
-                content="내용을 90% 이상 이해했어요."
+                content={und_after_text}
                 colour= "white"
                 >
                 <div className='label'>학습 후</div>
                 </LongButton>
 
-                <LongButton content="복습하기" colour="purple"/>
+                <LongButton content="복습하기" colour="purple" onClick={goToDetail}/>
                 <LongButton content="홈으로 가기" colour="black" onClick={goToMain}/>
 
             </div>
