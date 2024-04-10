@@ -30,7 +30,6 @@ const DetailPage = () => {
         }
     };
 
-
     const stages = [
         { title: '자막없이 풀기', type: "video" },
         { title: '쉐도잉하기', type: "video" },
@@ -42,7 +41,7 @@ const DetailPage = () => {
     };
 
     const goToReview = () => {
-        navigate("/review");
+        navigate("/review", { state: { understand, understand_after } });
     };
 
     useEffect(() => {
@@ -99,9 +98,9 @@ const DetailPage = () => {
             </div>
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
                 if (step === 0) {
-                    setUnderstand(index + 1);
+                    setUnderstand(index);
                 } else if (step === 3) {
-                    setUnderstand_after(index + 1);
+                    setUnderstand_after(index);
                 }
             }} />}
         </div>

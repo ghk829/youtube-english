@@ -4,7 +4,7 @@ import LongButton from './LongButton';
 import Chip from './Chip';
 
 const Modal = ({ onClose, step, onSelect  }) => {
-    const buttons = ["이해하지 못함", "30%", "50%", "70%", "90% 이상"];
+    const buttons = ["0%", "30%", "50%", "70%", "90% 이상"];
     const states = ["전", "전", "후", "후"]
     const [selected_before, setSelected_before] = useState(null);
 
