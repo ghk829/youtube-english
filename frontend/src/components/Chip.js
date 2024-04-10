@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './chip.css';
 
-const Chip = ({ content, width }) => {
+const Chip = ({ content, width, onClick, clicked }) => {
     return (
-        <div className={`chip`}
-        style={{width: width}}
+        <div
+            className={`chip ${clicked ? 'clicked' : ''}`}
+            style={{width: width}}
+            onClick={onClick} 
         >
             {content}
         </div>
