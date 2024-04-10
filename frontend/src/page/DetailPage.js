@@ -21,7 +21,13 @@ const DetailPage = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setStep(step + 1)
+        if(step<3)
+        {
+            setStep(step + 1)
+        }
+        else{
+            goToReview();
+        }
     };
 
 
@@ -51,7 +57,7 @@ const DetailPage = () => {
         }
         setYoutubeLink(selected);
         try {
-            const response = await axios.post(`${process.env.REACT_APP_MOD}/subtitles`, { videoUrl: selected });
+            const response = await axios.post(`${process.env.REACT_APP_MOD||""}/subtitles`, { videoUrl: selected });
             let textArray = response.data.map(x => x.text);
             textArray = textArray.slice(0, Math.min(10, textArray.length));
             setScripts(textArray);
@@ -78,7 +84,9 @@ const DetailPage = () => {
             </div>
 
             <div className='detail-type-wrapper'>
-                {step === 2 ? <QuizDetail scripts={scripts} /> :
+                {step === 2 ? 
+                <QuizDetail scripts={scripts} 
+                setStep = {()=>setStep(step + 1)} /> :
                     (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink}
                         step={step} isModalOpen={setIsModalOpen} />)
                 }
@@ -89,7 +97,6 @@ const DetailPage = () => {
                 </svg>
 
             </div>
-            <button onClick={goToReview}>임시 리뷰하기 버튼</button>
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
                 if (step === 0) {
                     setUnderstand(index + 1);

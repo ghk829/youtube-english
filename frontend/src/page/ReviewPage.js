@@ -1,5 +1,6 @@
 import React from 'react'
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, useLocation } from "react-router-dom";
 import mainIllust from '../img/Illustration.png';
 import './reviewPage.css'
 import LongButton from '../components/LongButton'
@@ -11,6 +12,7 @@ const ReviewPage = () => {
         navigate("/");
       };
 
+      const location = useLocation();
 
     return (
         <div className='login-page'>
