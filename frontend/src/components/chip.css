@@ -1,4 +1,5 @@
 .chip {
+    user-select: none;
     cursor: pointer;
     box-sizing: border-box;
     display: flex;
@@ -14,10 +15,32 @@
     flex-grow: 0;
 
     height: 32px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 16px;
+display: flex;
+align-items: center;
+
+color: #919191;
+
+
+flex: none;
+order: 0;
+flex-grow: 0;
+
 }
 
 .chip.clicked {
     border: 1px solid #913FF7;
     color: #913FF7;
 
+}
+
+.chip.filled{
+background: #913FF7;
+border-radius: 100px;
+color: white;
 }
