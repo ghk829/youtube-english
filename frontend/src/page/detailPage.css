@@ -29,6 +29,10 @@
     margin-top: 20px;
 }
 
+.script:hover{
+    border-radius: 10px;
+    background-color: #eaeaea;
+}
 
 .video-detail {
     width: 375px;
