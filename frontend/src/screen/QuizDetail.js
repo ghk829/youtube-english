@@ -84,7 +84,7 @@ const QuizDetail = ({ scripts, setStep }) => {
 
     try {
       let wholescript = scripts.map(x => x.text).join('');
-      const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/quizFromSubtitle`, { subtitles: wholescript });
+      const response = await axios.post(`/quizFromSubtitle`, { subtitles: wholescript });
       
       console.log(scripts)
       console.log(response)

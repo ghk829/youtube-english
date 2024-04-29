@@ -56,7 +56,7 @@ const DetailPage = () => {
         }
         setYoutubeLink(selected);
         try {
-            const response = await axios.post(`${process.env.REACT_APP_MOD||""}/subtitles`, { videoUrl: selected });
+            const response = await axios.post(`/subtitles`, { videoUrl: selected });
             // let textArray = response.data.map(x => x.text);
             let textArray = response.data;
 
