@@ -7,6 +7,7 @@ async function getSubtitles(videoUrl) {
         const fetch = (await import('node-fetch')).default;
         const info = await ytdl.getInfo(videoUrl);
         const tracks = info.player_response.captions.playerCaptionsTracklistRenderer.captionTracks;
+        
         if (tracks && tracks.length > 0) {
             const englishTrack = tracks.find(track => track.languageCode === 'en' || track.languageCode === 'en-US');
             if (englishTrack) {
@@ -21,7 +22,6 @@ async function getSubtitles(videoUrl) {
                     dur: textObj.$.dur,
                     text: he.decode(textObj._)
                 }));
-  
                 return subtitles;  // Return the subtitles instead of writing to a file
             } else {
                 console.log('No English captions found for this video.');

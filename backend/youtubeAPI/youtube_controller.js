@@ -1,5 +1,6 @@
 const youtube_subtitles = require('./youtube_subtitles');
 const openaiAPI = require('./openai_api');
+const blankFillQuiz = require('./blank_fill_quizs');
 // const { google } = require("googleapis");
 // // const youtube = google.youtube({
 // //   version: "v3",
@@ -52,7 +53,8 @@ getQuizFromVideo: async (req, res, next) => {
     const subtitlesText = subtitles.map(sub => sub.text.replace('\n',' ')).join('\n'); // Convert the subtitles array into a single string
     const slicedText = subtitlesText.slice(0, 15000);
     const quizJson = await openaiAPI.renderQuizSentences(slicedText); // Pass the string to the OpenAI API
-    res.json({ subtitles:subtitles, quiz: quizJson });
+    const blankChoicesJson = await blankFillQuiz.renderQuizChoices(quizJson)
+    res.json({ subtitles:subtitles, quiz: quizJson, blankChoicesJson: blankChoicesJson });
   } catch (err) {
     next(err);
   }
