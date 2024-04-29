@@ -16,15 +16,6 @@ const MainPage = () => {
         navigate('/detail', { state: { link } });
     };
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        goToDetail(customUrl);
-    };
-
-    const handleInputChange = (e) => {
-        setCustomUrl(e.target.value);
-    };
-
 
     const username = "Messi"
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]

@@ -57,8 +57,9 @@ const DetailPage = () => {
         setYoutubeLink(selected);
         try {
             const response = await axios.post(`${process.env.REACT_APP_MOD||""}/subtitles`, { videoUrl: selected });
-            let textArray = response.data.map(x => x.text);
-            textArray = textArray.slice(0, Math.min(10, textArray.length));
+            // let textArray = response.data.map(x => x.text);
+            let textArray = response.data;
+
             setScripts(textArray);
         } catch (error) {
             console.error('Error fetching subtitles:', error);

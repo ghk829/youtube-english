@@ -83,8 +83,11 @@ const QuizDetail = ({ scripts, setStep }) => {
     setIsLoading(true);
 
     try {
-      let wholescript = scripts.join('');
+      let wholescript = scripts.map(x => x.text).join('');
       const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/quizFromSubtitle`, { subtitles: wholescript });
+      
+      console.log(scripts)
+      console.log(response)
       setQuizs(JSON.parse(response.data).data);
       randQuiz(JSON.parse(response.data).data);
     } catch (error) {
