@@ -16,7 +16,6 @@ const MainPage = () => {
         navigate('/detail', { state: { link } });
     };
 
-
     const username = "Messi"
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
