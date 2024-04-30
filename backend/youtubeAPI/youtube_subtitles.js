@@ -7,6 +7,7 @@ async function getSubtitles(videoUrl) {
         const fetch = (await import('node-fetch')).default;
         const info = await ytdl.getInfo(videoUrl);
         
+        console.log(info)
         const tracks = info.player_response.captions.playerCaptionsTracklistRenderer.captionTracks;
         
         console.log(tracks)
@@ -15,7 +16,7 @@ async function getSubtitles(videoUrl) {
             if (englishTrack) {
                 const subtitlesUrl = englishTrack.baseUrl;
                 const subtitlesXml = await fetch(subtitlesUrl).then(res => res.text());
-
+                
                 // Convert XML to JSON
                 const parser = new xml2js.Parser();
                 const subtitlesJson = await parser.parseStringPromise(subtitlesXml);

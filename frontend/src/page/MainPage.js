@@ -20,8 +20,8 @@ const MainPage = () => {
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
     //Title 은 youtube API로 가져와야함 
-    const videoList = [{ link: "https://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
-    { link: "https://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
+    const videoList = [{ link: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
+    { link: "http://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
 
 
     return (
