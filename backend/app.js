@@ -8,7 +8,11 @@ const user_controller = require('./userManage/user_controller');
 const youtube_controller = require('./youtubeAPI/youtube_controller');
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "https://youtube-english.onrender.com",
+  headers: ["Content-Type"],
+  credentials: true,
+}));
 app.use(express.static(path.join(__dirname, './build')));
 
 

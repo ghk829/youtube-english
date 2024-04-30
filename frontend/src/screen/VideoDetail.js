@@ -43,7 +43,7 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
                   controls: '0',
                   autohide: '1',
                   enablejsapi:'1',
-                  origin:"https://youtube-english.onrender.com/"
+                  origin:"https://youtube-english.onrender.com"
           },
         events: {
           'onReady': onPlayerReady,
