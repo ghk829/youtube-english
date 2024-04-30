@@ -6,6 +6,8 @@ async function getSubtitles(videoUrl) {
     try {
         const fetch = (await import('node-fetch')).default;
         const info = await ytdl.getInfo(videoUrl);
+        
+        console.log(info)
         const tracks = info.player_response.captions.playerCaptionsTracklistRenderer.captionTracks;
         
         if (tracks && tracks.length > 0) {

@@ -28,6 +28,7 @@ getSubtitles: async (req, res, next) => {
       if (!videoUrl) {
           return res.status(400).send({ error: "videoUrl is required" });
       }
+      console.log(videoUrl)
       const subtitles = await youtube_subtitles.getSubtitles(videoUrl);
       res.json(subtitles);
   } catch (err) {
