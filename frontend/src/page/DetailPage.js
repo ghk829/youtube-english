@@ -57,7 +57,7 @@ const DetailPage = () => {
         setYoutubeLink(selected);
         try {
             console.log(selected)
-            const response = await axios.post(`/subtitles`, { videoUrl: selected });
+            const response = await axios.post(`/api/subtitles`, { "videoUrl": selected });
             // let textArray = response.data.map(x => x.text);
             let textArray = response.data;
 
