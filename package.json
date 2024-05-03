@@ -2,12 +2,18 @@
   "name": "youtube-english",
   "version": "1.0.0",
   "description": "Javascript / React / Node.js / PortgreSQL",
-  "main": "index.js",
+  "main": "app.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/app.js",
     "build": "cd frontend && npm run build"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
 }

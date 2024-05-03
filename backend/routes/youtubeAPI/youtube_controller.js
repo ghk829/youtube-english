@@ -23,6 +23,7 @@ module.exports = {
     }
 },
 getSubtitles: async (req, res, next) => {
+  console.log(req.body.videoUrl)
   try {
       const videoUrl = req.body.videoUrl;
       if (!videoUrl) {

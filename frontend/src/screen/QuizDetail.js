@@ -84,7 +84,7 @@ const QuizDetail = ({ scripts, setStep }) => {
 
     try {
       let wholescript = scripts.map(x => x.text).join('');
-      const response = await axios.post(`/api/quizFromSubtitle`, { "subtitles": wholescript });
+      const response = await axios.post(`/api/quizFromSubtitle`, { subtitles: wholescript });
       
       console.log(scripts)
       console.log(response)

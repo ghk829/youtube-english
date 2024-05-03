@@ -5,12 +5,8 @@ const he = require('he');
 async function getSubtitles(videoUrl) {
     try {
         const fetch = (await import('node-fetch')).default;
-        const info = await ytdl.getInfo(videoUrl);
-        
-        console.log(info)
+        const info = await ytdl.getInfo(videoUrl);        
         const tracks = info.player_response.captions.playerCaptionsTracklistRenderer.captionTracks;
-        
-        console.log(tracks)
         if (tracks && tracks.length > 0) {
             const englishTrack = tracks.find(track => track.languageCode === 'en' || track.languageCode === 'en-US');
             if (englishTrack) {

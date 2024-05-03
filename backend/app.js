@@ -3,38 +3,35 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
-const port = process.env.PORT || 3000;
-const user_controller = require('./userManage/user_controller');
-const youtube_controller = require('./youtubeAPI/youtube_controller');
+const routes = require("./routes/router");
 
-app.use(express.json());
-app.use(cors({
-  origin: "https://youtube-english.onrender.com",
-  headers: ["Content-Type"],
-  credentials: true,
-}));
+
+app.use("/", routes);
+app.use(cors());
 app.use(express.static(path.join(__dirname, './build')));
-app.use(function (req, res, next) {
+app.use(express.json());
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    next();
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); 
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    return res.status(200).json({});
+  }
+  next();
 });
+// app.get("/test", (req, res)=>{
+//   res.send("HELLO");
+// });
+// app.get("/login", user_controller.decodeToken);
+// app.get("/user/all", user_controller.getUserInfo);
+// app.get("/search", youtube_controller.getSearchResult);
+// app.post('/subtitles', youtube_controller.getSubtitles);
+// app.post('/quizFromSubtitle', youtube_controller.getQuizFromSubtitles);
+// app.post('/getQuizFromVideo', youtube_controller.getQuizFromVideo)
 
-app.get("/login", user_controller.decodeToken);
-app.get("/user/all", user_controller.getUserInfo);
-app.get("/search", youtube_controller.getSearchResult);
-app.post('/subtitles', youtube_controller.getSubtitles);
-app.post('/quizFromSubtitle', youtube_controller.getQuizFromSubtitles);
-app.post('/getQuizFromVideo', youtube_controller.getQuizFromVideo)
 
-
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+app.listen(3000, () => {
+  console.log(`App listening at http://localhost:3000`);
 });
+module.exports = app;
