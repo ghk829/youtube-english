@@ -38,6 +38,13 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
         width: '370',
         height: '219',
         videoId: url.split('=')[1],
+        playerVars: {
+                  showinfo: '0',        
+                  controls: '0',
+                  autohide: '1',
+                  enablejsapi:'1',
+                  origin:"https://youtube-english.onrender.com"
+          },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange,
@@ -49,7 +56,7 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
       initializePlayer();
     } else {
       const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.src = '//www.youtube.com/iframe_api';
       const firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 

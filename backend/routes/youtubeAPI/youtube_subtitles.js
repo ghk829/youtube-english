@@ -5,15 +5,14 @@ const he = require('he');
 async function getSubtitles(videoUrl) {
     try {
         const fetch = (await import('node-fetch')).default;
-        const info = await ytdl.getInfo(videoUrl);
+        const info = await ytdl.getInfo(videoUrl);        
         const tracks = info.player_response.captions.playerCaptionsTracklistRenderer.captionTracks;
-        
         if (tracks && tracks.length > 0) {
             const englishTrack = tracks.find(track => track.languageCode === 'en' || track.languageCode === 'en-US');
             if (englishTrack) {
                 const subtitlesUrl = englishTrack.baseUrl;
                 const subtitlesXml = await fetch(subtitlesUrl).then(res => res.text());
-  
+                
                 // Convert XML to JSON
                 const parser = new xml2js.Parser();
                 const subtitlesJson = await parser.parseStringPromise(subtitlesXml);
@@ -22,6 +21,7 @@ async function getSubtitles(videoUrl) {
                     dur: textObj.$.dur,
                     text: he.decode(textObj._)
                 }));
+                console.log(subtitles)
                 return subtitles;  // Return the subtitles instead of writing to a file
             } else {
                 console.log('No English captions found for this video.');

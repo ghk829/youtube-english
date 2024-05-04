@@ -19,6 +19,8 @@ const DetailPage = () => {
     const [understand, setUnderstand] = useState(0);
     const [understand_after, setUnderstand_after] = useState(0);
 
+    const [quizs, setQuizs] = useState([]);
+
     const closeModal = () => {
         setIsModalOpen(false);
         if(step<3)
@@ -45,8 +47,15 @@ const DetailPage = () => {
     };
 
     useEffect(() => {
-        fetchSubtitles();
+        if(scripts.length<2)
+        {fetchSubtitles();}
     }, []);
+
+    useEffect(()=>{
+        if (scripts.length > 1 && scripts[0] !== "" && !quizs.data) {
+            fetchQuiz();
+        }
+    }, [scripts]);
 
     const fetchSubtitles = async () => {
         const selected = location.state?.link;
@@ -56,18 +65,34 @@ const DetailPage = () => {
         }
         setYoutubeLink(selected);
         try {
-            const response = await axios.post(`/subtitles`, { videoUrl: selected });
+            console.log("자막 요청 링크")
+            console.log(location.state?.link )
+            console.log("자막 요청 중...  (/api/subtitles)")
+            const response = await axios.post(`${process.env.REACT_APP_MOD||""}/api/subtitles`, { videoUrl: location.state?.link });
             // let textArray = response.data.map(x => x.text);
             let textArray = response.data;
+            console.log("자막 Response")
+            console.log(response.data)
 
             setScripts(textArray);
+
         } catch (error) {
             console.error('Error fetching subtitles:', error);
             alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
         }
     };
 
-
+const fetchQuiz = async()=>{
+    let maxText = Math.min(15, scripts.length)
+    let wholescript = scripts.slice(1, maxText).map(x => x.text).join('');
+    console.log("퀴즈 요청용 데이터");
+    console.log(wholescript)
+    console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
+    const response2 = await axios.post(`${process.env.REACT_APP_MOD||""}/api/quizFromSubtitle`, { subtitles: wholescript});
+    setQuizs(response2.data)
+    console.log("퀴즈 데이터")
+    console.log(response2.data);
+}
 
     return (
         <div className='detail-page'>
@@ -85,7 +110,7 @@ const DetailPage = () => {
 
             <div className='detail-type-wrapper'>
                 {step === 2 ? 
-                <QuizDetail scripts={scripts} 
+                <QuizDetail quizs_data={quizs} 
                 setStep = {()=>setStep(step + 1)} /> :
                     (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink}
                         step={step} isModalOpen={setIsModalOpen} />)

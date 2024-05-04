@@ -20,10 +20,17 @@ const MainPage = () => {
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
     //Title 은 youtube API로 가져와야함 
-    const videoList = [{ link: "https://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
-    { link: "https://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
+    const videoList = [{ link: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
+    { link: "http://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
 
+    const handleInputChange = (event) => {
+        setCustomUrl(event.target.value);
+    };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        goToDetail(customUrl)
+    };
     return (
         <div className='main-page'>
 
@@ -32,12 +39,12 @@ const MainPage = () => {
                 <div className='profile'
                     onClick={goToLogin}>
 
-<svg width="28" height="27" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8.16667 6.08333C8.16667 4.53624 8.78125 3.05251 9.87521 1.95854C10.9692 0.864581 12.4529 0.25 14 0.25C15.5471 0.25 17.0308 0.864581 18.1248 1.95854C19.2188 3.05251 19.8333 4.53624 19.8333 6.08333C19.8333 7.63043 19.2188 9.11416 18.1248 10.2081C17.0308 11.3021 15.5471 11.9167 14 11.9167C12.4529 11.9167 10.9692 11.3021 9.87521 10.2081C8.78125 9.11416 8.16667 7.63043 8.16667 6.08333ZM8.16667 14.8333C6.2328 14.8333 4.37813 15.6016 3.01068 16.969C1.64323 18.3365 0.875 20.1911 0.875 22.125C0.875 23.2853 1.33594 24.3981 2.15641 25.2186C2.97688 26.0391 4.08968 26.5 5.25 26.5H22.75C23.9103 26.5 25.0231 26.0391 25.8436 25.2186C26.6641 24.3981 27.125 23.2853 27.125 22.125C27.125 20.1911 26.3568 18.3365 24.9893 16.969C23.6219 15.6016 21.7672 14.8333 19.8333 14.8333H8.16667Z" fill="#6A6A6A"/>
-</svg>
+                    <svg width="28" height="27" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.16667 6.08333C8.16667 4.53624 8.78125 3.05251 9.87521 1.95854C10.9692 0.864581 12.4529 0.25 14 0.25C15.5471 0.25 17.0308 0.864581 18.1248 1.95854C19.2188 3.05251 19.8333 4.53624 19.8333 6.08333C19.8333 7.63043 19.2188 9.11416 18.1248 10.2081C17.0308 11.3021 15.5471 11.9167 14 11.9167C12.4529 11.9167 10.9692 11.3021 9.87521 10.2081C8.78125 9.11416 8.16667 7.63043 8.16667 6.08333ZM8.16667 14.8333C6.2328 14.8333 4.37813 15.6016 3.01068 16.969C1.64323 18.3365 0.875 20.1911 0.875 22.125C0.875 23.2853 1.33594 24.3981 2.15641 25.2186C2.97688 26.0391 4.08968 26.5 5.25 26.5H22.75C23.9103 26.5 25.0231 26.0391 25.8436 25.2186C26.6641 24.3981 27.125 23.2853 27.125 22.125C27.125 20.1911 26.3568 18.3365 24.9893 16.969C23.6219 15.6016 21.7672 14.8333 19.8333 14.8333H8.16667Z" fill="#6A6A6A" />
+                    </svg>
 
 
-                    </div>
+                </div>
                 <div className='user-name'>반가워요, {username}님</div>
             </header>
 
@@ -101,9 +108,21 @@ const MainPage = () => {
                 }
             </div>
 
+            <form onSubmit={handleSubmit} style={{marginTop: "10px"}}>
+                <label >유튜브 링크:</label>
+                <input
+                    type="text"
+                    id="youtubeLink"
+                    value={customUrl}
+                    onChange={handleInputChange}
+                />
+                <button type="submit">제출</button>
+            </form>
+
+
             {/* 푸터 */}
             <footer className='bottom-navbar'>
-                <button className='bottom-navbar-btn' style={{color:'#913FF7'}}>
+                <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
 
                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.75 5.69L17.75 10.19V18H15.75V12H9.75V18H7.75V10.19L12.75 5.69ZM12.75 3L2.75 12H5.75V20H11.75V14H13.75V20H19.75V12H22.75" fill="#913FF7" />
@@ -112,7 +131,7 @@ const MainPage = () => {
                     </svg>
 
                     홈
-                    </button>
+                </button>
 
                 <button className='bottom-navbar-btn'>
 
