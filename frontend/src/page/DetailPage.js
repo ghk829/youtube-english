@@ -83,7 +83,9 @@ const DetailPage = () => {
     };
 
 const fetchQuiz = async()=>{
-    let maxText = Math.min(15, scripts.length)
+
+    try
+{    let maxText = Math.min(15, scripts.length)
     let wholescript = scripts.slice(1, maxText).map(x => x.text).join('');
     console.log("퀴즈 요청용 데이터");
     console.log(wholescript)
@@ -91,7 +93,11 @@ const fetchQuiz = async()=>{
     const response2 = await axios.post(`${process.env.REACT_APP_MOD||""}/api/quizFromSubtitle`, { subtitles: wholescript});
     setQuizs(response2.data)
     console.log("퀴즈 데이터")
-    console.log(response2.data);
+    console.log(response2.data);}
+    catch (error) {
+        console.error('Error fetching subtitles:', error);
+        alert('번역/퀴즈를 생성하는 데에 실패하였습니다.');
+    }
 }
 
     return (

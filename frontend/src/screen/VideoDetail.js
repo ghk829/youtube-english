@@ -26,7 +26,6 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
 
   
   const generateQuiz = async () => {
-    setIsLoading(true);
 
     if(translations.length>0)
       {
@@ -37,7 +36,6 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
       console.error('번역 생성 중 오류:', error);
       alert('번역을 생성하는 데 실패했습니다.');
     } finally {
-      setIsLoading(false);
     }}
   };
   useEffect(() => {
@@ -100,23 +98,65 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
   }, [url, step]);
 
   useEffect(() => {
+
     const mergeScriptsAndTranslations = () => {
       const merged = scripts.map(script => {
         const translation = translatedJson.find(t => t.sentence.includes(script.text));
         return {
           ...script,
-          translatedText: translation ? translation.translated_sentence : "번역 없음"
+          translatedText: translation ? translation.translated_sentence : ""
         };
       });
-      setTranslatedScripts(merged);
+      let newMerged = [];
+      let previous = null;
+  
+      for (let i = 0; i < merged.length; i++) {
+        // 마지막 요소가 아닐 경우
+        if (i !== merged.length - 1) {
+          if (merged[i].translatedText === "" || merged[i].translatedText === merged[i + 1].translatedText) {
+            // 다음 요소와 text를 합침
+            previous = {
+              ...merged[i],
+              text: previous ? previous.text + " " + merged[i].text : merged[i].text + " " + merged[i + 1].text,
+              translatedText: merged[i + 1].translatedText // 다음 요소의 번역을 사용
+            };
+          } else {
+            if (previous) {
+              newMerged.push(previous);
+              previous = null;
+            } else {
+              newMerged.push(merged[i]);
+            }
+          }
+        } else {
+          // 마지막 요소는 항상 추가
+          if (previous) {
+            // 마지막 요소가 이전 요소와 합쳐져야 할 경우
+            newMerged.push({
+              ...previous,
+              text: previous.text + " " + merged[i].text
+            });
+          } else {
+            // 마지막 요소가 단독으로 추가될 경우
+            newMerged.push(merged[i]);
+          }
+        }
+      }
+  
+      setTranslatedScripts(newMerged);
     };
-
+  
     if (scripts && translatedJson) {
+      mergeScriptsAndTranslations();
+    }
+    if (scripts && translatedJson) {
+      setIsLoading(true);
       mergeScriptsAndTranslations();
       console.log("번역완")
       console.log(translatedScripts)
       
-      setIsLoading(false);
+      if(translatedScripts.length<8 && translatedScripts.length>2){
+      setIsLoading(false);}
     }
   }, [scripts, translatedJson]);
   useEffect(() => {
@@ -213,7 +253,7 @@ const rewindVideoToScriptSegment = (start, dur) => {
             style={{cursor: "pointer"}}
 
             >
-              <div className='script-num'>{key + 1}/{scripts.length}</div>
+              <div className='script-num'>{key + 1}/{translatedScripts.length}</div>
               <div className='script-content' style={{fontWeight:"bold"}}>{item.text}</div>
               <div className='script-translation'>{item.translatedText}</div> 
 
@@ -222,7 +262,10 @@ const rewindVideoToScriptSegment = (start, dur) => {
         }
       </div>
         :
-        <></>}
+        <>{
+          step===1 && isLoading ? <div>로딩중...</div>:<></>
+        }
+        </>}
 
 
     </div>
