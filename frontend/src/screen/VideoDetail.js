@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../page/detailPage.css';
 
-const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
+const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
   const videoRef = useRef(null);
   const [player, setPlayer] = useState(null);
   const [displayedScripts, setDisplayedScripts] = useState([]);
   const [endScriptTime, setEndScriptTime] = useState(null);
+  const [translatedJson, setTranslatedJson] = useState([])
+  const [translatedScripts, setTranslatedScripts] = useState([]);
   const stepRef = useRef(step);
   const endScriptTimeRef = useRef(endScriptTime);
   const repeatCountRef = useRef(0); 
   const durRef = useRef(0);
   
+  const [isLoading, setIsLoading] = useState(false);
 
   
 
@@ -20,6 +23,27 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
     { title: '받아쓰기', type: "quiz" },
     { title: '다시 풀기', type: "video" }
   ]
+
+  
+  const generateQuiz = async () => {
+    setIsLoading(true);
+
+    if(translations.length>0)
+      {
+    try {
+      console.log("번역 JSON parse중")
+      setTranslatedJson(JSON.parse(translations).data);
+    } catch (error) {
+      console.error('번역 생성 중 오류:', error);
+      alert('번역을 생성하는 데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }}
+  };
+  useEffect(() => {
+    generateQuiz();
+  }, [translations]);
+
 
   useEffect(() => {
     stepRef.current = step;
@@ -34,16 +58,18 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
         event.target.addEventListener('onStateChange', function(){});
       };
       
+  const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/);
+  const videoId = videoIdMatch ? videoIdMatch[1] : null;
       new window.YT.Player(videoRef.current, {
         width: '370',
         height: '219',
-        videoId: url.split('=')[1],
+        videoId: videoId,
         playerVars: {
                   showinfo: '0',        
                   controls: '0',
                   autohide: '1',
                   enablejsapi:'1',
-                  origin:"https://youtube-english.onrender.com"
+                  origin:"https://youtube-english-nine.vercel.app"
           },
         events: {
           'onReady': onPlayerReady,
@@ -74,6 +100,26 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
   }, [url, step]);
 
   useEffect(() => {
+    const mergeScriptsAndTranslations = () => {
+      const merged = scripts.map(script => {
+        const translation = translatedJson.find(t => t.sentence.includes(script.text));
+        return {
+          ...script,
+          translatedText: translation ? translation.translated_sentence : "번역 없음"
+        };
+      });
+      setTranslatedScripts(merged);
+    };
+
+    if (scripts && translatedJson) {
+      mergeScriptsAndTranslations();
+      console.log("번역완")
+      console.log(translatedScripts)
+      
+      setIsLoading(false);
+    }
+  }, [scripts, translatedJson]);
+  useEffect(() => {
     let intervalId;
 
     if (player && step === 1) {
@@ -94,13 +140,6 @@ const VideoDetail = ({ scripts, url, step, isModalOpen }) => {
     return () => clearInterval(intervalId);
   }, [player, scripts, displayedScripts, step]);
 
-
-  useEffect(() => {
-    if (step === 1) {
-      alert("자막을 클릭해서 해당 구간을 반복해서 볼 수 있습니다. 반복 이후에는 쉐도잉 시간 5초가 주어집니다. 1회 반복합니다.");
-    }
-  }, [step]);
-  
 const onPlayerStateChange = (event) => {
   if (stepRef.current === 0 || stepRef.current === 3) {
     if (event.data === window.YT.PlayerState.ENDED) {
@@ -164,16 +203,20 @@ const rewindVideoToScriptSegment = (start, dur) => {
       <div className='video-wrapper'>
         <div ref={videoRef}></div>
       </div>
-      {step === 1 ? <div className='scripts-wrapper'>
+
+      
+      {step === 1  && !isLoading ?<div className='scripts-wrapper'>
         {
-          displayedScripts.map((item, key) => (
+          translatedScripts.map((item, key) => (
             <div className='script' key={key}
             onClick={() => rewindVideoToScriptSegment(item.start, item.dur)}
             style={{cursor: "pointer"}}
 
             >
               <div className='script-num'>{key + 1}/{scripts.length}</div>
-              <div className='script-content'>{item.text}</div>
+              <div className='script-content' style={{fontWeight:"bold"}}>{item.text}</div>
+              <div className='script-translation'>{item.translatedText}</div> 
+
             </div>
           ))
         }

@@ -112,7 +112,7 @@ const fetchQuiz = async()=>{
                 {step === 2 ? 
                 <QuizDetail quizs_data={quizs} 
                 setStep = {()=>setStep(step + 1)} /> :
-                    (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink}
+                    (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink} translations={quizs}
                         step={step} isModalOpen={setIsModalOpen} />)
                 }
             </div>
