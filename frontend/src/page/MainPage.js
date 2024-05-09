@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, } from "react-router-dom";
 import './mainPage.css'
 import Chip from '../components/Chip';
@@ -7,13 +7,13 @@ const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
     const [selected, setSelected] = useState('시사/교양');
+    const [autoPlay, setAutoplay] = useState(false);
 
     const goToLogin = () => {
         navigate("/login");
     };
-
     const goToDetail = (link) => {
-        navigate('/detail', { state: { link } });
+        navigate('/detail', { state: { link, autoPlay } });
     };
 
     const username = "Messi"
@@ -74,6 +74,30 @@ const MainPage = () => {
                 </div>
             </nav>
 
+
+            {/* 폼 */}
+            <div>
+                자동 재생 옵션
+            <input type='checkbox' value={autoPlay}
+            onClick={()=>setAutoplay(!autoPlay)}
+            ></input>
+            </div>
+            <div className='form-wrapper'>
+            <form onSubmit={handleSubmit} style={{marginTop: "10px"}}>
+                <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
+                <input
+                className='form-input'
+                    type="text"
+                    id="youtubeLink"
+                    value={customUrl}
+                    placeholder='링크를 붙여 넣어주세요.'
+                    onChange={handleInputChange}
+                />
+                <button 
+                className='form-submit'
+                type="submit">제출</button>
+            </form>
+            </div>
             {/* 비디오 컨텐츠 */}
             <div className='explore-detail-btn'>
                 탐색하기
@@ -107,18 +131,6 @@ const MainPage = () => {
                     ))
                 }
             </div>
-
-            <form onSubmit={handleSubmit} style={{marginTop: "10px"}}>
-                <label >유튜브 링크:</label>
-                <input
-                    type="text"
-                    id="youtubeLink"
-                    value={customUrl}
-                    onChange={handleInputChange}
-                />
-                <button type="submit">제출</button>
-            </form>
-
 
             {/* 푸터 */}
             <footer className='bottom-navbar'>
