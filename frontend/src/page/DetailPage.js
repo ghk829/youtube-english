@@ -23,17 +23,16 @@ const DetailPage = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        if(step<3)
-        {
+        if (step < 3) {
             setStep(step + 1)
         }
-        else{
+        else {
             goToReview();
         }
     };
 
     const stages = [
-        { title: '자막없이 풀기', type: "video" },
+        { title: '자막없이 듣기', type: "video" },
         { title: '쉐도잉하기', type: "video" },
         { title: '받아쓰기', type: "quiz" },
         { title: '다시 풀기', type: "video" }
@@ -47,11 +46,10 @@ const DetailPage = () => {
     };
 
     useEffect(() => {
-        if(scripts.length<2)
-        {fetchSubtitles();}
+        if (scripts.length < 2) { fetchSubtitles(); }
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (scripts.length > 1 && scripts[0] !== "" && !quizs.data) {
             fetchQuiz();
         }
@@ -66,60 +64,88 @@ const DetailPage = () => {
         setYoutubeLink(selected);
         try {
             console.log("자막 요청 링크")
-            console.log(location.state?.link )
-            console.log("자막 요청 중...  (/api/subtitles)")
-            const response = await axios.post(`${process.env.REACT_APP_MOD||""}/api/subtitles`, { videoUrl: location.state?.link });
-            // let textArray = response.data.map(x => x.text);
-            let textArray = response.data;
-            console.log("자막 Response")
-            console.log(response.data)
+            console.log(location.state?.link)
 
-            setScripts(textArray);
+            if (scripts.length < 1)
+                console.log("자막 요청 중...  (/api/subtitles)")
+            {
+                const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
+                // let textArray = response.data.map(x => x.text);
+                let textArray = response.data;
+                console.log("자막 Response")
+                console.log(response.data)
+                setScripts(textArray);
 
+            }
         } catch (error) {
             console.error('Error fetching subtitles:', error);
             alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
         }
     };
 
-const fetchQuiz = async()=>{
+    const fetchQuiz = async () => {
 
-    try
-{    let maxText = Math.min(15, scripts.length)
-    let wholescript = scripts.slice(1, maxText).map(x => x.text).join('');
-    console.log("퀴즈 요청용 데이터");
-    console.log(wholescript)
-    console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
-    const response2 = await axios.post(`${process.env.REACT_APP_MOD||""}/api/quizFromSubtitle`, { subtitles: wholescript});
-    setQuizs(response2.data)
-    console.log("퀴즈 데이터")
-    console.log(response2.data);}
-    catch (error) {
-        console.error('Error fetching subtitles:', error);
-        alert('번역/퀴즈를 생성하는 데에 실패하였습니다.');
+        try {
+            let maxText = Math.min(20, scripts.length)
+            let wholescript = scripts.slice(1, maxText).map(x => x.text).join('');
+            console.log("퀴즈 요청용 데이터");
+            console.log(wholescript)
+
+            if (quizs.length < 1) {
+                console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
+                const response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
+
+                setQuizs(response2.data)
+                console.log("퀴즈 데이터")
+                console.log(response2.data);
+            }
+        }
+        catch (error) {
+            console.error('Error fetching subtitles:', error);
+            alert('번역/퀴즈를 생성하는 데에 실패하였습니다.');
+        }
     }
-}
 
     return (
         <div className='detail-page'>
             <div className='steps-header'>
-
                 {
                     stages.map((item, key) => (
                         <div className='step'>
-                            <div className='step-num' onClick={() => { setStep(key) }}>{key + 1}</div>
-                            <div className='step-content'>{item.title}</div>
+
+                            <div
+                                className='step-num'
+                                onClick={() => { setStep(key) }}
+                                style={{ backgroundColor: step >= key ? '#903FF6' : '#F0E6FD',
+                                color: step >= key ? 'white' : '#E2CEFC' 
+                                 }}
+                                key={key}
+                            >
+                                {key + 1}
+                            </div>
+                            <div className='step-content'
+                            
+                            style={{ 
+                            color: step >= key ? '#333333' : '#ABABAB' 
+                             }}
+                            >{item.title}</div>
+                            <div className='step-bar'
+                            
+                            style={{ backgroundColor: step-1 >= key? '#903FF6' : '#F0E6FD',
+                            display: key===3? 'none':''
+                             }}
+                            ></div>
                         </div>
                     ))
                 }
             </div>
 
             <div className='detail-type-wrapper'>
-                {step === 2 ? 
-                <QuizDetail quizs_data={quizs} 
-                setStep = {()=>setStep(step + 1)} /> :
+                {step === 2 ?
+                    <QuizDetail quizs_data={quizs}
+                        setStep={() => setStep(step + 1)} /> :
                     (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink} translations={quizs}
-                        autoPlay = {location.state?.autoPlay}
+                        autoPlay={location.state?.autoPlay}
                         step={step} isModalOpen={setIsModalOpen} />)
                 }
             </div>

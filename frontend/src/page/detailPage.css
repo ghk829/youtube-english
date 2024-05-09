@@ -1,15 +1,27 @@
 .detail-page {
     width: 375px;
     overflow: hidden;
+    user-select: none;
 }
 
 .steps-header {
+
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    margin: 10px;
+    margin-top: 30px;
     text-align: center;
 }
+.step-bar{
+    position: absolute;
+    top: 43px;
+    margin-left:40px;
+    z-index: -1;
+width: 88px;
+height: 2px;
+background: #F7F0FE;
 
+
+}
 .step-num {
     display: flex;
     justify-content: center;
@@ -17,10 +29,23 @@
     cursor: pointer;
     margin: auto;
     border-radius: 1000px;
-    width: 40px;
-    height: 40px;
-    background-color: #903FF6;
-    color: white;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+}
+
+.step-content{
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 700;
+font-size: 12px;
+padding: 5px;
+text-align: center;
+
+/* Gray/80 */
+color: #333333;
+
 }
 
 .scripts-wrapper {
