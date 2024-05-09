@@ -119,6 +119,7 @@ const fetchQuiz = async()=>{
                 <QuizDetail quizs_data={quizs} 
                 setStep = {()=>setStep(step + 1)} /> :
                     (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink} translations={quizs}
+                        autoPlay = {location.state?.autoPlay}
                         step={step} isModalOpen={setIsModalOpen} />)
                 }
             </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../page/detailPage.css';
 
-const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
+const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay}) => {
   const videoRef = useRef(null);
   const [player, setPlayer] = useState(null);
   const [displayedScripts, setDisplayedScripts] = useState([]);
@@ -52,6 +52,9 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
     const initializePlayer = () => {
       
       const onPlayerReady = (event) => {
+        
+        if(autoPlay)
+{        event.target.playVideo();}
         setPlayer(event.target);
         event.target.addEventListener('onStateChange', function(){});
       };
@@ -111,14 +114,12 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
       let previous = null;
   
       for (let i = 0; i < merged.length; i++) {
-        // 마지막 요소가 아닐 경우
         if (i !== merged.length - 1) {
           if (merged[i].translatedText === "" || merged[i].translatedText === merged[i + 1].translatedText) {
-            // 다음 요소와 text를 합침
             previous = {
               ...merged[i],
               text: previous ? previous.text + " " + merged[i].text : merged[i].text + " " + merged[i + 1].text,
-              translatedText: merged[i + 1].translatedText // 다음 요소의 번역을 사용
+              translatedText: merged[i + 1].translatedText 
             };
           } else {
             if (previous) {
@@ -160,6 +161,7 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
     }
   }, [scripts, translatedJson]);
   useEffect(() => {
+    
     let intervalId;
 
     if (player && step === 1) {
@@ -181,6 +183,7 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen }) => {
   }, [player, scripts, displayedScripts, step]);
 
 const onPlayerStateChange = (event) => {
+  
   if (stepRef.current === 0 || stepRef.current === 3) {
     if (event.data === window.YT.PlayerState.ENDED) {
       isModalOpen(true);
@@ -239,6 +242,7 @@ const rewindVideoToScriptSegment = (start, dur) => {
   
   return (
     <div className='video-detail'>
+      {autoPlay?<div>Auto Playing</div>:<></>}
       <h3>STEP {step + 1}: {stages[step].title}</h3>
       <div className='video-wrapper'>
         <div ref={videoRef}></div>
