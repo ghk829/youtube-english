@@ -28,9 +28,11 @@ const MainPage = () => {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        goToDetail(customUrl)
+        goToDetail(customUrl);
+        
     };
+
+
     return (
         <div className='main-page'>
 
@@ -83,7 +85,9 @@ const MainPage = () => {
             ></input>
             </div>
             <div className='form-wrapper'>
-            <form onSubmit={handleSubmit} style={{marginTop: "10px"}}>
+            <form onSubmit={(e)=>{
+                e.preventDefault();
+                handleSubmit(e);}} style={{marginTop: "10px"}}>
                 <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
                 <input
                 className='form-input'
@@ -99,7 +103,7 @@ const MainPage = () => {
             </form>
             </div>
             {/* 비디오 컨텐츠 */}
-            <div className='explore-detail-btn'>
+            <div className='explore-detail-btn' >
                 탐색하기
             </div>
 
@@ -107,7 +111,7 @@ const MainPage = () => {
             <div className='explore-btn-wrapper'>
                 {
                     buttonList.map((item) => (
-                        <Chip content={item} onClick={() => setSelected(item)} clicked={item === selected} filled={true} />))
+                        <Chip content={item} onClick={() => setSelected(item) } clicked={item === selected} filled={true} />))
                 }
             </div>
 

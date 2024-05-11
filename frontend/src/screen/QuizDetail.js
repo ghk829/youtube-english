@@ -89,8 +89,6 @@ const QuizDetail = ({ quizs_data, setStep }) => {
         <>
           <div className='quiz-progress'>{currentQuizIndex + 1}/5</div>
           <div className='quiz-question' >{quizSentence}</div>
-          <div className='quiz-question-empty' >
-          </div>
 
           <div className='quiz-question-translated'>{quizTranslated}</div>
           <div className='quiz-btns'>
