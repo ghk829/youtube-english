@@ -7,21 +7,23 @@
 .steps-header {
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     margin-top: 30px;
     text-align: center;
 }
-.step-bar{
+
+.step-bar {
     position: absolute;
     top: 43px;
-    margin-left:40px;
+    margin-left: 76px;
     z-index: -1;
-width: 88px;
-height: 2px;
-background: #F7F0FE;
+    width: 98px;
+    height: 2px;
+    background: #F7F0FE;
 
 
 }
+
 .step-num {
     display: flex;
     justify-content: center;
@@ -34,17 +36,17 @@ background: #F7F0FE;
     padding: 5px;
 }
 
-.step-content{
+.step-content {
 
-font-family: 'Pretendard';
-font-style: normal;
-font-weight: 700;
-font-size: 12px;
-padding: 5px;
-text-align: center;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 5px;
+    text-align: center;
 
-/* Gray/80 */
-color: #333333;
+    /* Gray/80 */
+    color: #333333;
 
 }
 
@@ -54,7 +56,7 @@ color: #333333;
     margin-top: 20px;
 }
 
-.script:hover{
+.script:hover {
     border-radius: 10px;
     background-color: #eaeaea;
 }
@@ -172,17 +174,6 @@ color: #333333;
 
 }
 
-.quiz-question-empty {
-
-    box-sizing: border-box;
-
-    width: 283px;
-    height: 32px;
-
-    border-bottom: 1px solid #919191;
-
-
-}
 
 .quiz-btns {
     display: flex;
