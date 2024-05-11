@@ -25,4 +25,4 @@ yarn-error.log*
 
 .env
 .vercel
-.env.devlopment.local
+*.local
