@@ -51,6 +51,7 @@ const DetailPage = () => {
 
 
     useEffect(() => {
+        setYoutubeLink(location.state?.link)
         if (!isFetching) {
 
             fetchSubtitles();
@@ -74,51 +75,66 @@ const DetailPage = () => {
         let isInData = false;
 
         const existingUrlIndex = existingData.urls.findIndex(item => item.videoId === videoId);
+
+       
         if (existingUrlIndex !== -1) {
             setIsInData(true)
+            
+            console.log(existingData.urls[existingUrlIndex].data)
+
+            setTranslatedScripts(existingData.urls[existingUrlIndex].data.translatedScripts)
+            setQuizs(existingData.urls[existingUrlIndex].data.quizs)
         }
+        else{
 
-        if (!isInData) {
-            try {
-                console.log("자막 요청 링크:", location.state?.link);
-                console.log("자막 요청 중... (/api/subtitles)");
-
-                const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
-                let textArray = response.data.slice(0, 15);
-
-                textArray = mergeTexts(textArray);
-                setScripts(textArray);
-                const mergedTexts = mergeAllTexts(textArray);
-                setMergedScripts(mergedTexts);
-
-                const translatedTexts = await translateSubtitle(mergedTexts);
-                const newTranslatedScripts = mergeJsonArrays(textArray, translatedTexts);
-                setTranslatedScripts(newTranslatedScripts);
-
-                if (scripts.length > 1 && scripts[0] !== "" && !quizs.data) {
-                    fetchQuiz();
-                }
-                existingData.urls.push({
-                    videoId: videoId,
-                    data: {
-                        translatedScripts: newTranslatedScripts,
-                        quizs: []
+            if (!isInData) {
+                try {
+                    console.log("자막 요청 링크:", location.state?.link);
+                    console.log("자막 요청 중... (/api/subtitles)");
+    
+                    const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
+                    let textArray = response.data.slice(0, 16);
+    
+                    textArray = mergeTexts(textArray);
+                    setScripts(textArray);
+                    const mergedTexts = mergeAllTexts(textArray);
+                    setMergedScripts(mergedTexts);
+    
+                   const newScript = await translateSubtitle(mergedTexts);
+                    console.log(newScript)
+                    const newTranslatedScripts = await mergeJsonArrays(textArray, newScript);
+                    setTranslatedScripts(newTranslatedScripts);
+    
+    
+                    if (newTranslatedScripts.length > 1 && !quizs.data) {
+                        await  fetchQuiz();
+                        
+                       existingData.urls.push({
+                        videoId: videoId,
+                        data: {
+                            translatedScripts: newTranslatedScripts,
+                            quizs: quizs
+                        }
+                    });
+    
+                    if (existingData.urls.length > 4) {
+                        existingData.urls.shift();
                     }
-                });
-
-                if (existingData.urls.length > 4) {
-                    existingData.urls.shift();
+    
+                    localStorage.setItem('urlData', JSON.stringify(existingData));
+                    }
+    
+                } catch (error) {
+                    console.error('자막을 가져오는 중 오류 발생:', error);
+                    alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
                 }
-
-                localStorage.setItem('urlData', JSON.stringify(existingData));
-
-            } catch (error) {
-                console.error('자막을 가져오는 중 오류 발생:', error);
-                alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
             }
         }
 
+
         setIsFetching(false);
+        
+        setIsInData(false)
     };
 
 
@@ -126,10 +142,10 @@ const DetailPage = () => {
     const mergeTexts = (data) => {
         const result = [];
 
-        for (let i = 0; i < data.length; i += 3) {
-            const chunk = data.slice(i, i + 3);
+        for (let i = 0; i < data.length; i += 2) {
+            const chunk = data.slice(i, i + 2);
             const start = chunk[0].start;
-            const dur = chunk.reduce((acc, curr) => acc + parseFloat(curr.dur), 0).toFixed(2);
+            const dur = chunk.reduce((acc, curr) => acc + parseFloat(curr.dur), 0).toFixed(1);
             const text = chunk.map(item => item.text).join(' ');
 
             result.push({ start, dur, text });
@@ -140,9 +156,8 @@ const DetailPage = () => {
     function mergeAllTexts(data) {
         return data.map(item => item.text + '\n').join('');
     }
-    const mergeJsonArrays = (originalJson, newJson) => {
+    const mergeJsonArrays = async (originalJson, newJson) => {
         console.log("JSON 결합 중...")
-
         const maxLength = Math.max(originalJson.length, newJson.length);
 
         const mergedArray = [];
@@ -160,7 +175,7 @@ const DetailPage = () => {
             }
 
         }
-
+console.log(mergedArray)
         return mergedArray;
 
 
@@ -178,7 +193,9 @@ const DetailPage = () => {
 
         console.log("번역 요청 중...  (/api/translator)")
         const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/translator`, { subtitle: data });
-        setRawTranslatedScripts(stringToJson(response.data));
+        const result = stringToJson(response.data);
+        setRawTranslatedScripts(result);
+        return result;
 
     }
     const fetchQuiz = async () => {
@@ -189,13 +206,13 @@ const DetailPage = () => {
             console.log("퀴즈 요청용 데이터");
             console.log(wholescript)
 
-            if (quizs.length < 1) {
+            if (!quizs.data) {
                 console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
-                // const response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
+                const response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
 
-                // setQuizs(response2.data)
-                // console.log("퀴즈 데이터")
-                // console.log(response2.data);
+                setQuizs(response2.data)
+                console.log("퀴즈 데이터")
+                console.log(response2.data);
             }
         }
         catch (error) {

@@ -176,7 +176,7 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       </div>
 
 
-      {step ===0  &&translations.length>1&& !isLoading ? <div className='scripts-wrapper'>
+      {step ===0 && translations.length>1? <div className='scripts-wrapper'>
         {
           translations.map((item, key) => (
             <div className='script' key={key}
@@ -194,10 +194,9 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       </div>
         :
         <>{
-          step === 0 && isLoading ? <div>로딩중...</div> : <></>
+          step === 0 && translations.length<1 ? <div>로딩중...</div> : <></>
         }
         </>}
-
 
     </div>
   );
