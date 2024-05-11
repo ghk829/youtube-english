@@ -93,7 +93,7 @@ const DetailPage = () => {
                     console.log("자막 요청 중... (/api/subtitles)");
     
                     const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
-                    let textArray = response.data.slice(0, 16);
+                    let textArray = response.data.slice(0, 14);
     
                     textArray = mergeTexts(textArray);
                     setScripts(textArray);
@@ -107,7 +107,24 @@ const DetailPage = () => {
     
     
                     if (newTranslatedScripts.length > 1 && !quizs.data) {
-                        await  fetchQuiz();
+
+                        try {
+                            let wholescript = mergedTexts;
+                            console.log("퀴즈 요청용 데이터");
+                            console.log(wholescript)
+                
+                            if (!quizs.data) {
+                                console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
+                                const response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
+                
+                                setQuizs(response2.data)
+                                console.log("퀴즈 데이터")
+                                console.log(response2.data);
+                            }
+                        }
+                        catch (error) {
+                            console.error('Error fetching quizs:', error);
+                        }
                         
                        existingData.urls.push({
                         videoId: videoId,
@@ -196,30 +213,7 @@ console.log(mergedArray)
         const result = stringToJson(response.data);
         setRawTranslatedScripts(result);
         return result;
-
     }
-    const fetchQuiz = async () => {
-
-        try {
-            let maxText = Math.min(20, scripts.length)
-            let wholescript = scripts.slice(1, maxText).map(x => x.text).join('');
-            console.log("퀴즈 요청용 데이터");
-            console.log(wholescript)
-
-            if (!quizs.data) {
-                console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
-                const response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
-
-                setQuizs(response2.data)
-                console.log("퀴즈 데이터")
-                console.log(response2.data);
-            }
-        }
-        catch (error) {
-            console.error('Error fetching subtitles:', error);
-        }
-    }
-
     return (
         <div className='detail-page'>
             <div className='steps-header'>
