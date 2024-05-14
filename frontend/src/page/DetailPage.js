@@ -77,7 +77,7 @@ const DetailPage = () => {
         const existingUrlIndex = existingData.urls.findIndex(item => item.videoId === videoId);
 
        
-        if (existingUrlIndex !== -1 &&quizs.length>0) {
+        if (existingUrlIndex !== -1) {
             setIsInData(true)
             
             console.log(existingData.urls[existingUrlIndex].data)
