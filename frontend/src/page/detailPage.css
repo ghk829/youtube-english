@@ -54,11 +54,27 @@
     overflow-y: auto;
     height: 250px;
     margin-top: 20px;
+    display: grid;
+    grid-template-columns: 89% 11%;
+    padding: 5px;
 }
 
+.script{
+    display:block;
+    width: 285px;
+    padding: 5px;
+}
+
+.bookmark{
+    cursor: pointer;
+    margin-top: 60%;
+}
 .script:hover {
-    border-radius: 10px;
-    background-color: #eaeaea;
+
+background: #F7F0FE;
+border-radius: 8px;
+
+
 }
 
 .video-detail {
@@ -79,14 +95,33 @@
     height: 100%;
 }
 
-.script-num {
-    color: #ABABAB;
-    margin-top: 10px;
+
+.script-content{
+width: 295px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 600;
+font-size: 16px;
+line-height: 20px;
+color: #1C1C1C;
+margin-top: 3px;
+margin-bottom: 3px;
+
 }
 
-.script-content-translated {
-    color: #5F5F5F;
-    margin-bottom: 10px;
+.script-translation {
+width: 271px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 20px;
+color: #333333;
+margin-bottom: 16px;
+
+
 }
 
 .return-btn {
@@ -182,11 +217,10 @@
     justify-content: center;
     align-items: center;
     align-content: center;
-    padding: 0px 20px;
     gap: 20px;
 
-    width: 375px;
-    height: 100px;
+    width: 360px;
+    height: 120px;
     cursor: pointer;
 
 }
@@ -208,8 +242,39 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
     border-radius: 100px;
 
+    font-family: 'Pretendard';
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    
+    color: #1C1C1C;
+
+    
 }
 
+.feedback{
+display: flex;
+flex-direction: row;
+align-items: center;
+
+width: 335px;
+height: 56px;
+
+background: #FFFFFF;
+border-radius: 8px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 17px;
+color: #1C1C1C;
+
+}
+.feedback>svg{
+    margin: 12px;
+    margin-left: 24px;
+}
 
 .scripts-wrapper::-webkit-scrollbar {
     width: 8px;
@@ -227,3 +292,12 @@
 .scripts-wrapper::-webkit-scrollbar-thumb:hover {
     background: #999;
 }
+
+
+
+/* Not In Use */
+
+/* .script-num {
+    color: #ABABAB;
+    margin-top: 10px;
+} */

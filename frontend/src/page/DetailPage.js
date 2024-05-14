@@ -77,7 +77,7 @@ const DetailPage = () => {
         const existingUrlIndex = existingData.urls.findIndex(item => item.videoId === videoId);
 
        
-        if (existingUrlIndex !== -1) {
+        if (existingUrlIndex !== -1 &&quizs.length>0) {
             setIsInData(true)
             
             console.log(existingData.urls[existingUrlIndex].data)
@@ -87,8 +87,9 @@ const DetailPage = () => {
         }
         else{
 
-            if (!isInData) {
+            if (!isInData ) {
                 try {
+                    
                     console.log("자막 요청 링크:", location.state?.link);
                     console.log("자막 요청 중... (/api/subtitles)");
     
@@ -112,10 +113,10 @@ const DetailPage = () => {
                             let wholescript = mergedTexts;
                             console.log("퀴즈 요청용 데이터");
                             console.log(wholescript)
-                
+                            var response2;
                             if (!quizs.data) {
                                 console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
-                                const response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
+                                response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
                 
                                 setQuizs(response2.data)
                                 console.log("퀴즈 데이터")
@@ -130,7 +131,7 @@ const DetailPage = () => {
                         videoId: videoId,
                         data: {
                             translatedScripts: newTranslatedScripts,
-                            quizs: quizs
+                            quizs: response2.data
                         }
                     });
     
