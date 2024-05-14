@@ -179,19 +179,33 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       {step ===0 && translations.length>1? <div className='scripts-wrapper'>
         {
           translations.map((item, key) => (
+            <>
             <div className='script' key={key}
               onClick={() => rewindVideoToScriptSegment(item.start, item.dur)}
               style={{ cursor: "pointer" }}
 
             >
-              <div className='script-num'>{key + 1}/{translations.length}</div>
-              <div className='script-content' style={{ fontWeight: "bold" }}>{item.text}</div>
+              {/* <div className='script-num'>{key + 1}/{translations.length}</div> */}
+              <div className='script-content'>{item.text}</div>
               <div className='script-translation'>{item.translatedText}</div>
 
             </div>
+
+                    
+        <div className='bookmark'>
+        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 3.5835H19V21.5835L12 18.6668L5 21.5835V3.5835ZM7 5.5835V18.5835L12 16.5002L17 18.5835V5.5835H7Z" fill="#1C1C1C"/>
+</svg>
+
+
+        </div>
+        </>
+
           ))
         }
+
       </div>
+      
         :
         <>{
           step === 0 && translations.length<1 ? <div>로딩중...</div> : <></>
