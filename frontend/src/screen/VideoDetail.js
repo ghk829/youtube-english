@@ -6,15 +6,14 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
   const [player, setPlayer] = useState(null);
   const [displayedScripts, setDisplayedScripts] = useState([]);
   const [endScriptTime, setEndScriptTime] = useState(null);
-  const [translatedScripts, setTranslatedScripts] = useState([]);
   const stepRef = useRef(step);
   const endScriptTimeRef = useRef(endScriptTime);
   const repeatCountRef = useRef(0);
   const durRef = useRef(0);
-  const translatedScriptsRef= useRef([]);
+  const translatedScriptsRef = useRef([]);
+  const [activeScriptIndex, setActiveScriptIndex] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
-
 
 
   const stages = [
@@ -28,7 +27,7 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
 
     if (player) {
       player.seekTo(0, true);
-      if(!autoPlay){
+      if (!autoPlay) {
         player.pauseVideo();
       }
 
@@ -94,10 +93,20 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
 
     let intervalId;
 
-    if (player && step === 1) {
+    if (player && step === 0) {
 
       intervalId = setInterval(() => {
         const currentTime = player.getCurrentTime();
+
+        const activeIndex = translations.findIndex((script, index) => {
+          const nextScriptStart = index + 1 < translations.length ? parseFloat(translations[index + 1].start) : Number.MAX_SAFE_INTEGER;
+          const currentScriptStart = parseFloat(script.start);
+          return currentScriptStart <= currentTime && currentTime < nextScriptStart;
+        });
+  
+        if (activeIndex !== activeScriptIndex) {
+          setActiveScriptIndex(activeIndex);
+        }
         const newScripts = translatedScriptsRef.current.filter(script => {
           const scriptTime = script.start.split(':').reduce((acc, time) => (60 * acc) + +time, 0);
           return scriptTime <= currentTime && !displayedScripts.includes(script);
@@ -176,39 +185,40 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       </div>
 
 
-      {step ===0 && translations.length>1? <div className='scripts-wrapper'>
+      {step === 0 && translations.length > 1 ? <div className='scripts-wrapper'>
         {
           translations.map((item, key) => (
             <>
-            <div className='script' key={key}
-              onClick={() => rewindVideoToScriptSegment(item.start, item.dur)}
-              style={{ cursor: "pointer" }}
+              <div className={`script ${key === activeScriptIndex ? 'active' : ''}`}
+                key={key}
+                onClick={() => rewindVideoToScriptSegment(item.start, item.dur)}
+                style={{ cursor: "pointer" }}
 
-            >
-              {/* <div className='script-num'>{key + 1}/{translations.length}</div> */}
-              <div className='script-content'>{item.text}</div>
-              <div className='script-translation'>{item.translatedText}</div>
+              >
+                {/* <div className='script-num'>{key + 1}/{translations.length}</div> */}
+                <div className='script-content'>{item.text}</div>
+                <div className='script-translation'>{item.translatedText}</div>
 
-            </div>
-
-                    
-        <div className='bookmark'>
-        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M5 3.5835H19V21.5835L12 18.6668L5 21.5835V3.5835ZM7 5.5835V18.5835L12 16.5002L17 18.5835V5.5835H7Z" fill="#1C1C1C"/>
-</svg>
+              </div>
 
 
-        </div>
-        </>
+              <div className='bookmark'>
+                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5 3.5835H19V21.5835L12 18.6668L5 21.5835V3.5835ZM7 5.5835V18.5835L12 16.5002L17 18.5835V5.5835H7Z" fill="#1C1C1C" />
+                </svg>
+
+
+              </div>
+            </>
 
           ))
         }
 
       </div>
-      
+
         :
         <>{
-          step === 0 && translations.length<1 ? <div>로딩중...</div> : <></>
+          step === 0 && translations.length < 1 ? <div>로딩중...</div> : <></>
         }
         </>}
 
