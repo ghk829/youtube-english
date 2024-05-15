@@ -35,6 +35,19 @@ async function getSubtitles(videoUrl) {
     }
   }
 
+  
+async function getTitle(videoUrl) {
+    try {
+        const info = await ytdl.getBasicInfo(videoUrl);
+        console.log(info.videoDetails.title)
+        return info.videoDetails.title;
+    } catch (error) {
+        console.error('Error getting titles:', error);
+        throw error; 
+    }
+  }
 module.exports = {
-    getSubtitles : getSubtitles
+    getSubtitles : getSubtitles,
+    getTitle : getTitle
 }
+

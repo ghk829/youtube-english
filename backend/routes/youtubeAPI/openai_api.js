@@ -10,7 +10,7 @@ async function renderQuizSentences(subtitles) {
     messages: [
       {
         role: "system",
-        content: "Please give me 7 words and it's translation from the provided subtitles, along with sentences and korean translations from the provided subtitles. For example, it should has {'word':$word,'translated_word':$tranlsated,'sentence':$example_sentence,'translated_sentence':$translated_example_sentence} in JSON. please final result as list that contains 6 object. the result should look like {data : []}",
+        content: "Please give me 6 words and it's translation from the provided subtitles, along with different sentences and korean translations from the provided subtitles. For example, it should has {'word':$word,'translated_word':$tranlsated,'sentence':$example_sentence,'translated_sentence':$translated_example_sentence} in JSON. please final result as list that contains 6 object. the result should look like {data : []}",
       },
       { role: "user", content: subtitles },
     ],
