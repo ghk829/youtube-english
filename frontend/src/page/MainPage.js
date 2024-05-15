@@ -2,13 +2,35 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, } from "react-router-dom";
 import './mainPage.css'
 import Chip from '../components/Chip';
+import axios from 'axios'
+
 
 const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
     const [selected, setSelected] = useState('시사/교양');
     const [autoPlay, setAutoplay] = useState(false);
+    const [videoList, setVideoList] = useState([
+        { url: "https://www.youtube.com/watch?v=y8Pomwve_OQ", title: null },
+        { url: "https://www.youtube.com/shorts/bO1BcFk2TRA", title: null },
+        { url: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: null },
+        { url: "http://www.youtube.com/watch?v=U5L22eeGQUc", title: null }
+    ]);
 
+
+    useEffect(() => {
+        async function fetchTitles() {
+          const promises = videoList.map((video) =>
+            getTitle(video.url).then((titleData) => {
+              return { ...video, title: titleData.title };
+            })
+          );
+          const videosWithTitles = await Promise.all(promises);
+          setVideoList(videosWithTitles);
+        }
+    
+        fetchTitles();
+      }, []);
     const goToLogin = () => {
         navigate("/login");
     };
@@ -19,18 +41,24 @@ const MainPage = () => {
     const username = "Messi"
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
-    //Title 은 youtube API로 가져와야함 
-    const videoList = [{ link: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
-    { link: "http://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
-
     const handleInputChange = (event) => {
         setCustomUrl(event.target.value);
     };
 
     const handleSubmit = (event) => {
         goToDetail(customUrl);
-        
+
     };
+
+    const getVideoId = (url) => {
+        const videoId = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1];
+        return videoId;
+    }
+
+    const getTitle = async (url) =>{
+        const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/title`, { videoUrl:url});
+        return response.data;
+    }
 
 
     return (
@@ -80,27 +108,28 @@ const MainPage = () => {
             {/* 폼 */}
             <div>
                 자동 재생 옵션
-            <input type='checkbox' value={autoPlay}
-            onClick={()=>setAutoplay(!autoPlay)}
-            ></input>
+                <input type='checkbox' value={autoPlay}
+                    onClick={() => setAutoplay(!autoPlay)}
+                ></input>
             </div>
             <div className='form-wrapper'>
-            <form onSubmit={(e)=>{
-                e.preventDefault();
-                handleSubmit(e);}} style={{marginTop: "10px"}}>
-                <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
-                <input
-                className='form-input'
-                    type="text"
-                    id="youtubeLink"
-                    value={customUrl}
-                    placeholder='링크를 붙여 넣어주세요.'
-                    onChange={handleInputChange}
-                />
-                <button 
-                className='form-submit'
-                type="submit">제출</button>
-            </form>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit(e);
+                }} style={{ marginTop: "10px" }}>
+                    <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
+                    <input
+                        className='form-input'
+                        type="text"
+                        id="youtubeLink"
+                        value={customUrl}
+                        placeholder='링크를 붙여 넣어주세요.'
+                        onChange={handleInputChange}
+                    />
+                    <button
+                        className='form-submit'
+                        type="submit">제출</button>
+                </form>
             </div>
             {/* 비디오 컨텐츠 */}
             <div className='explore-detail-btn' >
@@ -111,26 +140,26 @@ const MainPage = () => {
             <div className='explore-btn-wrapper'>
                 {
                     buttonList.map((item) => (
-                        <Chip content={item} onClick={() => setSelected(item) } clicked={item === selected} filled={true} />))
+                        <Chip content={item} onClick={() => setSelected(item)} clicked={item === selected} filled={true} />))
                 }
             </div>
 
             {/* 비디오 */}
             <div className='explore-videos'>
                 {
-                    videoList.map((item) => (
+                    videoList.map((item, key) => (
                         <div className='explore-video'>
-                            <div className='explore-video-content' onClick={() => goToDetail(item.link)}>
+                            <div className='explore-video-content' onClick={() => goToDetail(item.url)}>
 
                                 <img
-                                    src={`https://img.youtube.com/vi/${item.link.split('=')[1]}/0.jpg`}
-                                    alt={item.title}
+                                    src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
+                                    alt={item}
                                     width="250"
                                     height="165"
                                     style={{ borderRadius: "20px" }}
                                 />
                             </div>
-                            <div className='explore-video-title'>{item.title}</div>
+                            <div className='explore-video-title' >{item.title}</div>
                         </div>
                     ))
                 }
