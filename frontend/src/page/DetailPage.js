@@ -210,8 +210,11 @@ console.log(mergedArray)
     const translateSubtitle = async (data) => {
 
         console.log("번역 요청 중...  (/api/translator)")
+        console.log(data)
         const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/translator`, { subtitle: data });
         const result = stringToJson(response.data);
+        console.log("번역 완료")
+        console.log(result)
         setRawTranslatedScripts(result);
         return result;
     }

@@ -20,7 +20,11 @@ const MainPage = () => {
     const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
     //Title 은 youtube API로 가져와야함 
-    const videoList = [{ link: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
+    const videoList = [
+        {        link: "https://www.youtube.com/watch?v=y8Pomwve_OQ", title: "Short1"},
+        {        link: "https://www.youtube.com/shorts/bO1BcFk2TRA", title: "Short2"},
+        
+    { link: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: "Title1" },
     { link: "http://www.youtube.com/watch?v=U5L22eeGQUc", title: "Title2" }]
 
     const handleInputChange = (event) => {
@@ -31,6 +35,11 @@ const MainPage = () => {
         goToDetail(customUrl);
         
     };
+
+    const getVideoId = (url) =>{
+        const videoId = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1];
+        return videoId;
+    }
 
 
     return (
@@ -123,7 +132,7 @@ const MainPage = () => {
                             <div className='explore-video-content' onClick={() => goToDetail(item.link)}>
 
                                 <img
-                                    src={`https://img.youtube.com/vi/${item.link.split('=')[1]}/0.jpg`}
+                                    src={`https://img.youtube.com/vi/${getVideoId(item.link)}/0.jpg`}
                                     alt={item.title}
                                     width="250"
                                     height="165"
