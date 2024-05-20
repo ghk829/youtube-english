@@ -1,7 +1,9 @@
 .main-page {
     user-select: none;
-    margin-top: 60px;
-    max-height: 630px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    margin-left: 10px;
+    max-height: 660px;
     overflow-y: auto;
 
 }
@@ -156,7 +158,7 @@ color: #5F5F5F;
 
 .bottom-navbar {
     position: fixed;
-    top: 700px;
+    bottom: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }

@@ -8,12 +8,13 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
   const [endScriptTime, setEndScriptTime] = useState(null);
   const stepRef = useRef(step);
   const endScriptTimeRef = useRef(endScriptTime);
-  const repeatCountRef = useRef(0);
+  const repeatCountRef = useRef(1);
   const durRef = useRef(0);
   const translatedScriptsRef = useRef([]);
   const [activeScriptIndex, setActiveScriptIndex] = useState(null);
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isShadowing, setIsShadowing] = useState(false);
+  const activeScriptIndexRef = React.useRef(null);
 
 
   const stages = [
@@ -21,7 +22,6 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
     { title: '받아쓰기', type: "quiz" },
     { title: '다시 풀기', type: "video" }
   ]
-
   useEffect(() => {
     stepRef.current = step;
 
@@ -90,14 +90,12 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
   }, [url, step]);
 
   useEffect(() => {
-
     let intervalId;
-
+  
     if (player && step === 0) {
-
       intervalId = setInterval(() => {
-        const currentTime = player.getCurrentTime();
-
+        var currentTime = player.getCurrentTime();
+  
         const activeIndex = translations.findIndex((script, index) => {
           const nextScriptStart = index + 1 < translations.length ? parseFloat(translations[index + 1].start) : Number.MAX_SAFE_INTEGER;
           const currentScriptStart = parseFloat(script.start);
@@ -106,76 +104,53 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
   
         if (activeIndex !== activeScriptIndex) {
           setActiveScriptIndex(activeIndex);
+          activeScriptIndexRef.current = activeIndex;
+          repeatCountRef.current = 1;
         }
-        const newScripts = translatedScriptsRef.current.filter(script => {
-          const scriptTime = script.start.split(':').reduce((acc, time) => (60 * acc) + +time, 0);
-          return scriptTime <= currentTime && !displayedScripts.includes(script);
-        });
-
-        if (newScripts.length > 0) {
-          setDisplayedScripts([...displayedScripts, ...newScripts]);
+  
+        if (activeIndex !== -1 && repeatCountRef.current > 0) {
+          const currentScript = translations[activeIndex];
+          const scriptDur = parseFloat(currentScript.dur);
+          const scriptEnd = parseFloat(currentScript.start) + scriptDur;
+  
+          if (currentTime >= scriptEnd - 0.3) {
+            player.pauseVideo();
+            setIsShadowing(true);
+            repeatCountRef.current -= 1;
+  
+            setTimeout(() => {
+              if (repeatCountRef.current === 0) {
+                player.playVideo();
+                setIsShadowing(false)
+              }
+            }, 1000*scriptDur+1000); 
+          }
         }
-      }, 1000);
+    
+      }, 500);
     }
-
+  
     return () => clearInterval(intervalId);
-  }, [player, scripts, translatedScriptsRef, displayedScripts, step]);
+  }, [player, translations, activeScriptIndex, displayedScripts, step]);
 
   const onPlayerStateChange = (event) => {
 
-    if (stepRef.current === 0 || stepRef.current === 2) {
-      if (event.data === window.YT.PlayerState.ENDED) {
-        isModalOpen(true);
-      }
-    }
-
-    if (event.data === window.YT.PlayerState.PLAYING) {
-      if (endScriptTimeRef.current && repeatCountRef.current > 0) {
-        const checkEndTimeAndPause = () => {
-          const currentTime = event.target.getCurrentTime();
-          if (currentTime >= endScriptTimeRef.current - 0.6) {
-            event.target.pauseVideo();
-
-            setTimeout(() => {
-              if (event.target) {
-                if (repeatCountRef.current > 0) {
-
-                  if (repeatCountRef.current > 1) {
-                    event.target.seekTo(endScriptTimeRef.current - parseFloat(endScriptTimeRef.current) - parseFloat(durRef), true);
-                  }
-                  event.target.playVideo();
-                  repeatCountRef.current -= 1;
-                  if (repeatCountRef.current <= 0) {
-
-                    setEndScriptTime(null);
-                  }
-                } else {
-                  event.target.playVideo();
-                }
-              }
-            }, 4500);
-            clearInterval(intervalId);
-          }
-        };
-
-        const intervalId = setInterval(checkEndTimeAndPause, 1000);
-      }
+    if ((stepRef.current === 0 || stepRef.current === 2) && event.data === window.YT.PlayerState.ENDED) {
+      isModalOpen(true);
     }
   };
-
+  
   const rewindVideoToScriptSegment = (start, dur) => {
     if (player) {
-      player.playVideo();
       const startTimeSeconds = parseFloat(start);
       const durationSeconds = parseFloat(dur);
       durRef.current = dur;
       const endTimeSeconds = startTimeSeconds + durationSeconds;
       player.seekTo(startTimeSeconds, true);
       setEndScriptTime(endTimeSeconds);
-      repeatCountRef.current = 2;
+      repeatCountRef.current = 1;
     }
-  }
-
+  };
   return (
     <div className='video-detail'>
       {autoPlay ? <div>Auto Playing</div> : <></>}
@@ -183,6 +158,7 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       <div className='video-wrapper'>
         <div ref={videoRef}></div>
       </div>
+        <div style={{fontWeight:"bold", color: "#333"}}>{isShadowing?<>섀도잉 하세요!!</>:<></>}</div>
 
 
       {step === 0 && translations.length > 1 ? <div className='scripts-wrapper'>
