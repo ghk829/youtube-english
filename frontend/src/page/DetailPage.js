@@ -83,7 +83,26 @@ const DetailPage = () => {
             console.log(existingData.urls[existingUrlIndex].data)
 
             setTranslatedScripts(existingData.urls[existingUrlIndex].data.translatedScripts)
-            setQuizs(existingData.urls[existingUrlIndex].data.quizs)
+
+            try {
+                
+                let wholescript =  existingData.urls[existingUrlIndex].data.translatedScripts.map(item => item.text).join(' ');
+                console.log("퀴즈 요청용 데이터");
+                console.log(wholescript)
+                var response2;
+                if (!quizs.data) {
+                    console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
+                    response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
+    
+                    setQuizs(response2.data)
+                    console.log("퀴즈 데이터")
+                    console.log(response2.data);
+                }
+            }
+            catch (error) {
+                console.error('Error fetching quizs:', error);
+            }
+            // setQuizs(existingData.urls[existingUrlIndex].data.quizs)
         }
         else{
 
@@ -94,7 +113,7 @@ const DetailPage = () => {
                     console.log("자막 요청 중... (/api/subtitles)");
     
                     const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
-                    let textArray = response.data.slice(0, 14);
+                    let textArray = response.data.slice(0, 17);
     
                     textArray = mergeTexts(textArray);
                     setScripts(textArray);
@@ -159,18 +178,24 @@ const DetailPage = () => {
 
     const mergeTexts = (data) => {
         const result = [];
-
+    
         for (let i = 0; i < data.length; i += 2) {
             const chunk = data.slice(i, i + 2);
             const start = chunk[0].start;
-            const dur = chunk.reduce((acc, curr) => acc + parseFloat(curr.dur), 0).toFixed(1);
+            let dur;
+            if (i + 2 >= data.length) {
+                dur = chunk.reduce((acc, curr) => acc + parseFloat(curr.dur), 0).toFixed(1);
+            } else {
+                dur = (parseFloat(data[i + 2].start) - parseFloat(start)).toFixed(1);
+            }
             const text = chunk.map(item => item.text).join(' ');
-
+    
             result.push({ start, dur, text });
         }
-
+    
         return result;
     }
+    
     function mergeAllTexts(data) {
         return data.map(item => item.text + '\n').join('');
     }
@@ -227,7 +252,7 @@ console.log(mergedArray)
 
                             <div
                                 className='step-num'
-                                onClick={() => { setStep(key) }}
+                                // onClick={() => { setStep(key) }}
                                 style={{
                                     backgroundColor: step >= key ? '#903FF6' : '#F0E6FD',
                                     color: step >= key ? 'white' : '#E2CEFC'
