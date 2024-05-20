@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../page/detailPage.css';
 import axios from 'axios';
 
@@ -13,10 +13,9 @@ const QuizDetail = ({ quizs_data, setStep }) => {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
   const quizLimit = 5;
+  const usedQuizIndices = useRef(new Set());
 
   const checkAnswer = (selectedWord) => {
-
-    // message += `\n실제 정답: ${quizAns}`;
     setFeedback(selectedWord === quizAns);
 
     setTimeout(() => {
@@ -25,8 +24,8 @@ const QuizDetail = ({ quizs_data, setStep }) => {
       let nextQuizIndex = currentQuizIndex + 1;
       if (nextQuizIndex < quizs.length && nextQuizIndex < quizLimit) {
         setCurrentQuizIndex(nextQuizIndex);
-        randQuiz(JSON.parse(quizs_data).data);
-        setIsClicked(false)
+        randQuiz(quizs);
+        setIsClicked(false);
       } else {
         alert("퀴즈가 완료되었습니다!");
         setStep();
@@ -34,43 +33,46 @@ const QuizDetail = ({ quizs_data, setStep }) => {
     }, 1000); // 1초 지연
   };
 
-
-
   const randQuiz = (quizData) => {
     if (quizData.length > 0) {
-      let randIndex = Math.floor(Math.random() * quizData.length);
-      console.log(quizData[randIndex]);
-      const wordRegex = quizData[randIndex].word.split(' ').join('\\s*').trim();
+      let availableIndices = quizData.map((_, index) => index).filter(index => !usedQuizIndices.current.has(index));
+      if (availableIndices.length === 0) {
+        alert("퀴즈 데이터가 부족합니다.");
+        return;
+      }
 
+      let randIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+      usedQuizIndices.current.add(randIndex);
+
+      const wordRegex = quizData[randIndex].word.split(' ').join('\\s*').trim();
       let sentenceReplaced = quizData[randIndex].sentence.replace(new RegExp(wordRegex, 'gi'), '______');
 
       setQuizSentence(sentenceReplaced);
       setQuizTranslated(quizData[randIndex].translated_sentence);
       setQuizAns(quizData[randIndex].word);
 
-      let newWords = [];
-      newWords.push(quizData[randIndex].word.trim());
-      while (newWords.length != 5) {
-        let randIndex = Math.floor(Math.random() * quizData.length);
-        let word = quizData[randIndex].word;
-        if (!newWords.includes(word.trim())) {
-          newWords.push(word.trim());
-        }
+      let newWords = new Set();
+      newWords.add(quizData[randIndex].word.trim());
+
+      while (newWords.size < 5) {
+        let tempRandIndex = Math.floor(Math.random() * quizData.length);
+        let word = quizData[tempRandIndex].word.trim();
+        newWords.add(word);
       }
+
       setWords([...newWords].sort(() => Math.random() - 0.5));
     }
   };
-
-
 
   const generateQuiz = async () => {
     setIsLoading(true);
 
     if (quizs_data.length > 0) {
       try {
-        console.log("퀴즈 JSON parse중")
-        setQuizs(JSON.parse(quizs_data).data);
-        randQuiz(JSON.parse(quizs_data).data);
+        console.log("퀴즈 JSON parse중");
+        const parsedData = JSON.parse(quizs_data).data;
+        setQuizs(parsedData);
+        randQuiz(parsedData);
       } catch (error) {
         console.error('퀴즈 생성 중 오류:', error);
         alert('퀴즈를 생성하는 데 실패했습니다.');
@@ -79,6 +81,7 @@ const QuizDetail = ({ quizs_data, setStep }) => {
       }
     }
   };
+
   useEffect(() => {
     generateQuiz();
   }, [quizs_data]);

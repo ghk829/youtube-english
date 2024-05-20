@@ -135,7 +135,7 @@ const MainPage = () => {
             <div className='explore-detail-btn' >
                 탐색하기
             </div>
-
+잘 되지 않을 때는 캐시 삭제 후 다시 실행해 주세요! 
             {/* 탐색 버튼 */}
             <div className='explore-btn-wrapper'>
                 {
