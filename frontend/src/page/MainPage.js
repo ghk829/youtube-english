@@ -3,6 +3,8 @@ import { useNavigate, } from "react-router-dom";
 import './mainPage.css'
 import Chip from '../components/Chip';
 import axios from 'axios'
+import LongButton from '../components/LongButton'
+import homeIcon from '../img/icon/homeIcon.svg'
 
 
 const MainPage = () => {
@@ -68,12 +70,7 @@ const MainPage = () => {
             <header className='main-header'>
                 <div className='profile'
                     onClick={goToLogin}>
-
-                    <svg width="28" height="27" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.16667 6.08333C8.16667 4.53624 8.78125 3.05251 9.87521 1.95854C10.9692 0.864581 12.4529 0.25 14 0.25C15.5471 0.25 17.0308 0.864581 18.1248 1.95854C19.2188 3.05251 19.8333 4.53624 19.8333 6.08333C19.8333 7.63043 19.2188 9.11416 18.1248 10.2081C17.0308 11.3021 15.5471 11.9167 14 11.9167C12.4529 11.9167 10.9692 11.3021 9.87521 10.2081C8.78125 9.11416 8.16667 7.63043 8.16667 6.08333ZM8.16667 14.8333C6.2328 14.8333 4.37813 15.6016 3.01068 16.969C1.64323 18.3365 0.875 20.1911 0.875 22.125C0.875 23.2853 1.33594 24.3981 2.15641 25.2186C2.97688 26.0391 4.08968 26.5 5.25 26.5H22.75C23.9103 26.5 25.0231 26.0391 25.8436 25.2186C26.6641 24.3981 27.125 23.2853 27.125 22.125C27.125 20.1911 26.3568 18.3365 24.9893 16.969C23.6219 15.6016 21.7672 14.8333 19.8333 14.8333H8.16667Z" fill="#6A6A6A" />
-                    </svg>
-
-
+ <object data={homeIcon}></object>
                 </div>
                 <div className='user-name'>반가워요, {username}님</div>
             </header>
@@ -104,38 +101,19 @@ const MainPage = () => {
                 </div>
             </nav>
 
+            <div className='today-sentence-wrapper'>
+                <h2>오늘의 문장🔮</h2>
+                <h2>Good things don't come easy</h2>
+                <LongButton>관련 영상 보러 가기</LongButton>
+                
 
-            {/* 폼 */}
-            <div>
-                자동 재생 옵션
-                <input type='checkbox' value={autoPlay}
-                    onClick={() => setAutoplay(!autoPlay)}
-                ></input>
             </div>
-            <div className='form-wrapper'>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit(e);
-                }} style={{ marginTop: "10px" }}>
-                    <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
-                    <input
-                        className='form-input'
-                        type="text"
-                        id="youtubeLink"
-                        value={customUrl}
-                        placeholder='링크를 붙여 넣어주세요.'
-                        onChange={handleInputChange}
-                    />
-                    <button
-                        className='form-submit'
-                        type="submit">제출</button>
-                </form>
-            </div>
+
+
             {/* 비디오 컨텐츠 */}
             <div className='explore-detail-btn' >
-                탐색하기
+                미국 영어
             </div>
-
             {/* 탐색 버튼 */}
             <div className='explore-btn-wrapper'>
                 {
@@ -165,6 +143,32 @@ const MainPage = () => {
                 }
             </div>
 
+            {/* 폼 */}
+            {/* <div>
+                자동 재생 옵션
+                <input type='checkbox' value={autoPlay}
+                    onClick={() => setAutoplay(!autoPlay)}
+                ></input>
+            </div> */}
+            <div className='form-wrapper'>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit(e);
+                }} style={{ marginTop: "10px" }}>
+                    <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
+                    <input
+                        className='form-input'
+                        type="text"
+                        id="youtubeLink"
+                        value={customUrl}
+                        placeholder='링크를 붙여 넣어주세요.'
+                        onChange={handleInputChange}
+                    />
+                    <button
+                        className='form-submit'
+                        type="submit">제출</button>
+                </form>
+            </div>
             {/* 푸터 */}
             <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
@@ -181,9 +185,9 @@ const MainPage = () => {
                 <button className='bottom-navbar-btn'>
 
                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M22.25 12C22.25 17.5228 17.7728 22 12.25 22C6.72715 22 2.25 17.5228 2.25 12C2.25 6.47715 6.72715 2 12.25 2C17.7728 2 22.25 6.47715 22.25 12ZM12.25 20C16.6683 20 20.25 16.4183 20.25 12C20.25 7.58172 16.6683 4 12.25 4C7.83172 4 4.25 7.58172 4.25 12C4.25 16.4183 7.83172 20 12.25 20Z" fill="#C7C7C7" />
-                        <path d="M11.25 11H13.25V17H11.25V11Z" fill="#C7C7C7" />
-                        <path d="M11.25 7H13.25V9H11.25V7Z" fill="#C7C7C7" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M22.25 12C22.25 17.5228 17.7728 22 12.25 22C6.72715 22 2.25 17.5228 2.25 12C2.25 6.47715 6.72715 2 12.25 2C17.7728 2 22.25 6.47715 22.25 12ZM12.25 20C16.6683 20 20.25 16.4183 20.25 12C20.25 7.58172 16.6683 4 12.25 4C7.83172 4 4.25 7.58172 4.25 12C4.25 16.4183 7.83172 20 12.25 20Z" fill="var(--gray30)" />
+                        <path d="M11.25 11H13.25V17H11.25V11Z" fill="gray" />
+                        <path d="M11.25 7H13.25V9H11.25V7Z" fill="gray" />
                     </svg>
 
                     학습 내용</button>

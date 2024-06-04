@@ -8,7 +8,7 @@
     align-items: center;
     padding: 8px 16px;
     gap: 12px;
-    border: 1px solid #C7C7C7;
+    border: 1px solid var(--gray30);
     border-radius: 100px;
     flex: none;
     order: 0;

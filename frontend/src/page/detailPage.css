@@ -1,4 +1,5 @@
 .detail-page {
+    height: 700px;
     width: 375px;
     overflow: hidden;
     user-select: none;
@@ -79,6 +80,7 @@
 
 .video-detail {
     width: 375px;
+    height: 700px;
     display: flex;
     flex-direction: column;
 }
@@ -146,7 +148,7 @@
 }
 
 .quiz-detail {
-    background-color: #F7F7F7;
+    background-color: (--gray05);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -248,7 +250,7 @@
     height: 40px;
 
     background: #FFFFFF;
-    border: 1px solid #C7C7C7;
+    border: 1px solid (--gray30);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
     border-radius: 100px;
 
@@ -289,10 +291,12 @@
 
 .scripts-wrapper::-webkit-scrollbar {
     width: 8px;
+    border-radius: 4px;
 }
 
 .scripts-wrapper::-webkit-scrollbar-track {
     background: #f0f0f0;
+    border-radius: 4px;
 }
 
 .scripts-wrapper::-webkit-scrollbar-thumb {
@@ -302,6 +306,7 @@
 
 .scripts-wrapper::-webkit-scrollbar-thumb:hover {
     background: #999;
+    border-radius: 4px;
 }
 
 
