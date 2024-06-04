@@ -154,15 +154,17 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
   return (
     <div className='video-detail'>
       {autoPlay ? <div>Auto Playing</div> : <></>}
-      <h3>STEP {step + 1}: {stages[step].title}</h3>
+      <h3>영상 제목</h3>
       <div className='video-wrapper'>
         <div ref={videoRef}></div>
       </div>
-        <div style={{fontWeight:"bold", color: "#333"}}>{isShadowing?<>섀도잉 하세요!!</>:<></>}</div>
-
-
+        <div className='shadowing-guide'>
+        {isShadowing?<>발음과 억양을 집중해서 들어보세요.</>:<></>}
+          </div>
       {step === 0 && translations.length > 1 ? <div className='scripts-wrapper'>
+
         {
+          
           translations.map((item, key) => (
             <>
               <div className={`script ${key === activeScriptIndex ? 'active' : ''}`}
@@ -190,6 +192,9 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
           ))
         }
 
+<div className='shadowing-bar' style={{backgroundColor: "red"}}>
+  프로그레스 바
+            </div>
       </div>
 
         :

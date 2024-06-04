@@ -60,6 +60,25 @@ nav{
     margin-bottom: 56px;
 }
 
+.today-sentence-wrapper{
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 36px 20px 32px;
+gap: 48px;
+
+width: 326px;
+height: 270px;
+
+background: var(--gray05);
+border-radius: 8px;
+
+flex: none;
+order: 2;
+flex-grow: 0;
+
+}
+
 .studied-wrapper {
 
 width: 134.5px;
@@ -134,7 +153,7 @@ vertical-align: middle;
 .explore-video-content {
     width: 250px;
     height: 165px;
-    background-color: #e4e4e4;
+    background-color: var(--gray10);
     margin-left: 20px;
     margin-bottom: 10px;
     cursor: pointer;
@@ -182,7 +201,7 @@ font-size: 12px;
 line-height: 16px;
 text-align: center;
 
-color: #C7C7C7;
+color: var(--gray30);
 border:none;
 background-color: white;
 
@@ -200,7 +219,7 @@ height: 124px;
 margin: 30px;
 
 
-background: #F7F7F7;
+background: var(--gray05);
 border-radius: 8px;
 margin-left: 1em;
 

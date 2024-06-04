@@ -101,7 +101,7 @@ const QuizDetail = ({ quizs_data, setStep }) => {
               words.map((item, index) => (
                 <button key={index} className='quiz-btn' onClick={() =>{ checkAnswer(item);     setIsClicked(true);}} 
                 style={{
-                  backgroundColor: isClicked?"#C7C7C7": "white",
+                  backgroundColor: isClicked?"var(--gray30)": "white",
                   color: isClicked?"#ABABAB": "#1C1C1C"
                 }}
                 >

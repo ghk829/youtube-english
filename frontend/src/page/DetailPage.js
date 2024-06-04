@@ -28,7 +28,7 @@ const DetailPage = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        if (step < 2) {
+        if (step < 1) {
             setStep(step + 1)
         }
         else {
@@ -38,7 +38,6 @@ const DetailPage = () => {
 
     const stages = [
         { title: '쉐도잉하기', type: "video" },
-        { title: '받아쓰기', type: "quiz" },
         { title: '다시 풀기', type: "video" }
     ]
     const goToMain = () => {
@@ -252,7 +251,6 @@ console.log(mergedArray)
 
                             <div
                                 className='step-num'
-                                // onClick={() => { setStep(key) }}
                                 style={{
                                     backgroundColor: step >= key ? '#903FF6' : '#F0E6FD',
                                     color: step >= key ? 'white' : '#E2CEFC'
@@ -271,7 +269,7 @@ console.log(mergedArray)
 
                                 style={{
                                     backgroundColor: step - 1 >= key ? '#903FF6' : '#F0E6FD',
-                                    display: key === 2 ? 'none' : ''
+                                    display: key === 1 ? 'none' : ''
                                 }}
                             ></div>
                         </div>
@@ -280,7 +278,7 @@ console.log(mergedArray)
             </div>
 
             <div className='detail-type-wrapper'>
-                {step === 1 ?
+                {step === 3 ?
                     <QuizDetail quizs_data={quizs}
                         setStep={() => setStep(step + 1)} /> :
                     (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink} translations={translatedScripts}
@@ -297,7 +295,7 @@ console.log(mergedArray)
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
                 if (step === 0) {
                     setUnderstand(index);
-                } else if (step === 2) {
+                } else if (step === 1) {
                     setUnderstand_after(index);
                 }
             }} />}
