@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, } from "react-router-dom";
-import './mainPage.css'
+import './css/mainPage.css'
 import Chip from '../components/Chip';
 import axios from 'axios'
 import LongButton from '../components/LongButton'

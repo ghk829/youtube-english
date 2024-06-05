@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { useNavigate, useLocation } from "react-router-dom";
-import './detailPage.css'
+import './css/detailPage.css'
 import Modal from '../components/Modal';
 import VideoDetail from '../screen/VideoDetail';
-import QuizDetail from '../screen/QuizDetail';
 
 const DetailPage = () => {
     const navigate = useNavigate();
@@ -12,8 +11,6 @@ const DetailPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [scripts, setScripts] = useState([""])
     const [translatedScripts, setTranslatedScripts] = useState([""])
-    const [rawTranslatedScripts, setRawTranslatedScripts] = useState([""])
-    const [mergedScripts, setMergedScripts] = useState("")
     const [youtubeLink, setYoutubeLink] = useState("");
     const [isInData, setIsInData] = useState(false);
 
@@ -23,8 +20,6 @@ const DetailPage = () => {
     const [understand_after, setUnderstand_after] = useState(0);
 
     const [isFetching, setIsFetching] = useState(false);
-
-    const [quizs, setQuizs] = useState([]);
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -83,25 +78,6 @@ const DetailPage = () => {
 
             setTranslatedScripts(existingData.urls[existingUrlIndex].data.translatedScripts)
 
-            try {
-                
-                let wholescript =  existingData.urls[existingUrlIndex].data.translatedScripts.map(item => item.text).join(' ');
-                console.log("퀴즈 요청용 데이터");
-                console.log(wholescript)
-                var response2;
-                if (!quizs.data) {
-                    console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
-                    response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
-    
-                    setQuizs(response2.data)
-                    console.log("퀴즈 데이터")
-                    console.log(response2.data);
-                }
-            }
-            catch (error) {
-                console.error('Error fetching quizs:', error);
-            }
-            // setQuizs(existingData.urls[existingUrlIndex].data.quizs)
         }
         else{
 
@@ -117,7 +93,6 @@ const DetailPage = () => {
                     textArray = mergeTexts(textArray);
                     setScripts(textArray);
                     const mergedTexts = mergeAllTexts(textArray);
-                    setMergedScripts(mergedTexts);
     
                    const newScript = await translateSubtitle(mergedTexts);
                     console.log(newScript)
@@ -125,31 +100,12 @@ const DetailPage = () => {
                     setTranslatedScripts(newTranslatedScripts);
     
     
-                    if (newTranslatedScripts.length > 1 && !quizs.data) {
-
-                        try {
-                            let wholescript = mergedTexts;
-                            console.log("퀴즈 요청용 데이터");
-                            console.log(wholescript)
-                            var response2;
-                            if (!quizs.data) {
-                                console.log("퀴즈 요청 중... (/api/quizFromSubtitle) ")
-                                response2 = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/quizFromSubtitle`, { subtitles: wholescript });
-                
-                                setQuizs(response2.data)
-                                console.log("퀴즈 데이터")
-                                console.log(response2.data);
-                            }
-                        }
-                        catch (error) {
-                            console.error('Error fetching quizs:', error);
-                        }
+                    if (newTranslatedScripts.length) {
                         
                        existingData.urls.push({
                         videoId: videoId,
                         data: {
-                            translatedScripts: newTranslatedScripts,
-                            quizs: response2.data
+                            translatedScripts: newTranslatedScripts
                         }
                     });
     
@@ -239,11 +195,11 @@ console.log(mergedArray)
         const result = stringToJson(response.data);
         console.log("번역 완료")
         console.log(result)
-        setRawTranslatedScripts(result);
         return result;
     }
     return (
         <div className='detail-page'>
+            <h2>영상제목</h2>
             <div className='steps-header'>
                 {
                     stages.map((item, key) => (
@@ -276,14 +232,11 @@ console.log(mergedArray)
                     ))
                 }
             </div>
-
+            
             <div className='detail-type-wrapper'>
-                {step === 3 ?
-                    <QuizDetail quizs_data={quizs}
-                        setStep={() => setStep(step + 1)} /> :
-                    (youtubeLink && <VideoDetail scripts={scripts} url={youtubeLink} translations={translatedScripts}
+                    {youtubeLink && <VideoDetail url={youtubeLink} translations={translatedScripts}
                         autoPlay={location.state?.autoPlay}
-                        step={step} isModalOpen={setIsModalOpen} />)
+                        step={step} isModalOpen={setIsModalOpen}></VideoDetail>
                 }
             </div>
             <div className='return-btn' onClick={goToMain} style={{ zIndex: "10" }}>

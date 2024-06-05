@@ -1,27 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../page/detailPage.css';
+import '../page/css/detailPage.css';
 
-const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }) => {
+const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
   const videoRef = useRef(null);
   const [player, setPlayer] = useState(null);
-  const [displayedScripts, setDisplayedScripts] = useState([]);
   const [endScriptTime, setEndScriptTime] = useState(null);
   const stepRef = useRef(step);
   const endScriptTimeRef = useRef(endScriptTime);
   const repeatCountRef = useRef(1);
-  const durRef = useRef(0);
-  const translatedScriptsRef = useRef([]);
+  const [isStopped, setIsStopped] = useState(false);
   const [activeScriptIndex, setActiveScriptIndex] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isShadowing, setIsShadowing] = useState(false);
   const activeScriptIndexRef = React.useRef(null);
+  const [progress, setProgress] = useState(100)
 
 
-  const stages = [
-    { title: '쉐도잉하기', type: "video" },
-    { title: '받아쓰기', type: "quiz" },
-    { title: '다시 풀기', type: "video" }
-  ]
   useEffect(() => {
     stepRef.current = step;
 
@@ -30,9 +23,7 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       if (!autoPlay) {
         player.pauseVideo();
       }
-
     }
-
     endScriptTimeRef.current = endScriptTime;
   }, [step, endScriptTime]);
 
@@ -91,47 +82,57 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
 
   useEffect(() => {
     let intervalId;
-  
+    let progressIntervalId;
+
     if (player && step === 0) {
       intervalId = setInterval(() => {
         var currentTime = player.getCurrentTime();
-  
+
         const activeIndex = translations.findIndex((script, index) => {
           const nextScriptStart = index + 1 < translations.length ? parseFloat(translations[index + 1].start) : Number.MAX_SAFE_INTEGER;
           const currentScriptStart = parseFloat(script.start);
           return currentScriptStart <= currentTime && currentTime < nextScriptStart;
         });
-  
+
         if (activeIndex !== activeScriptIndex) {
           setActiveScriptIndex(activeIndex);
           activeScriptIndexRef.current = activeIndex;
           repeatCountRef.current = 1;
+          setProgress(100); 
         }
-  
+
         if (activeIndex !== -1 && repeatCountRef.current > 0) {
           const currentScript = translations[activeIndex];
           const scriptDur = parseFloat(currentScript.dur);
           const scriptEnd = parseFloat(currentScript.start) + scriptDur;
-  
+
           if (currentTime >= scriptEnd - 0.3) {
             player.pauseVideo();
+            setIsStopped(true)
             setIsShadowing(true);
             repeatCountRef.current -= 1;
-  
+            
             setTimeout(() => {
-              if (repeatCountRef.current === 0) {
+              clearInterval(progressIntervalId); 
                 player.playVideo();
                 setIsShadowing(false)
-              }
-            }, 1000*scriptDur+1000); 
+                setIsStopped(false)
+                setProgress(0); 
+            }, 1000 * 15);
+            const progressDecrement = 100 / (1000 * scriptDur * 2 / 90); 
+            progressIntervalId = setInterval(() => {
+              setProgress((prevProgress) => Math.max(0, prevProgress - progressDecrement)); 
+            }, 90);
           }
+          
+          
         }
-    
+
       }, 500);
     }
-  
+
     return () => clearInterval(intervalId);
-  }, [player, translations, activeScriptIndex, displayedScripts, step]);
+  }, [player, translations, activeScriptIndex, step]);
 
   const onPlayerStateChange = (event) => {
 
@@ -139,52 +140,31 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
       isModalOpen(true);
     }
   };
-  
-  const rewindVideoToScriptSegment = (start, dur) => {
-    if (player) {
-      const startTimeSeconds = parseFloat(start);
-      const durationSeconds = parseFloat(dur);
-      durRef.current = dur;
-      const endTimeSeconds = startTimeSeconds + durationSeconds;
-      player.seekTo(startTimeSeconds, true);
-      setEndScriptTime(endTimeSeconds);
-      repeatCountRef.current = 1;
-    }
-  };
+
   return (
     <div className='video-detail'>
       {autoPlay ? <div>Auto Playing</div> : <></>}
-      <h3>영상 제목</h3>
       <div className='video-wrapper'>
         <div ref={videoRef}></div>
       </div>
-        <div className='shadowing-guide'>
-        {isShadowing?<>발음과 억양을 집중해서 들어보세요.</>:<></>}
-          </div>
+      <div className='shadowing-guide'>
+        {step===0&&!isStopped ? <>1. 발음과 억양을 집중해서 들어보세요.</> : <></>}
+        {isShadowing&&step===0&&isStopped ? <>2. 20초 동안 영상을 똑같이 따라해 보세요.</> : <></>}
+        {step===1 ? <>자막 없이 영상을 들어보세요.</> : <></>}
+      </div>
       {step === 0 && translations.length > 1 ? <div className='scripts-wrapper'>
 
-        {
-          
+        { 
+
           translations.map((item, key) => (
             <>
-              <div className={`script ${key === activeScriptIndex ? 'active' : ''}`}
+              <div className={`script}`}
                 key={key}
-                onClick={() => rewindVideoToScriptSegment(item.start, item.dur)}
                 style={{ cursor: "pointer" }}
 
               >
-                {/* <div className='script-num'>{key + 1}/{translations.length}</div> */}
-                <div className='script-content'>{item.text}</div>
-                <div className='script-translation'>{item.translatedText}</div>
-
-              </div>
-
-
-              <div className='bookmark'>
-                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5 3.5835H19V21.5835L12 18.6668L5 21.5835V3.5835ZM7 5.5835V18.5835L12 16.5002L17 18.5835V5.5835H7Z" fill="#1C1C1C" />
-                </svg>
-
+                <div className='script-content'>{key === activeScriptIndex ? item.text : <></>}</div>
+                <div className='script-translation'>{key === activeScriptIndex ? item.translatedText : <></>}</div>
 
               </div>
             </>
@@ -192,9 +172,8 @@ const VideoDetail = ({ scripts, translations, url, step, isModalOpen, autoPlay }
           ))
         }
 
-<div className='shadowing-bar' style={{backgroundColor: "red"}}>
-  프로그레스 바
-            </div>
+        {isStopped?<div className='shadowing-bar' style={{width: `${progress}%`}}></div>:<></>}
+
       </div>
 
         :
