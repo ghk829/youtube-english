@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef , } from 'react';
 import '../page/css/detailPage.css';
+import LongButton from '../components/LongButton'
+import { useNavigate, } from "react-router-dom";
 
 const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen}) => {
   const videoRef = useRef(null);
+  const navigate = useNavigate();
   const [player, setPlayer] = useState(null);
   const [endScriptTime, setEndScriptTime] = useState(null);
   const stepRef = useRef(step);
@@ -27,7 +30,9 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen}) =
     }
     endScriptTimeRef.current = endScriptTime;
   }, [step, endScriptTime]);
-
+  const goToLogin = () => {
+    navigate("/login");
+};
   useEffect(() => {
     const initializePlayer = () => {
 
@@ -168,7 +173,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen}) =
       <div className='shadowing-guide'>
         {step===0&&!isStopped ? <>1. 발음과 억양을 집중해서 들어보세요.</> : <></>}
         {isShadowing&&step===0&&isStopped ? <>2. 20초 동안 영상을 똑같이 따라해 보세요.</> : <></>}
-        {step===1 ? <>자막 없이 영상을 들어보세요.</> : <></>}
+        {step===1 ? <>자막 없이 영상을 들어보세요.</> : <></>} 
       </div>
       {step === 0 && translations.length > 1 ? <div className='scripts-wrapper'>
 
@@ -199,6 +204,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen}) =
           step === 0 && translations.length < 1 ? <div>로딩중...</div> : <></>
         }
         </>}
+        {step===1 ? <><LongButton onClick={()=>isModalOpen(true)}>학습 종료하기</LongButton></> : <></>}
 
     </div>
   );

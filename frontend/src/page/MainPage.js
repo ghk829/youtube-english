@@ -10,7 +10,6 @@ import homeIcon from '../img/icon/homeIcon.svg'
 const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
-    const [selected, setSelected] = useState('시사/교양');
     const [autoPlay, setAutoplay] = useState(false);
     const [videoList, setVideoList] = useState([
         { url: "https://www.youtube.com/watch?v=y8Pomwve_OQ", title: null },
