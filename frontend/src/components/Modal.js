@@ -3,10 +3,7 @@ import './modal.css'
 import LongButton from './LongButton';
 import Chip from './Chip';
 
-const Modal = ({ onClose, step, onSelect  }) => {
-    const buttons = ["0%", "30%", "50%", "70%", "90% 이상"];
-    const states = ["전", "전", "후", "후"]
-    const [selected_before, setSelected_before] = useState(null);
+const Modal = ({ onClose }) => {
 
     
     return (
@@ -15,27 +12,14 @@ const Modal = ({ onClose, step, onSelect  }) => {
             </div>
             <div className='modal-body'>
                 <div className='modal-header'>
-                    학습 {states[step]} <br />
-                    내용을 얼마나 이해하셨나요?
+                    오늘도 수고했어요!
                 </div>
                 <div className='modal-content'>
-                    {
-                        buttons.map((item, index) => (
-                            <Chip
-                            key={index}
-                            content={item}
-                            onClick={() => {
-                                setSelected_before(index); 
-                                onSelect(index); 
-                            }}
-                            clicked={selected_before === index}
-                            ></Chip>
-                        ))
-                    }
+
                 </div>
                 <LongButton
                 colour="purple"
-                content="확인하기"
+                content="닫기"
                 onClick={onClose}
                 />
             </div>

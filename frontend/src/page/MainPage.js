@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, } from "react-router-dom";
-import './mainPage.css'
+import './css/mainPage.css'
 import Chip from '../components/Chip';
 import axios from 'axios'
 import LongButton from '../components/LongButton'
@@ -70,7 +70,6 @@ const MainPage = () => {
             <header className='main-header'>
                 <div className='profile'
                     onClick={goToLogin}>
- <object data={homeIcon}></object>
                 </div>
                 <div className='user-name'>반가워요, {username}님</div>
             </header>
@@ -103,23 +102,16 @@ const MainPage = () => {
 
             <div className='today-sentence-wrapper'>
                 <h2>오늘의 문장🔮</h2>
-                <h2>Good things don't come easy</h2>
-                <LongButton>관련 영상 보러 가기</LongButton>
+                <h1>Good things don't come easy</h1>
+                <LongButton width={"240px"}>관련 영상 보러 가기</LongButton>
                 
 
             </div>
 
 
             {/* 비디오 컨텐츠 */}
-            <div className='explore-detail-btn' >
+            <div className='video-category' >
                 미국 영어
-            </div>
-            {/* 탐색 버튼 */}
-            <div className='explore-btn-wrapper'>
-                {
-                    buttonList.map((item) => (
-                        <Chip content={item} onClick={() => setSelected(item)} clicked={item === selected} filled={true} />))
-                }
             </div>
 
             {/* 비디오 */}
@@ -173,11 +165,8 @@ const MainPage = () => {
             <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
 
-                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.75 5.69L17.75 10.19V18H15.75V12H9.75V18H7.75V10.19L12.75 5.69ZM12.75 3L2.75 12H5.75V20H11.75V14H13.75V20H19.75V12H22.75" fill="#913FF7" />
-                        <path d="M7.75 10L12.75 5.5L17.75 10V18H15.75V12H9.75V18.5H7.75V10Z" fill="#913FF7" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.75 4.82732L18.25 9.77732V18.5H15.25V12.5H10.25V19H7.25V9.77732L12.75 4.82732ZM8.25 10.2227V18H9.25V11.5H16.25V17.5H17.25V10.2227L12.75 6.17268L8.25 10.2227Z" fill="#913FF7" />
-                    </svg>
+
+                <object data={homeIcon}></object>
 
                     홈
                 </button>

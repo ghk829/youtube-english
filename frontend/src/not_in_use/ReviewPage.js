@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useNavigate, useLocation } from "react-router-dom";
 import mainIllust from '../img/Illustration.png';
-import './reviewPage.css'
+import './css/reviewPage.css'
 import LongButton from '../components/LongButton'
 
 const ReviewPage = () => {

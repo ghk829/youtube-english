@@ -4,7 +4,7 @@ import kakaoLogin from '../img/kakao_login.png';
 import { useNavigate } from "react-router-dom";
 import mainIllust from '../img/Illustration.png';
 import { jwtDecode } from "jwt-decode";
-import './loginPage.css'
+import './css/loginPage.css'
 
 const LoginPage = () => {
     const navigate = useNavigate();
