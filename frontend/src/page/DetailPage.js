@@ -27,7 +27,7 @@ const DetailPage = () => {
             setStep(step + 1)
         }
         else {
-            goToReview();
+            goToMain();
         }
     };
 
@@ -38,11 +38,6 @@ const DetailPage = () => {
     const goToMain = () => {
         navigate("/");
     };
-
-    const goToReview = () => {
-        navigate("/review", { state: { understand, understand_after } });
-    };
-
 
     useEffect(() => {
         setYoutubeLink(location.state?.link)
@@ -234,7 +229,7 @@ console.log(mergedArray)
             </div>
             
             <div className='detail-type-wrapper'>
-                    {youtubeLink && <VideoDetail url={youtubeLink} translations={translatedScripts}
+                    {youtubeLink && <VideoDetail onEnd={closeModal}  url={youtubeLink} translations={translatedScripts}
                         autoPlay={location.state?.autoPlay}
                         step={step} isModalOpen={setIsModalOpen}></VideoDetail>
                 }

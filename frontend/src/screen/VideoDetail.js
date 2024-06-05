@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../page/css/detailPage.css';
 
-const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
+const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen}) => {
   const videoRef = useRef(null);
   const [player, setPlayer] = useState(null);
   const [endScriptTime, setEndScriptTime] = useState(null);
@@ -13,6 +13,7 @@ const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
   const [isShadowing, setIsShadowing] = useState(false);
   const activeScriptIndexRef = React.useRef(null);
   const [progress, setProgress] = useState(100)
+  const durRef = useRef(0);
 
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
         videoId: videoId,
         playerVars: {
           showinfo: '0',
-          controls: '0',
+          controls: '1',
           autohide: '1',
           enablejsapi: '1',
           origin: "https://youtube-english-nine.vercel.app"
@@ -136,11 +137,28 @@ const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
 
   const onPlayerStateChange = (event) => {
 
-    if ((stepRef.current ===1) && event.data === window.YT.PlayerState.ENDED) {
-      isModalOpen(true);
+    if (event.data === window.YT.PlayerState.ENDED) {
+      onEnd();
+
+      if(stepRef.current ===1){
+
+        isModalOpen(true);
+      }
+
     }
   };
 
+  const rewindVideoToScriptSegment = (start, dur) => {
+    if (player) {
+      const startTimeSeconds = parseFloat(start);
+      const durationSeconds = parseFloat(dur);
+      durRef.current = dur;
+      const endTimeSeconds = startTimeSeconds + durationSeconds;
+      player.seekTo(startTimeSeconds, true);
+      setEndScriptTime(endTimeSeconds);
+      repeatCountRef.current = 1;
+    }
+  };
   return (
     <div className='video-detail'>
       {autoPlay ? <div>Auto Playing</div> : <></>}

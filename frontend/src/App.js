@@ -3,7 +3,6 @@ import './App.css';
 import LoginPage from './page/LoginPage';
 import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
-import ReviewPage from './page/ReviewPage';
 function App() {
   return (
     <BrowserRouter>
@@ -26,11 +25,6 @@ function App() {
           element={<DetailPage />}
         />
 
-<Route
-          exact
-          path='/review'
-          element={<ReviewPage />}
-        />
 
         {/* <Route
         exact
