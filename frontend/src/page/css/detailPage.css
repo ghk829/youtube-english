@@ -168,3 +168,30 @@ background: linear-gradient(92.45deg, #D2B1FC -5.06%, #913FF7 104.69%);
 border-radius: 8px;
 
 }
+
+.shadowing-guide{
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+
+margin: 10px;
+width: 335px;
+height: 42px;
+
+background: #F7F7F7;
+border-radius: 8px;
+
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+font-family: 'Pretendard Variable';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 18px;
+color: #1C1C1C;
+
+}
