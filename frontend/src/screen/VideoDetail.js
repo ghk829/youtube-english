@@ -118,8 +118,8 @@ const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
                 setIsShadowing(false)
                 setIsStopped(false)
                 setProgress(0); 
-            }, 1000 * 15);
-            const progressDecrement = 100 / (1000 * scriptDur * 2 / 90); 
+            }, 1000 * 20);
+            const progressDecrement = 100 / (1000 * 20 / 90); 
             progressIntervalId = setInterval(() => {
               setProgress((prevProgress) => Math.max(0, prevProgress - progressDecrement)); 
             }, 90);
@@ -136,7 +136,7 @@ const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
 
   const onPlayerStateChange = (event) => {
 
-    if ((stepRef.current === 0 || stepRef.current === 2) && event.data === window.YT.PlayerState.ENDED) {
+    if ((stepRef.current ===1) && event.data === window.YT.PlayerState.ENDED) {
       isModalOpen(true);
     }
   };
@@ -172,7 +172,7 @@ const VideoDetail = ({ translations, url, step, isModalOpen, autoPlay }) => {
           ))
         }
 
-        {isStopped?<div className='shadowing-bar' style={{width: `${progress}%`}}></div>:<></>}
+        {isStopped?<div className='bar-wrapper'><div className='shadowing-bar' style={{width: `${progress}%`}}></div></div>:<></>}
 
       </div>
 
