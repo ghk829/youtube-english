@@ -4,21 +4,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import './css/detailPage.css'
 import Modal from '../components/Modal';
 import VideoDetail from '../screen/VideoDetail';
+import arrowLeft from '../img/icon/arrowLeft.svg'
 
 const DetailPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [scripts, setScripts] = useState([""])
     const [translatedScripts, setTranslatedScripts] = useState([""])
     const [youtubeLink, setYoutubeLink] = useState("");
-    const [isInData, setIsInData] = useState(false);
-
-
     const [step, setStep] = useState(0);
-    const [understand, setUnderstand] = useState(0);
-    const [understand_after, setUnderstand_after] = useState(0);
-
     const [isFetching, setIsFetching] = useState(false);
 
     const closeModal = () => {
@@ -56,48 +50,71 @@ const DetailPage = () => {
         if (!videoIdMatch) {
             alert('유효한 YouTube URL이 아닙니다.');
             setIsFetching(false);
+            goToMain();
             return;
         }
 
         const videoId = videoIdMatch[1];
         let existingData = JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}');
-        let isInData = false;
-
         const existingUrlIndex = existingData.urls.findIndex(item => item.videoId === videoId);
 
-       
+
         if (existingUrlIndex !== -1) {
-            setIsInData(true)
-            
             console.log(existingData.urls[existingUrlIndex].data)
 
             setTranslatedScripts(existingData.urls[existingUrlIndex].data.translatedScripts)
 
         }
-        else{
+        else {
+            fetchTransition(existingData, videoId);
+        }
 
-            if (!isInData ) {
-                try {
-                    
-                    console.log("자막 요청 링크:", location.state?.link);
-                    console.log("자막 요청 중... (/api/subtitles)");
+
+        setIsFetching(false);
+
+    };
+
+
+    const fetchTransition = async (existingData, videoId) =>{
+        
+        try {
+
+            const existingUrlIndex = existingData.urls.findIndex(item => item.videoId === videoId);
+
+            console.log("자막 요청 링크:", location.state?.link);
+            console.log("자막 요청 중... (/api/subtitles)");
+
+            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
+            let textArray = response.data.slice(0, Math.min(response.data.length, 30));
+
+            textArray = mergeTexts(textArray);
+            const mergedTexts = mergeAllTexts(textArray);
+
+            const newScript = await translateSubtitle(mergedTexts);
+            console.log(newScript)
+            const newTranslatedScripts = await mergeJsonArrays(textArray, newScript);
+            setTranslatedScripts(newTranslatedScripts);
+
+            if (existingUrlIndex !== -1) {
+                const tempData = existingData;
+                localStorage.removeItem('urlData')
+                
+                if (newTranslatedScripts.length) {
+
+                    tempData.urls[existingUrlIndex] = {
+                        videoId: videoId,
+                        data: {
+                            translatedScripts: newTranslatedScripts
+                        }
+                    };
     
-                    const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
-                    let textArray = response.data.slice(0, 17);
-    
-                    textArray = mergeTexts(textArray);
-                    setScripts(textArray);
-                    const mergedTexts = mergeAllTexts(textArray);
-    
-                   const newScript = await translateSubtitle(mergedTexts);
-                    console.log(newScript)
-                    const newTranslatedScripts = await mergeJsonArrays(textArray, newScript);
-                    setTranslatedScripts(newTranslatedScripts);
-    
-    
-                    if (newTranslatedScripts.length) {
-                        
-                       existingData.urls.push({
+                    localStorage.setItem('urlData', JSON.stringify(existingData));
+                }
+            }
+            else{
+                if (newTranslatedScripts.length) {
+
+                    existingData.urls.push({
                         videoId: videoId,
                         data: {
                             translatedScripts: newTranslatedScripts
@@ -109,26 +126,19 @@ const DetailPage = () => {
                     }
     
                     localStorage.setItem('urlData', JSON.stringify(existingData));
-                    }
-    
-                } catch (error) {
-                    console.error('자막을 가져오는 중 오류 발생:', error);
-                    alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
                 }
             }
+
+        } catch (error) {
+            console.error('자막을 가져오는 중 오류 발생:', error);
+            alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
         }
 
-
-        setIsFetching(false);
-        
-        setIsInData(false)
-    };
-
-
+    }
 
     const mergeTexts = (data) => {
         const result = [];
-    
+
         for (let i = 0; i < data.length; i += 2) {
             const chunk = data.slice(i, i + 2);
             const start = chunk[0].start;
@@ -139,13 +149,13 @@ const DetailPage = () => {
                 dur = (parseFloat(data[i + 2].start) - parseFloat(start)).toFixed(1);
             }
             const text = chunk.map(item => item.text).join(' ');
-    
+
             result.push({ start, dur, text });
         }
-    
+
         return result;
     }
-    
+
     function mergeAllTexts(data) {
         return data.map(item => item.text + '\n').join('');
     }
@@ -168,7 +178,7 @@ const DetailPage = () => {
             }
 
         }
-console.log(mergedArray)
+        console.log(mergedArray)
         return mergedArray;
 
 
@@ -194,7 +204,13 @@ console.log(mergedArray)
     }
     return (
         <div className='detail-page'>
-            <h2>영상제목</h2>
+
+            <header>
+                <div className='return-btn'>
+                    <object data={arrowLeft} onClick={goToMain} ></object>
+                </div>
+                <h2>영상제목</h2></header>
+
             <div className='steps-header'>
                 {
                     stages.map((item, key) => (
@@ -227,26 +243,17 @@ console.log(mergedArray)
                     ))
                 }
             </div>
-            
-            <div className='detail-type-wrapper'>
-                    {youtubeLink && <VideoDetail onEnd={closeModal}  url={youtubeLink} translations={translatedScripts}
-                        autoPlay={location.state?.autoPlay}
-                        step={step} isModalOpen={setIsModalOpen}></VideoDetail>
-                }
-            </div>
-            <div className='return-btn' onClick={goToMain} style={{ zIndex: "10" }}>
-                <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 1.5L1.5 7L7 12.5" stroke="white" strokeWidth="2" />
-                </svg>
 
+            <div className='detail-type-wrapper'>
+                {youtubeLink && <VideoDetail onEnd={closeModal} url={youtubeLink} translations={translatedScripts}
+                    autoPlay={location.state?.autoPlay}
+                    step={step} isModalOpen={setIsModalOpen} ></VideoDetail>
+                }
             </div>
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
-                if (step === 0) {
-                    setUnderstand(index);
-                } else if (step === 1) {
-                    setUnderstand_after(index);
-                }
             }} />}
+                        <button onClick={()=>fetchTransition(JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}') , youtubeLink.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1])}>자막 재요청하기</button>
+
         </div>
     )
 }

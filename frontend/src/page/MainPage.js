@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, } from "react-router-dom";
 import './css/mainPage.css'
-import Chip from '../components/Chip';
 import axios from 'axios'
 import LongButton from '../components/LongButton'
 import homeIcon from '../img/icon/homeIcon.svg'
@@ -10,7 +9,6 @@ import homeIcon from '../img/icon/homeIcon.svg'
 const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
-    const [selected, setSelected] = useState('시사/교양');
     const [autoPlay, setAutoplay] = useState(false);
     const [videoList, setVideoList] = useState([
         { url: "https://www.youtube.com/watch?v=y8Pomwve_OQ", title: null },
@@ -41,7 +39,6 @@ const MainPage = () => {
     };
 
     const username = "Messi"
-    const buttonList = ["시사/교양", "영어 인터뷰", "동기부여"]
 
     const handleInputChange = (event) => {
         setCustomUrl(event.target.value);
