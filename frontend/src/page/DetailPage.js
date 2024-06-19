@@ -206,7 +206,7 @@ const DetailPage = () => {
         <div className='detail-page'>
 
             <header>
-                <div className='return-btn'>
+                <div className='return-btn' onClick={goToMain}>
                     <object data={arrowLeft} onClick={goToMain} ></object>
                 </div>
                 <h2>영상제목</h2></header>

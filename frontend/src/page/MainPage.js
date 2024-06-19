@@ -28,8 +28,16 @@ const MainPage = () => {
           const videosWithTitles = await Promise.all(promises);
           setVideoList(videosWithTitles);
         }
+
+        const videoTest = async () =>{
+            const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/video/all`);
+            console.log(response.data)
+            return response.data;
+        }
+    
     
         fetchTitles();
+        videoTest();
       }, []);
     const goToLogin = () => {
         navigate("/login");

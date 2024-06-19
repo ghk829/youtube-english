@@ -1,8 +1,9 @@
-const test = require("express").Router();
+const getVideoUrl = require("express").Router();
 const { MongoClient } = require('mongodb');
+const mongoUri = process.env.MONGO_URL;
 
 
-test.get("/test", async function (req, res, next) {
+getVideoUrl.get("/video/all", async function (req, res, next) {
 
 const client = new MongoClient(mongoUri, {
 });
@@ -16,12 +17,11 @@ async function run() {
 
         const collection = db.collection('youtube_videos');  
 
-        const documents = await collection.find().toArray();
-        console.log(documents);
-        res.send("Something done");
+        const documents = await collection.find();
+        res.json(documents);
 
     } catch (err) {
-      res.send(err);
+      console.error(err);
     } finally {
         await client.close();
     }
@@ -30,4 +30,4 @@ async function run() {
 run();
 });
 
-module.exports = test;
+module.exports = getVideoUrl;
