@@ -3,6 +3,7 @@ import './App.css';
 import LoginPage from './page/LoginPage';
 import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
+import AddVideo from './page/AddVideo'
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +25,12 @@ function App() {
           path='/detail'
           element={<DetailPage />}
         />
+        <Route
+          exact
+          path='/admin/video/add'
+          element={<AddVideo />}
+        />
+
 
 
         {/* <Route

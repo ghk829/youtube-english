@@ -9,41 +9,27 @@ import homeIcon from '../img/icon/homeIcon.svg'
 const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
-    const [autoPlay, setAutoplay] = useState(false);
+    // const [autoPlay, setAutoplay] = useState(false);
     const [videoList, setVideoList] = useState([
-        { url: "https://www.youtube.com/watch?v=y8Pomwve_OQ", title: null },
-        { url: "https://www.youtube.com/shorts/bO1BcFk2TRA", title: null },
-        { url: "http://www.youtube.com/watch?v=MBRqu0YOH14", title: null },
-        { url: "http://www.youtube.com/watch?v=U5L22eeGQUc", title: null }
     ]);
 
 
-    useEffect(() => {
-        async function fetchTitles() {
-          const promises = videoList.map((video) =>
-            getTitle(video.url).then((titleData) => {
-              return { ...video, title: titleData.title };
-            })
-          );
-          const videosWithTitles = await Promise.all(promises);
-          setVideoList(videosWithTitles);
-        }
 
-        const videoTest = async () =>{
-            const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/video/all`);
-            console.log(response.data)
+    useEffect(() => {
+
+
+        const videoTest = async () => {
+            const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
+            setVideoList(response.data)
             return response.data;
         }
-    
-    
-        fetchTitles();
         videoTest();
-      }, []);
+    }, []);
     const goToLogin = () => {
         navigate("/login");
     };
     const goToDetail = (link) => {
-        navigate('/detail', { state: { link, autoPlay } });
+        navigate('/detail', { state: { link } });
     };
 
     const username = "Messi"
@@ -62,12 +48,16 @@ const MainPage = () => {
         return videoId;
     }
 
-    const getTitle = async (url) =>{
-        const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/title`, { videoUrl:url});
-        return response.data;
+
+    const groupByCategory = (videoList) => {
+        return videoList.reduce((acc, item) => {
+            if (!acc[item.category]) {
+                acc[item.category] = [];
+            }
+            acc[item.category].push(item);
+            return acc;
+        }, {});
     }
-
-
     return (
         <div className='main-page'>
 
@@ -81,7 +71,7 @@ const MainPage = () => {
 
             {/* 유저 통계 */}
             <nav>
-                <div className='studied-wrapper'>
+                <div className='studied-wrapper' >
                     공부한 영상
                     <div className='studied-number'>
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -109,36 +99,41 @@ const MainPage = () => {
                 <h2>오늘의 문장🔮</h2>
                 <h1>Good things don't come easy</h1>
                 <LongButton width={"240px"}>관련 영상 보러 가기</LongButton>
-                
+
 
             </div>
 
 
-            {/* 비디오 컨텐츠 */}
-            <div className='video-category' >
-                미국 영어
-            </div>
-
-            {/* 비디오 */}
-            <div className='explore-videos'>
-                {
-                    videoList.map((item, key) => (
-                        <div className='explore-video'>
-                            <div className='explore-video-content' onClick={() => goToDetail(item.url)}>
-
-                                <img
-                                    src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
-                                    alt={item}
-                                    width="250"
-                                    height="165"
-                                    style={{ borderRadius: "20px" }}
-                                />
+{/* 비디오 */}
+<div className='explore-videos'>
+    {
+        Object.keys(groupByCategory(videoList)).map((category, key) => (
+            <div key={key} className='category-container'>
+                <div className='video-category'>{category}</div>
+                <div className='explore-video-list'>
+                    {
+                        groupByCategory(videoList)[category].map((item, index) => (
+                            <div key={index} className='explore-video'>
+                                <div className='explore-video-content' onClick={() => goToDetail(item)}>
+                                    <img
+                                        src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
+                                        alt={item}
+                                        width="250"
+                                        height="165"
+                                        style={{ borderRadius: "20px" }}
+                                    />
+                                </div>
+                                <div className='explore-video-title'>{item.title}</div>
                             </div>
-                            <div className='explore-video-title' >{item.title}</div>
-                        </div>
-                    ))
-                }
+                        ))
+                    }
+                </div>
             </div>
+        ))
+    }
+</div>
+
+
 
             {/* 폼 */}
             {/* <div>
@@ -171,7 +166,7 @@ const MainPage = () => {
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
 
 
-                <object data={homeIcon}></object>
+                    <object data={homeIcon}></object>
 
                     홈
                 </button>

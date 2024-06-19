@@ -14,6 +14,7 @@ const DetailPage = () => {
     const [youtubeLink, setYoutubeLink] = useState("");
     const [step, setStep] = useState(0);
     const [isFetching, setIsFetching] = useState(false);
+    const [subtitles, setSubtitles] = useState([]);
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -34,10 +35,11 @@ const DetailPage = () => {
     };
 
     useEffect(() => {
-        setYoutubeLink(location.state?.link)
+        setYoutubeLink(location.state?.link.url)
+        setSubtitles(location.state?.link.subtitles)
         if (!isFetching) {
 
-            fetchSubtitles();
+            // fetchSubtitles();
 
         }
     }, [location.state]);
@@ -245,7 +247,7 @@ const DetailPage = () => {
             </div>
 
             <div className='detail-type-wrapper'>
-                {youtubeLink && <VideoDetail onEnd={closeModal} url={youtubeLink} translations={translatedScripts}
+                {youtubeLink && <VideoDetail onEnd={closeModal} url={youtubeLink} translations={subtitles}
                     autoPlay={location.state?.autoPlay}
                     step={step} isModalOpen={setIsModalOpen} ></VideoDetail>
                 }
