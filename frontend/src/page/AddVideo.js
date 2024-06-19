@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
 const AddVideo = () => {
+    const navigate = useNavigate();
     const [newVideo, setNewVideo] = useState({
         category: '',
         url: '',
@@ -201,4 +203,4 @@ const AddVideo = () => {
     )
 }
 
-export default AddVideo
+export default AddVideo;

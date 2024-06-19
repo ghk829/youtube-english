@@ -96,7 +96,7 @@ const MainPage = () => {
             </nav>
 
             <div className='today-sentence-wrapper'>
-                <h2>오늘의 문장🔮</h2>
+                <h2 onClick={()=> navigate("/video-add")}>오늘의 문장🔮</h2>
                 <h1>Good things don't come easy</h1>
                 <LongButton width={"240px"}>관련 영상 보러 가기</LongButton>
 
