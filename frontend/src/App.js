@@ -3,7 +3,8 @@ import './App.css';
 import LoginPage from './page/LoginPage';
 import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
-import AddVideo from './page/AddVideo'
+import AddVideo from './page/AddVideo';
+
 function App() {
   return (
     <BrowserRouter>
@@ -27,7 +28,7 @@ function App() {
         />
         <Route
           exact
-          path='/admin/video/add'
+          path='/video-add'
           element={<AddVideo />}
         />
 
