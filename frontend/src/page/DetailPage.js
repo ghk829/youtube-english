@@ -16,17 +16,6 @@ const DetailPage = () => {
     const [isFetching, setIsFetching] = useState(false);
     const [subtitles, setSubtitles] = useState([]);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        localStorage.setItem('currentDate', (parseInt(localStorage.getItem('currentDate'))) + 1);
-        if (step < 1) {
-            setStep(step + 1)
-        }
-        else {
-            goToMain();
-        }
-    };
-
     const stages = [
         { title: '쉐도잉하기', type: "title" },
         { title: '자막 없이 보기', type: "no_title" },
@@ -35,6 +24,18 @@ const DetailPage = () => {
     const goToMain = () => {
         navigate("/");
     };
+
+    
+    const closeModal = () => {
+        setIsModalOpen(false);
+        if(step===stages.length-1){
+            
+        localStorage.setItem('currentDate', (parseInt(localStorage.getItem('currentDate'))) + 1);
+            goToMain();
+            
+        }
+    };
+
 
     useEffect(() => {
         setYoutubeLink(location.state?.link.url)
@@ -89,7 +90,7 @@ const DetailPage = () => {
             console.log("자막 요청 중... (/api/subtitles)");
 
             const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: location.state?.link });
-            let textArray = response.data.slice(0, Math.min(response.data.length, 30));
+            let textArray = response.data.slice(0, Math.min(response.data.length, 60));
 
             textArray = mergeTexts(textArray);
             const mergedTexts = mergeAllTexts(textArray);
@@ -222,8 +223,8 @@ const DetailPage = () => {
                         <div
                             className='step-num'
                             style={{
-                                backgroundColor: step > key ? '#903FF6' : '#F0E6FD',
-                                color: step > key ? 'white' : '#E2CEFC'
+                                backgroundColor: step >= key ? '#903FF6' : '#F0E6FD',
+                                color: step >= key ? 'white' : '#E2CEFC'
                             }}
                         >
                             {key + 1}
@@ -232,7 +233,7 @@ const DetailPage = () => {
                             <div
                                 className='step-bar'
                                 style={{
-                                    backgroundColor: step > key + 1 ? '#903FF6' : '#F0E6FD',
+                                    backgroundColor: step > key ? '#903FF6' : '#F0E6FD',
                                     position: 'relative',
                                     top: '-30%',
                                     left: `${(key+1 * 120) / stages.length}%`
@@ -242,7 +243,7 @@ const DetailPage = () => {
                         <div
                             className='step-content'
                             style={{
-                                color: step > key ? '#333333' : '#ABABAB'
+                                color: step >= key ? '#333333' : '#ABABAB'
                             }}
                         >
                             {item.title}
@@ -255,7 +256,7 @@ const DetailPage = () => {
             <div className='detail-type-wrapper'>
                 {youtubeLink && <VideoDetail onEnd={closeModal} url={youtubeLink} translations={subtitles}
                     autoPlay={location.state?.autoPlay}
-                    step={step} isModalOpen={setIsModalOpen} ></VideoDetail>
+                    step={step} setStep={setStep} isModalOpen={setIsModalOpen} ></VideoDetail>
                 }
             </div>
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {

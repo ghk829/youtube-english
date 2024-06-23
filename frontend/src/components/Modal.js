@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './modal.css'
 import LongButton from './LongButton';
-import Chip from './Chip';
 import fireIcon from '../img/icon/fire.svg'
 
 const Modal = ({ onClose }) => {
