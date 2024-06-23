@@ -207,11 +207,11 @@ const DetailPage = () => {
     return (
         <div className='detail-page'>
 
-            <header>
+            <header style={{display:"flex", justifyContent:"center"}}>
                 <div className='return-btn' onClick={goToMain}>
                     <object data={arrowLeft} onClick={goToMain} ></object>
                 </div>
-                <h2>영상제목</h2></header>
+                <h2 style={{maxWidth: "250px", textAlign: "center"}}>{location.state?.link.title.slice(0, 25)}...</h2></header>
 
             <div className='steps-header'>
                 {
@@ -237,13 +237,18 @@ const DetailPage = () => {
                             <div className='step-bar'
 
                                 style={{
-                                    backgroundColor: step - 1 >= key ? '#903FF6' : '#F0E6FD',
-                                    display: key === 1 ? 'none' : ''
+                                    backgroundColor: step === 1 ? '#903FF6' : '#F0E6FD',
+                                    marginLeft: key === 1 ? '' : '44%',
+                                    marginRight: key === 1 ? '44%' : ''
                                 }}
                             ></div>
-                        </div>
+                            
+                            </div>
+                        
                     ))
+                    
                 }
+                
             </div>
 
             <div className='detail-type-wrapper'>
@@ -254,7 +259,7 @@ const DetailPage = () => {
             </div>
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
             }} />}
-                        <button onClick={()=>fetchTransition(JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}') , youtubeLink.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1])}>자막 재요청하기</button>
+                        {/* <button onClick={()=>fetchTransition(JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}') , youtubeLink.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1])}>자막 재요청하기</button> */}
 
         </div>
     )

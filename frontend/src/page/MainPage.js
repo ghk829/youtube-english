@@ -13,11 +13,17 @@ const MainPage = () => {
     const [videoList, setVideoList] = useState([
     ]);
 
+    const makeDescriptionMeta = ()  => {
+        const meta = document.createElement('meta');
+        meta.setAttribute('apple-mobile-web-app-capable', 'yes');
+        meta.setAttribute('viewport', "minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no");
+        document.getElementsByTagName('head')[0].appendChild(meta);    
+      }
 
 
     useEffect(() => {
 
-
+        makeDescriptionMeta();
         const videoTest = async () => {
             const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
             setVideoList(response.data)
@@ -32,10 +38,17 @@ const MainPage = () => {
         navigate('/detail', { state: { link } });
     };
 
+    const goToAdmin = () => {
+        navigate("/video-add");
+    };
     const username = "Messi"
 
     const handleInputChange = (event) => {
+        if(event.target.value==="mimos123"){
+            goToAdmin();
+        }
         setCustomUrl(event.target.value);
+        
     };
 
     const handleSubmit = (event) => {
@@ -96,9 +109,11 @@ const MainPage = () => {
             </nav>
 
             <div className='today-sentence-wrapper'>
-                <h2 onClick={()=> navigate("/video-add")}>오늘의 문장🔮</h2>
-                <h1>Good things don't come easy</h1>
-                <LongButton width={"240px"}>관련 영상 보러 가기</LongButton>
+                <h2>오늘의 문장🔮</h2>
+                <h1 style={{marginBottom: "48px"}}>Good things don't come easy</h1>
+
+
+                <LongButton width={"240px"} onClick={()=>goToDetail(videoList[0])}>관련 영상 보러 가기</LongButton>
 
 
             </div>
@@ -124,43 +139,45 @@ const MainPage = () => {
                                     />
                                 </div>
                                 <div className='explore-video-title'>{item.title}</div>
+
+                                
                             </div>
                         ))
                     }
                 </div>
+                
+                {key === 0 ?
+
+
+<div className='form-wrapper'>
+    <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e);
+    }} style={{ marginTop: "10px" }}>
+        <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
+        <input
+            className='form-input'
+            type="text"
+            id="youtubeLink"
+            value={customUrl}
+            placeholder='링크를 붙여 넣어주세요.'
+            onChange={handleInputChange}
+        />
+        <button
+            className='form-submit'
+            type="submit">제출</button>
+    </form>
+</div>
+:
+<></>}
             </div>
         ))
     }
+    
 </div>
 
 
 
-            {/* 폼 */}
-            {/* <div>
-                자동 재생 옵션
-                <input type='checkbox' value={autoPlay}
-                    onClick={() => setAutoplay(!autoPlay)}
-                ></input>
-            </div> */}
-            <div className='form-wrapper'>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit(e);
-                }} style={{ marginTop: "10px" }}>
-                    <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
-                    <input
-                        className='form-input'
-                        type="text"
-                        id="youtubeLink"
-                        value={customUrl}
-                        placeholder='링크를 붙여 넣어주세요.'
-                        onChange={handleInputChange}
-                    />
-                    <button
-                        className='form-submit'
-                        type="submit">제출</button>
-                </form>
-            </div>
             {/* 푸터 */}
             <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>

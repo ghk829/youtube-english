@@ -30,9 +30,6 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
       }
     }
   }, [step]);
-  const goToLogin = () => {
-    navigate("/login");
-  };
   useEffect(() => {
     const initializePlayer = () => {
 
@@ -48,8 +45,8 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
       const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/);
       const videoId = videoIdMatch ? videoIdMatch[1] : null;
       new window.YT.Player(videoRef.current, {
-        width: '370',
-        height: '219',
+        width: window.screen.width.toString(),
+        height: '240',
         videoId: videoId,
         playerVars: {
           showinfo: '0',
@@ -170,11 +167,13 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
       <div className='video-wrapper'>
         <div ref={videoRef}></div>
       </div>
-      <div className='shadowing-guide'>
-        {step === 0 && !isStopped ? <p> 1. 발음과 억양을 집중해서 들어보세요.</p> : <></>}
-        {isShadowing && step === 0 && isStopped ? <p> 2. 10초 동안 영상을 똑같이 따라해 보세요.</p> : <></>}
-        {step === 1 ? <p> 자막 없이 영상을 들어보세요.</p> : <></>}
-      </div>
+
+      {step === 0?   <div className='bar-wrapper'><div className='shadowing-bar' style={{ width: `${progress}%` }}></div></div> 
+:<></>}
+      {step === 1 ?
+          <div className='shadowing-guide'> <p> 자막 없이 영상을 들어보세요.</p>
+      </div> : <></>}
+      
       {step === 0 && translations.length > 1 ? <div className='scripts-wrapper'>
 
         {
@@ -186,16 +185,22 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
                 style={{ cursor: "pointer" }}
 
               >
-                <div className='script-content'>{key === activeScriptIndex ? item.text : <></>}</div>
-                <div className='script-translation'>{key === activeScriptIndex ? item.translatedText : <></>}</div>
+                <ul style={{margin: 0, padding: 0, listStylePosition: 'inside'}}>
+              <li  className='script-content'
+              style={{backgroundColor: key===activeScriptIndex?"#F0E6FD":""}}
+              
+              >
+                {1 ? item.text : <></>}</li>
+                </ul>
+{/* 
+              <div className='script-content'>{key === activeScriptIndex ? item.text : <></>}</div>
+                <div className='script-translation'>{key === activeScriptIndex ? item.translatedText : <></>}</div> */}
 
               </div>
             </>
 
           ))
         }
-
-        {isStopped ? <div className='bar-wrapper'><div className='shadowing-bar' style={{ width: `${progress}%` }}></div></div> : <></>}
 
       </div>
 
@@ -207,15 +212,17 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
       <div className='video-bottom-nav'>
         {step === 1 ? <><LongButton onClick={() => isModalOpen(true)} width="298px">학습 종료하기</LongButton></> :
 
-
-          <>
-            <div className='script-btn script-prev-btn' onClick={() => {rewindVideoToScriptSegment(prevStart); setIsStopped(false);  player.playVideo(); clearInterval(currentProgressInterval);  setProgress(100); setActiveScriptIndex(Math.min(activeScriptIndex-1, 0))}}>
-              <object data={arrowLeftWhite}></object>
-            </div>
-            <div className='script-btn script-next-btn' onClick={() => {rewindVideoToScriptSegment(nextStart); setIsStopped(false);  player.playVideo(); clearInterval(currentProgressInterval); setProgress(100);  setActiveScriptIndex(Math.max(activeScriptIndex+1, translations.length))}}>
-              <object data={arrowRightWhite}></object>
-            </div>
-          </>}
+<></>
+          // <div className='script-btn-wrapper'>
+          //   <div className='script-btn script-prev-btn' onClick={() => {rewindVideoToScriptSegment(prevStart); setIsStopped(false);  player.playVideo(); clearInterval(currentProgressInterval);  setProgress(100); setActiveScriptIndex(Math.min(activeScriptIndex-1, 0))}}>
+          //     <object data={arrowLeftWhite}></object>
+          //   </div>
+          //   <div></div>
+          //   <div className='script-btn script-next-btn' onClick={() => {rewindVideoToScriptSegment(nextStart); setIsStopped(false);  player.playVideo(); clearInterval(currentProgressInterval); setProgress(100);  setActiveScriptIndex(Math.max(activeScriptIndex+1, translations.length))}}>
+          //     <object data={arrowRightWhite}></object>
+          //   </div>
+          // </div>
+          }
       </div>
     </div>
   );

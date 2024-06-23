@@ -15,12 +15,10 @@
     align-items: center;
     justify-content: center;
     padding: 6px 20px;
-    gap: 18px;
 
     position: fixed;
     width: 320px;
-    height: 300px;
-    left: calc(50% - 320px/2 + 0.5px);
+    height: 248px;
     top: calc(50% - 300px/2);
     background: #FFFFFF;
     border-radius: 16px;
@@ -29,14 +27,16 @@
 
 .modal-header {
     width: 205px;
-    height: 56px;
+    height: 28px;
 
     font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;
+    margin-top: 32px;
     font-size: 18px;
     line-height: 28px;
     text-align: center;
+    margin-bottom: 42px;
 
     color: #1C1C1C;
 
@@ -44,6 +44,13 @@
     order: 0;
     flex-grow: 0;
 
+}
+
+.modal-icon{
+    margin: 0;
+    width: 67px;
+    height: 36px;
+    margin-bottom: 48px;
 }
 
 .modal-content {
@@ -54,26 +61,13 @@
     justify-content: center;
     align-content: flex-start;
     padding: 0px 20px;
-    gap: 12px;
 
     width: 270px;
     height: 76px;
 
 }
 
-.modal-content-btn {
-    cursor: pointer;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 16px;
-    gap: 12px;
-    border: 1px solid var(--gray30);
-    border-radius: 100px;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-
+.modal-btn{
+    
+    margin-bottom: 24px;
 }
