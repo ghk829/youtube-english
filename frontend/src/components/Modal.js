@@ -24,7 +24,7 @@ const Modal = ({ onClose }) => {
                 <div className='modal-btn'>
                 <LongButton
                 colour="purple"
-                content="닫기"
+                content="홈으로 돌아가기"
                 onClick={onClose}
                 />
                 </div>

@@ -86,7 +86,13 @@ header>h2 {
 .scripts-wrapper {
     overflow-y: scroll;
     width: 100%;
-    max-height: 260px;
+    height: 250px;
+}
+
+@media screen and (max-height: 700px ) {
+    .scripts-wrapper{
+        height: 8em;
+    }
 }
 
 .script {
@@ -276,11 +282,15 @@ margin-top: 10px;
 }
 
 .video-bottom-nav {
-    position: absolute;
+    position: fixed;
     display: flex;
+    align-items: center;
     justify-content: center;
-    bottom: 8%;
-    width: 90%;
+    background-color: white;
+    bottom: 0px;
+    height: 100px;
+    left: 0;
+    width: 100%;
 }
 
 object {
