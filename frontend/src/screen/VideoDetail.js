@@ -18,7 +18,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   const [nextStart, setNextStart] = useState(0)
   const activeScriptIndexRef = React.useRef(null);
   const [progress, setProgress] = useState(100)
-  const [isLast, setIsLast] = useState(0);
+  const [rewinded, setRewinded] = useState(false);
 
   //스텝 변경시
   useEffect(() => {
@@ -124,8 +124,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
 
           if (step === 0) {
 
-
-            if (currentTime >= scriptEnd - 0.3) {
+            if ((currentTime >= scriptEnd - 0.3 || (activeIndex === translations.length - 1 && currentTime + 5.5 >= scriptEnd))) {
               player.pauseVideo();
               setProgress(100);
               setIsStopped(true)
@@ -138,19 +137,21 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
                 setIsShadowing(false)
                 setIsStopped(false)
                 setProgress(0);
-              }, 1000 * scriptDur * 1.5);
+
+
+                if (activeIndex === translations.length - 1) {
+                  stepRef.current = stepRef.current + 1;
+                  setStep(stepRef.current);
+                }
+              }, 1000 * scriptDur * 1.5 + 1);
+
+
               const progressDecrement = 100 / (1000 * scriptDur * 1.5 / 80);
               progressIntervalId = setInterval(() => {
                 setProgress((prevProgress) => Math.max(0, prevProgress - progressDecrement));
               }, 80);
 
             }
-
-            if (activeIndex === translations.length - 1) {
-              stepRef.current = stepRef.current + 1;
-              setStep(stepRef.current);
-            }
-
           }
 
         }
@@ -185,8 +186,10 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   //start 시점 복귀 함수 
   //start는 youtube API 에서 받은 response의 자막.start 그대로 사용
   const rewindVideoToScriptSegment = (start) => {
-    if (player) {
+    if (player&&!isShadowing) {
       const startTimeSeconds = parseFloat(start);
+      setProgress(100);
+      setRewinded(true);
       player.seekTo(startTimeSeconds, true);
       repeatCountRef.current = 1;
     }
@@ -218,24 +221,24 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
 
               >
 
-<div className='script-num-wrapper'>
-                    <div className='script-num'
-                      style={{
-                        backgroundColor: activeScriptIndex=== key ? '#903FF6' : '#ABABAB',
-                        color: "white"
-                      }}
+                <div className='script-num-wrapper'>
+                  <div className='script-num'
+                    style={{
+                      backgroundColor: activeScriptIndex === key ? '#903FF6' : '#ABABAB',
+                      color: "white"
+                    }}
 
-                    >{key + 1}</div>
-                    </div>
+                  >{key + 1}</div>
+                </div>
                 <ul style={{ margin: 0, padding: 0 }}>
                   <li className='script-content'
                     style={{ backgroundColor: key === activeScriptIndex ? "#F0E6FD" : "" }}
                   >
 
-                    <div className='script-text'>{item.text}</div></li>
+                    <div className='script-text'>{item.text}</div>
 
                     {step === 2 && key === activeScriptIndex ? <div className='script-translation'>{item.translatedText}</div> : <></>}
-
+                  </li>
                 </ul>
 
               </div>

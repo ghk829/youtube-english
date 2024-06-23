@@ -4,6 +4,7 @@ import './css/mainPage.css'
 import axios from 'axios'
 import LongButton from '../components/LongButton'
 import homeIcon from '../img/icon/homeIcon.svg'
+import personOutlinedIcon from '../img/icon/person_outlined.svg'
 
 
 const MainPage = () => {
@@ -193,19 +194,14 @@ const MainPage = () => {
 
 
                     <object data={homeIcon}></object>
+                    <span>홈</span>
 
-                    홈
                 </button>
 
                 <button className='bottom-navbar-btn'>
-
-                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M22.25 12C22.25 17.5228 17.7728 22 12.25 22C6.72715 22 2.25 17.5228 2.25 12C2.25 6.47715 6.72715 2 12.25 2C17.7728 2 22.25 6.47715 22.25 12ZM12.25 20C16.6683 20 20.25 16.4183 20.25 12C20.25 7.58172 16.6683 4 12.25 4C7.83172 4 4.25 7.58172 4.25 12C4.25 16.4183 7.83172 20 12.25 20Z" fill="var(--gray30)" />
-                        <path d="M11.25 11H13.25V17H11.25V11Z" fill="gray" />
-                        <path d="M11.25 7H13.25V9H11.25V7Z" fill="gray" />
-                    </svg>
-
-                    학습 내용</button>
+                    <object data={personOutlinedIcon}></object>
+                    <span>마이페이지</span>
+                    </button>
             </footer>
         </div>
     )

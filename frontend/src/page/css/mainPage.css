@@ -242,18 +242,23 @@ color: #5F5F5F;
 }
 
 .bottom-navbar {
-    width: 90%;
+
+    width: 100%;
+    
     position: fixed;
     bottom: 0;
+    left: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
 
 .bottom-navbar-btn {
+gap: 7px;
 display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+
 height: 64px;
 
 background: #FFFFFF;
@@ -261,7 +266,6 @@ font-family: 'Pretendard';
 font-style: normal;
 font-weight: 600;
 font-size: 12px;
-line-height: 16px;
 text-align: center;
 
 color: var(--gray30);
