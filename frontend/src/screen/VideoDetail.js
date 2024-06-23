@@ -181,6 +181,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
           translations.map((item, key) => (
             <>
               <div className={`script}`}
+              onClick={()=>rewindVideoToScriptSegment(item.start)}
                 key={key}
                 style={{ cursor: "pointer" }}
 
