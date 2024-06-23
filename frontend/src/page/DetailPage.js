@@ -18,6 +18,7 @@ const DetailPage = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        localStorage.setItem('currentDate', (parseInt(localStorage.getItem('currentDate'))) + 1);
         if (step < 1) {
             setStep(step + 1)
         }
@@ -27,8 +28,9 @@ const DetailPage = () => {
     };
 
     const stages = [
-        { title: '쉐도잉하기', type: "video" },
-        { title: '다시 풀기', type: "video" }
+        { title: '쉐도잉하기', type: "title" },
+        { title: '자막 없이 보기', type: "no_title" },
+        { title: '자막이랑 보기', type: "title" }
     ]
     const goToMain = () => {
         navigate("/");
@@ -77,8 +79,8 @@ const DetailPage = () => {
     };
 
 
-    const fetchTransition = async (existingData, videoId) =>{
-        
+    const fetchTransition = async (existingData, videoId) => {
+
         try {
 
             const existingUrlIndex = existingData.urls.findIndex(item => item.videoId === videoId);
@@ -100,7 +102,7 @@ const DetailPage = () => {
             if (existingUrlIndex !== -1) {
                 const tempData = existingData;
                 localStorage.removeItem('urlData')
-                
+
                 if (newTranslatedScripts.length) {
 
                     tempData.urls[existingUrlIndex] = {
@@ -109,11 +111,11 @@ const DetailPage = () => {
                             translatedScripts: newTranslatedScripts
                         }
                     };
-    
+
                     localStorage.setItem('urlData', JSON.stringify(existingData));
                 }
             }
-            else{
+            else {
                 if (newTranslatedScripts.length) {
 
                     existingData.urls.push({
@@ -122,11 +124,11 @@ const DetailPage = () => {
                             translatedScripts: newTranslatedScripts
                         }
                     });
-    
+
                     if (existingData.urls.length > 4) {
                         existingData.urls.shift();
                     }
-    
+
                     localStorage.setItem('urlData', JSON.stringify(existingData));
                 }
             }
@@ -207,49 +209,48 @@ const DetailPage = () => {
     return (
         <div className='detail-page'>
 
-            <header style={{display:"flex", justifyContent:"center"}}>
+            <header style={{ display: "flex", justifyContent: "center" }}>
                 <div className='return-btn' onClick={goToMain}>
                     <object data={arrowLeft} onClick={goToMain} ></object>
                 </div>
-                <h2 style={{maxWidth: "250px", textAlign: "center"}}>{location.state?.link.title.slice(0, 25)}...</h2></header>
+                <h2 style={{ maxWidth: "250px", textAlign: "center" }}>{location.state?.link.title.slice(0, 25)}...</h2></header>
 
-            <div className='steps-header'>
-                {
-                    stages.map((item, key) => (
-                        <div className='step'>
-
-                            <div
-                                className='step-num'
-                                style={{
-                                    backgroundColor: step >= key ? '#903FF6' : '#F0E6FD',
-                                    color: step >= key ? 'white' : '#E2CEFC'
-                                }}
-                                key={key}
-                            >
-                                {key + 1}
-                            </div>
-                            <div className='step-content'
-
-                                style={{
-                                    color: step >= key ? '#333333' : '#ABABAB'
-                                }}
-                            >{item.title}</div>
-                            <div className='step-bar'
-
-                                style={{
-                                    backgroundColor: step === 1 ? '#903FF6' : '#F0E6FD',
-                                    marginLeft: key === 1 ? '' : '44%',
-                                    marginRight: key === 1 ? '44%' : ''
-                                }}
-                            ></div>
-                            
-                            </div>
-                        
-                    ))
-                    
-                }
                 
+            <div className='steps-header'>
+                {stages.map((item, key) => (
+                    <div className='step' key={key}>
+                        <div
+                            className='step-num'
+                            style={{
+                                backgroundColor: step > key ? '#903FF6' : '#F0E6FD',
+                                color: step > key ? 'white' : '#E2CEFC'
+                            }}
+                        >
+                            {key + 1}
+                        </div>
+                        {key < stages.length-1 && (
+                            <div
+                                className='step-bar'
+                                style={{
+                                    backgroundColor: step > key + 1 ? '#903FF6' : '#F0E6FD',
+                                    position: 'relative',
+                                    top: '-30%',
+                                    left: `${(key+1 * 120) / stages.length}%`
+                                }}
+                            />
+                        )}
+                        <div
+                            className='step-content'
+                            style={{
+                                color: step > key ? '#333333' : '#ABABAB'
+                            }}
+                        >
+                            {item.title}
+                        </div>
+                    </div>
+                ))}
             </div>
+
 
             <div className='detail-type-wrapper'>
                 {youtubeLink && <VideoDetail onEnd={closeModal} url={youtubeLink} translations={subtitles}
@@ -259,7 +260,7 @@ const DetailPage = () => {
             </div>
             {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
             }} />}
-                        {/* <button onClick={()=>fetchTransition(JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}') , youtubeLink.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1])}>자막 재요청하기</button> */}
+            {/* <button onClick={()=>fetchTransition(JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}') , youtubeLink.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1])}>자막 재요청하기</button> */}
 
         </div>
     )

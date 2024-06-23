@@ -210,7 +210,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen }) 
         }
         </>}
       <div className='video-bottom-nav'>
-        {step === 1 ? <><LongButton onClick={() => isModalOpen(true)} width="298px">학습 종료하기</LongButton></> :
+        {step === 2 ? <><LongButton onClick={() => isModalOpen(true)} width="298px">학습 종료하기</LongButton></> :
 
 <></>
           // <div className='script-btn-wrapper'>

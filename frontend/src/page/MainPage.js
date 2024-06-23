@@ -9,6 +9,7 @@ import homeIcon from '../img/icon/homeIcon.svg'
 const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
+    const [currentDate, setCurrentDate] = useState(0);
     // const [autoPlay, setAutoplay] = useState(false);
     const [videoList, setVideoList] = useState([
     ]);
@@ -23,6 +24,7 @@ const MainPage = () => {
 
     useEffect(() => {
 
+
         makeDescriptionMeta();
         const videoTest = async () => {
             const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
@@ -30,6 +32,13 @@ const MainPage = () => {
             return response.data;
         }
         videoTest();
+
+        if(localStorage.getItem('currentDate')){
+            setCurrentDate(localStorage.getItem('currentDate'));
+        }
+        else{
+            localStorage.setItem('currentDate', 0);
+        }
     }, []);
     const goToLogin = () => {
         navigate("/login");
@@ -103,7 +112,7 @@ const MainPage = () => {
                         </svg>
 
 
-                        8
+                        {currentDate}
                     </div>
                 </div>
             </nav>
