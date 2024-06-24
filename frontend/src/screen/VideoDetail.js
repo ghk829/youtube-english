@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, } from 'react';
 import '../page/css/detailPage.css';
 import LongButton from '../components/LongButton'
 import { useNavigate, } from "react-router-dom";
-import arrowLeftWhite from '../img/icon/arrowLeftWhite.svg'
-import arrowRightWhite from '../img/icon/arrowRightWhite.svg'
 
 const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, setStep }) => {
   const videoRef = useRef(null);
@@ -19,6 +17,9 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   const activeScriptIndexRef = React.useRef(null);
   const [progress, setProgress] = useState(100)
   const [rewinded, setRewinded] = useState(false);
+  const refs = useRef([]);
+  const scriptWrapperRef = useRef(null);
+
 
   //스텝 변경시
   useEffect(() => {
@@ -111,6 +112,15 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
         });
         if (activeIndex !== activeScriptIndex) {
           setActiveScriptIndex(activeIndex);
+
+          if(activeIndex>0)
+{setTimeout(() => {
+  scriptWrapperRef.current.scrollTo({
+    top: refs.current[activeIndex].offsetTop-scriptWrapperRef.current.offsetTop,
+    behavior: 'smooth'
+  })
+}, 10);}
+
           activeScriptIndexRef.current = activeIndex;
           repeatCountRef.current = 1;
           setProgress(100);
@@ -118,6 +128,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
 
         if (activeIndex !== -1 && repeatCountRef.current > 0) {
           const currentScript = translations[activeIndex];
+
           const scriptDur = parseFloat(currentScript.dur);
           const scriptEnd = parseFloat(currentScript.start) + scriptDur;
 
@@ -208,7 +219,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
         <div className='shadowing-guide'> <p> 자막 없이 영상을 들어보세요.</p>
         </div> : <></>}
 
-      {step !== 1 && translations.length > 1 ? <div className='scripts-wrapper'>
+      {step !== 1 && translations.length > 1 ? <div className='scripts-wrapper' ref={scriptWrapperRef}>
 
         {
 
@@ -232,12 +243,13 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
                 </div>
                 <ul style={{ margin: 0, padding: 0 }}>
                   <li className='script-content'
+                  ref={(el)=>(refs.current[key]=el)}
                     style={{ backgroundColor: key === activeScriptIndex ? "#F0E6FD" : "" }}
                   >
 
                     <div className='script-text'>{item.text}</div>
 
-                    {step === 2 && key === activeScriptIndex ? <div className='script-translation'>{item.translatedText}</div> : <></>}
+                    {step === 2 && key === activeScriptIndex ? <div className='script-translation'>{item.ko}</div> : <></>}
                   </li>
                 </ul>
 
