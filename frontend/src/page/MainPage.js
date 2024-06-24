@@ -4,26 +4,42 @@ import './css/mainPage.css'
 import axios from 'axios'
 import LongButton from '../components/LongButton'
 import homeIcon from '../img/icon/homeIcon.svg'
+import personOutlinedIcon from '../img/icon/person_outlined.svg'
 
 
 const MainPage = () => {
     const navigate = useNavigate();
     const [customUrl, setCustomUrl] = useState('');
+    const [currentDate, setCurrentDate] = useState(0);
     // const [autoPlay, setAutoplay] = useState(false);
     const [videoList, setVideoList] = useState([
     ]);
 
+    const makeDescriptionMeta = ()  => {
+        const meta = document.createElement('meta');
+        meta.setAttribute('apple-mobile-web-app-capable', 'yes');
+        meta.setAttribute('viewport', "minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no");
+        document.getElementsByTagName('head')[0].appendChild(meta);    
+      }
 
 
     useEffect(() => {
 
 
+        makeDescriptionMeta();
         const videoTest = async () => {
             const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
             setVideoList(response.data)
             return response.data;
         }
         videoTest();
+
+        if(localStorage.getItem('currentDate')){
+            setCurrentDate(localStorage.getItem('currentDate'));
+        }
+        else{
+            localStorage.setItem('currentDate', 0);
+        }
     }, []);
     const goToLogin = () => {
         navigate("/login");
@@ -32,10 +48,17 @@ const MainPage = () => {
         navigate('/detail', { state: { link } });
     };
 
+    const goToAdmin = () => {
+        navigate("/video-add");
+    };
     const username = "Messi"
 
     const handleInputChange = (event) => {
+        if(event.target.value==="mimos123"){
+            goToAdmin();
+        }
         setCustomUrl(event.target.value);
+        
     };
 
     const handleSubmit = (event) => {
@@ -90,15 +113,17 @@ const MainPage = () => {
                         </svg>
 
 
-                        8
+                        {currentDate}
                     </div>
                 </div>
             </nav>
 
             <div className='today-sentence-wrapper'>
-                <h2 onClick={()=> navigate("/video-add")}>오늘의 문장🔮</h2>
-                <h1>Good things don't come easy</h1>
-                <LongButton width={"240px"}>관련 영상 보러 가기</LongButton>
+                <h2>오늘의 문장🔮</h2>
+                <h1 style={{marginBottom: "48px"}}>Good things don't come easy</h1>
+
+
+                <LongButton width={"240px"} onClick={()=>goToDetail(videoList[0])}>관련 영상 보러 가기</LongButton>
 
 
             </div>
@@ -124,62 +149,59 @@ const MainPage = () => {
                                     />
                                 </div>
                                 <div className='explore-video-title'>{item.title}</div>
+
+                                
                             </div>
                         ))
                     }
                 </div>
+                
+                {key === 0 ?
+
+
+<div className='form-wrapper'>
+    <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e);
+    }} style={{ marginTop: "10px" }}>
+        <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
+        <input
+            className='form-input'
+            type="text"
+            id="youtubeLink"
+            value={customUrl}
+            placeholder='링크를 붙여 넣어주세요.'
+            onChange={handleInputChange}
+        />
+        <button
+            className='form-submit'
+            type="submit">제출</button>
+    </form>
+</div>
+:
+<></>}
             </div>
         ))
     }
+    
 </div>
 
 
 
-            {/* 폼 */}
-            {/* <div>
-                자동 재생 옵션
-                <input type='checkbox' value={autoPlay}
-                    onClick={() => setAutoplay(!autoPlay)}
-                ></input>
-            </div> */}
-            <div className='form-wrapper'>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit(e);
-                }} style={{ marginTop: "10px" }}>
-                    <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
-                    <input
-                        className='form-input'
-                        type="text"
-                        id="youtubeLink"
-                        value={customUrl}
-                        placeholder='링크를 붙여 넣어주세요.'
-                        onChange={handleInputChange}
-                    />
-                    <button
-                        className='form-submit'
-                        type="submit">제출</button>
-                </form>
-            </div>
             {/* 푸터 */}
             <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
 
 
                     <object data={homeIcon}></object>
+                    <span>홈</span>
 
-                    홈
                 </button>
 
                 <button className='bottom-navbar-btn'>
-
-                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M22.25 12C22.25 17.5228 17.7728 22 12.25 22C6.72715 22 2.25 17.5228 2.25 12C2.25 6.47715 6.72715 2 12.25 2C17.7728 2 22.25 6.47715 22.25 12ZM12.25 20C16.6683 20 20.25 16.4183 20.25 12C20.25 7.58172 16.6683 4 12.25 4C7.83172 4 4.25 7.58172 4.25 12C4.25 16.4183 7.83172 20 12.25 20Z" fill="var(--gray30)" />
-                        <path d="M11.25 11H13.25V17H11.25V11Z" fill="gray" />
-                        <path d="M11.25 7H13.25V9H11.25V7Z" fill="gray" />
-                    </svg>
-
-                    학습 내용</button>
+                    <object data={personOutlinedIcon}></object>
+                    <span>마이페이지</span>
+                    </button>
             </footer>
         </div>
     )
