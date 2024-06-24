@@ -170,10 +170,16 @@ header>h2 {
     
 .script-translation {
 
-    font-weight: 500;
+    max-width: 270px;
+
+font-family: 'Pretendard Variable';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 20px;
+color: #333333;
 margin-top: 10px;
-    font-size: 16px;
-    color: #333333;
+
 
 }
 
@@ -288,7 +294,8 @@ margin-top: 10px;
     justify-content: center;
     background-color: white;
     bottom: 0px;
-    height: 100px;
+    padding-top: 5px;
+    padding-bottom: 20px;
     left: 0;
     width: 100%;
 }

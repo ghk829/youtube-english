@@ -5,6 +5,7 @@ import axios from 'axios'
 import LongButton from '../components/LongButton'
 import homeIcon from '../img/icon/homeIcon.svg'
 import personOutlinedIcon from '../img/icon/person_outlined.svg'
+import Chip from '../components/Chip'
 
 
 const MainPage = () => {
@@ -45,7 +46,8 @@ const MainPage = () => {
         navigate("/login");
     };
     const goToDetail = (link) => {
-        navigate('/detail', { state: { link } });
+        if(link)
+{        navigate('/detail', { state: { link } });}
     };
 
     const goToAdmin = () => {
@@ -135,6 +137,10 @@ const MainPage = () => {
         Object.keys(groupByCategory(videoList)).map((category, key) => (
             <div key={key} className='category-container'>
                 <div className='video-category'>{category}</div>
+                {
+                    // key===0? <div style={{display: "flex", gap: "10px", marginTop: "20px", marginBottom: "16px", marginLeft: "20px"}}><div ><Chip content="임시1" width="70px"></Chip></div><div ><Chip content="임시2" width="70px"></Chip></div></div>:<></>
+                }
+                
                 <div className='explore-video-list'>
                     {
                         groupByCategory(videoList)[category].map((item, index) => (
