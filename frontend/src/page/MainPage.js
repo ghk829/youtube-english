@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import './css/mainPage.css'
 import axios from 'axios'
 import LongButton from '../components/LongButton'
 import homeIcon from '../img/icon/homeIcon.svg'
 import personOutlinedIcon from '../img/icon/person_outlined.svg'
-import Chip from '../components/Chip'
-
 
 const MainPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
     const [customUrl, setCustomUrl] = useState('');
     const [currentDate, setCurrentDate] = useState(0);
     // const [autoPlay, setAutoplay] = useState(false);
     const [videoList, setVideoList] = useState([
     ]);
+    const [pic, setPic] = useState("");
 
     const makeDescriptionMeta = ()  => {
         const meta = document.createElement('meta');
         meta.setAttribute('apple-mobile-web-app-capable', 'yes');
+        meta.setAttribute('referrer', 'no-referrer');
         meta.setAttribute('viewport', "minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no");
         document.getElementsByTagName('head')[0].appendChild(meta);    
       }
 
 
     useEffect(() => {
-
 
         makeDescriptionMeta();
         const videoTest = async () => {
@@ -41,6 +42,7 @@ const MainPage = () => {
         else{
             localStorage.setItem('currentDate', 0);
         }
+        
     }, []);
     const goToLogin = () => {
         navigate("/login");
@@ -53,7 +55,7 @@ const MainPage = () => {
     const goToAdmin = () => {
         navigate("/video-add");
     };
-    const username = "Messi"
+    const username = location.state?.user.name;
 
     const handleInputChange = (event) => {
         if(event.target.value==="mimos123"){
@@ -90,6 +92,7 @@ const MainPage = () => {
             <header className='main-header'>
                 <div className='profile'
                     onClick={goToLogin}>
+                        <img src={pic} style={{borderRadius: "999px"}}></img>
                 </div>
                 <div className='user-name'>반가워요, {username}님</div>
             </header>

@@ -4,9 +4,12 @@ import LoginPage from './page/LoginPage';
 import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
 import AddVideo from './page/AddVideo';
+import GoogleTagManager from './components/GoogleTagManager';
 
 function App() {
   return (
+    <>
+    <GoogleTagManager gtmId={process.env.REACT_APP_GTAG}></GoogleTagManager>
     <BrowserRouter>
       <Routes>
         <Route
@@ -42,6 +45,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

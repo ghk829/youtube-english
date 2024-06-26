@@ -1,44 +1,68 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GoogleLogin } from "@react-oauth/google";
-import kakaoLogin from '../img/kakao_login.png';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import mainIllust from '../img/Illustration.png';
+import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
+import KakaoLogin, { kakaoLogin } from '../components/KakaoLogin'
 import './css/loginPage.css'
 
 const LoginPage = () => {
+    const location = useLocation();
     const navigate = useNavigate();
 
-    const goToMain = () => {
-        navigate("/");
+    const goToMain = (user) => {
+        navigate("/", { state: { user: user } });
     };
+    const makeDescriptionMeta = () => {
+        const meta = document.createElement('meta');
+        meta.setAttribute('referrer', 'no-referrer');
+        document.getElementsByTagName('head')[0].appendChild(meta);
+    }
+const handleGoogleLogin = (res) =>{
+    
+    const addUser = async (user) => {
+        const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/adduser`, { user: user })
+        console.log(response.data);
+    }
+    let userObj = jwtDecode(res.credential);
 
+    let userInfo = {
+        name: userObj.name,
+        email: userObj.email,
+        picture: userObj.picture
+    }
+
+    addUser(userInfo);
+
+
+    goToMain(userObj);
+}
+
+    useEffect(() => {
+
+
+        makeDescriptionMeta();
+
+    }, []);
     return (
         <div className='login-page'>
 
             {/* 로고 */}
             <div className='logo-wrapper'>
                 <img src={mainIllust} className='logo-image'
-                alt='logo'></img>
+                    alt='logo'></img>
                 <div className='logo-text'>Mimos</div>
             </div>
 
-            {/* 카카오 로그인 (클릭시 메인 페이지 바로 이동) */}
+            {/* 카카오 로그인  */}
             <div className='login-btn-wrapper'>
-                <img src={kakaoLogin}
-                alt='kakao-login'
-                    onClick={goToMain}
-                    className="kakao-login-btn" />
+                <KakaoLogin></KakaoLogin>
 
                 {/* 구글 로그인 */}
                 <GoogleLogin
                     className="google-login-btn"
-                    onSuccess={(res) => {
-                        console.log(res);
-                        let userObj = jwtDecode(res.credential);
-                        console.log(userObj);
-
-                        goToMain();
+                    onSuccess={(res) => {handleGoogleLogin(res)
                     }}
                     onError={() => {
                         console.log("Error while login with google")

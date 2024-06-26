@@ -1,8 +1,8 @@
-const getallvideo = require("express").Router();
+const adduser = require("express").Router();
 const { MongoClient } = require('mongodb');
 const mongoUri = process.env.MONGODB_URI
 
-getallvideo.get("/getallvideo", async function (req, res, next) {
+adduser.post("/adduser", async function (req, res, next) {
 
 
     const client = new MongoClient(mongoUri, {
@@ -15,12 +15,14 @@ getallvideo.get("/getallvideo", async function (req, res, next) {
 
             const db = client.db('english');
 
-            const collection = db.collection('youtube_videos');
-
-            res.json(await collection.find().toArray());
+            const collection = db.collection('users');
+            console.log(req)
+            await collection.updateOne({"email": req.body.user.email}, req.body.user, {upsert: True});
+            res.json({message: "success!"})
 
         } catch (err) {
-            console.error(err);
+            console.log(err);
+            res.errored({message: "failed!"})
         } finally {
             await client.close();
         }
@@ -29,4 +31,4 @@ getallvideo.get("/getallvideo", async function (req, res, next) {
     run();
 });
 
-module.exports = getallvideo;
+module.exports = adduser;
