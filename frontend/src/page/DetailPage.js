@@ -30,9 +30,18 @@ const DetailPage = () => {
         setIsModalOpen(false);
         if(step===stages.length-1){
             
-        localStorage.setItem('currentDate', (parseInt(localStorage.getItem('currentDate'))) + 1);
-            goToMain();
-            
+            const lastVisitDate = new Date(localStorage.getItem('lastVisitDate'));
+            const today = new Date();
+        
+            if (lastVisitDate && today.getDate() !== lastVisitDate.getDate()) {
+              const newVideo = parseInt(localStorage.getItem('currentDate')) + 1;
+              localStorage.setItem('currentDate', newVideo.toString());
+        
+              localStorage.setItem('lastVisitDate', today.toISOString());
+              localStorage.setItem('currentVideo', parseInt(localStorage.getItem('currentVideo')+1));
+
+            }
+                        goToMain();
         }
     };
 
@@ -46,7 +55,6 @@ const DetailPage = () => {
 
         }
     }, [location.state]);
-
 
     const fetchSubtitles = async () => {
         setIsFetching(true);

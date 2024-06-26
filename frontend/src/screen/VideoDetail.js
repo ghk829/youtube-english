@@ -154,7 +154,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
                   stepRef.current = stepRef.current + 1;
                   setStep(stepRef.current);
                 }
-              }, 1000 * scriptDur * 1.5 + 1);
+              }, 1000 * scriptDur * 1.5 - 2.5);
 
 
               const progressDecrement = 100 / (1000 * scriptDur * 1.5 / 80);
