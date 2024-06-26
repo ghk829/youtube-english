@@ -1,6 +1,6 @@
 const getallvideo = require("express").Router();
 const { MongoClient } = require('mongodb');
-const mongoUri = "mongodb+srv://messiki:WzRGijqN7A8jG4a8@shopilotcluster.u2wmlln.mongodb.net"
+const mongoUri = process.env.MONGODB_URI
 
 getallvideo.get("/getallvideo", async function (req, res, next) {
 
