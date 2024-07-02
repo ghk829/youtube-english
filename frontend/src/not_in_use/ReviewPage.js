@@ -37,20 +37,20 @@ const ReviewPage = () => {
 
                 <LongButton
                 content= {und_text}
-                colour= "white"
+                color= "white"
                 >
                     <div className='label'>학습 전</div>
                 </LongButton>
 
                 <LongButton
                 content={und_after_text}
-                colour= "white"
+                color= "white"
                 >
                 <div className='label'>학습 후</div>
                 </LongButton>
 
-                <LongButton content="복습하기" colour="purple" onClick={goToDetail}/>
-                <LongButton content="홈으로 가기" colour="black" onClick={goToMain}/>
+                <LongButton content="복습하기" color="purple" onClick={goToDetail}/>
+                <LongButton content="홈으로 가기" color="black" onClick={goToMain}/>
 
             </div>
         </div>

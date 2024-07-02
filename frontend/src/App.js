@@ -5,12 +5,10 @@ import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
 import AddVideo from './page/AddVideo';
 import Auth from './page/Auth'
-import GoogleTagManager from './components/GoogleTagManager';
 
 function App() {
   return (
     <>
-      <GoogleTagManager gtmId={process.env.REACT_APP_GTAG}></GoogleTagManager>
       <BrowserRouter>
         <Routes>
           <Route
