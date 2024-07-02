@@ -17,6 +17,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   const activeScriptIndexRef = React.useRef(null);
   const [progress, setProgress] = useState(100)
   const [rewinded, setRewinded] = useState(false);
+  const [isLast, setIsLast] = useState(false);
   const refs = useRef([]);
   const scriptWrapperRef = useRef(null);
 
@@ -113,13 +114,21 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
         if (activeIndex !== activeScriptIndex) {
           setActiveScriptIndex(activeIndex);
 
-          if(activeIndex>0)
-{setTimeout(() => {
-  scriptWrapperRef.current.scrollTo({
-    top: refs.current[activeIndex].offsetTop-scriptWrapperRef.current.offsetTop,
-    behavior: 'smooth'
-  })
-}, 10);}
+          if(activeIndex===translations.length-1){
+            setIsLast(true);
+          }
+          else{
+            setIsLast(false);
+          }
+          if (activeIndex > 0) {
+            
+            setTimeout(() => {
+              scriptWrapperRef.current.scrollTo({
+                top: refs.current[activeIndex].offsetTop - scriptWrapperRef.current.offsetTop,
+                behavior: 'smooth'
+              })
+            }, 10);
+          }
 
           activeScriptIndexRef.current = activeIndex;
           repeatCountRef.current = 1;
@@ -197,7 +206,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   //start 시점 복귀 함수 
   //start는 youtube API 에서 받은 response의 자막.start 그대로 사용
   const rewindVideoToScriptSegment = (start) => {
-    if (player&&!isShadowing) {
+    if (player && !isShadowing) {
       const startTimeSeconds = parseFloat(start);
       setProgress(100);
       setRewinded(true);
@@ -243,7 +252,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
                 </div>
                 <ul style={{ margin: 0, padding: 0 }}>
                   <li className='script-content'
-                  ref={(el)=>(refs.current[key]=el)}
+                    ref={(el) => (refs.current[key] = el)}
                     style={{ backgroundColor: key === activeScriptIndex ? "#F0E6FD" : "" }}
                   >
 
@@ -267,7 +276,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
         }
         </>}
       <div className='video-bottom-nav'>
-        {step === 2 ? <><LongButton onClick={() => isModalOpen(true)} width="298px">학습 종료하기</LongButton></> :
+        {step === 2 && !isLast ? <><LongButton color="inactive" width="298px">학습 종료하기</LongButton></> :
 
           <></>
           // <div className='script-btn-wrapper'>
@@ -280,6 +289,9 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
           //   </div>
           // </div>
         }
+
+        {step === 2 && isLast ? <><LongButton color="purple" onClick={() => isModalOpen(true)} width="298px">학습 종료하기</LongButton></> :
+          <></>}
       </div>
     </div>
   );

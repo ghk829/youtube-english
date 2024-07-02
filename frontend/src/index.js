@@ -4,12 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import GoogleTagManager from './components/GoogleTagManager';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const clientId =process.env.REACT_APP_CLIENT_ID;
 
 root.render(
   <GoogleOAuthProvider clientId={clientId}>
+  <GoogleTagManager gtmId="G-RX1L3E1GCN"></GoogleTagManager>
       <App />
   </GoogleOAuthProvider>
 );

@@ -6,38 +6,48 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import KakaoLogin, { kakaoLogin } from '../components/KakaoLogin'
 import './css/loginPage.css'
+import arrowLeft from '../img/icon/arrowLeft.svg'
 
 const LoginPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
     const goToMain = (user) => {
-        navigate("/", { state: { user: user } });
+        if(user){
+            navigate("/", { state: { user: user } });
+        }
+        else{
+            navigate("/");
+        }
     };
     const makeDescriptionMeta = () => {
         const meta = document.createElement('meta');
         meta.setAttribute('referrer', 'no-referrer');
         document.getElementsByTagName('head')[0].appendChild(meta);
     }
-const handleGoogleLogin = (res) =>{
+    const handleGoogleLogin = (res) => {
+
+        if(res){
+
+            const addUser = async (user) => {
+                const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/adduser`, { user: user })
+                console.log(response.data);
+            }
+            let userObj = jwtDecode(res.credential);
     
-    const addUser = async (user) => {
-        const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/adduser`, { user: user })
-        console.log(response.data);
+            let userInfo = {
+                name: userObj.name,
+                email: userObj.email,
+                picture: userObj.picture
+            }
+    
+            addUser(userInfo);
+    
+    
+            goToMain(userObj);
+        }
+
     }
-    let userObj = jwtDecode(res.credential);
-
-    let userInfo = {
-        name: userObj.name,
-        email: userObj.email,
-        picture: userObj.picture
-    }
-
-    addUser(userInfo);
-
-
-    goToMain(userObj);
-}
 
     useEffect(() => {
 
@@ -47,6 +57,14 @@ const handleGoogleLogin = (res) =>{
     }, []);
     return (
         <div className='login-page'>
+
+
+            <header style={{ display: "flex", justifyContent: "center" }}>
+                <div className='return-btn' onClick={()=>goToMain()}>
+                    <object data={arrowLeft} onClick={()=>goToMain()} ></object>
+                </div>
+                <h2 style={{ maxWidth: "250px", textAlign: "center" }}></h2></header>
+
 
             {/* 로고 */}
             <div className='logo-wrapper'>
@@ -62,7 +80,8 @@ const handleGoogleLogin = (res) =>{
                 {/* 구글 로그인 */}
                 <GoogleLogin
                     className="google-login-btn"
-                    onSuccess={(res) => {handleGoogleLogin(res)
+                    onSuccess={(res) => {
+                        handleGoogleLogin(res)
                     }}
                     onError={() => {
                         console.log("Error while login with google")

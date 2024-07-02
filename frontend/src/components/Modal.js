@@ -23,7 +23,7 @@ const Modal = ({ onClose }) => {
                 </div >
                 <div className='modal-btn'>
                 <LongButton
-                colour="purple"
+                color="purple"
                 content="홈으로 돌아가기"
                 onClick={onClose}
                 />

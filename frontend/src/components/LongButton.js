@@ -1,14 +1,15 @@
 import React from 'react';
 import './longButton.css';
 
-const LongButton = ({ colour, content, onClick, width, children}) => {
+const LongButton = ({ color, content, onClick, width, children}) => {
     const buttonStyles = {
         black: "blackButton",
         white: "whiteButton",
         purple: "purpleButton",
+        inactive: "inactiveButton"
     };
 
-    const buttonClass = buttonStyles[colour] || "purpleButton";
+    const buttonClass = buttonStyles[color] || "purpleButton";
 
     return (
         <div className={`long-btn ${buttonClass}`} onClick={onClick}

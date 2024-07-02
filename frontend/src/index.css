@@ -3,8 +3,11 @@
 
 body {
   padding-left: 20px;
-width: 89%;
+  width: 89%;
+  margin: 0;
   padding-right: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
   margin-right: auto;
   overflow-x: hidden;
   margin-left: auto;

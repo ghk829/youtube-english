@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './css/mainPage.css'
 import axios from 'axios'
 import LongButton from '../components/LongButton'
@@ -20,25 +20,31 @@ const MainPage = () => {
     const [pic, setPic] = useState("");
     const [profileName, setProfileName] = useState("");
 
-    const makeDescriptionMeta = ()  => {
+    const makeDescriptionMeta = () => {
         const meta = document.createElement('meta');
         meta.setAttribute('apple-mobile-web-app-capable', 'yes');
         meta.setAttribute('referrer', 'no-referrer');
         meta.setAttribute('viewport', "minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no");
-        document.getElementsByTagName('head')[0].appendChild(meta);    
-      }
+        document.getElementsByTagName('head')[0].appendChild(meta);
+    }
 
 
     useEffect(() => {
-        
-    setProfileName( location.state?.user.name);
-    setPic( location.state?.user.picture);
-    if(!location.state?.user.name && !localStorage.getItem("name")){
-        goToLogin();
-    }
-    else{
-        localStorage.setItem("name", location.state?.user.name);
-    }
+
+        if (!location.state?.user.name && !localStorage.getItem("name")) {
+            const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
+            localStorage.setItem("name", tempName);
+            setProfileName(tempName)
+
+        }
+        else if (location.state?.user.name) {
+            localStorage.setItem("name", location.state?.user.name);
+            setProfileName(location.state?.user.name);
+            setPic(location.state?.user.picture);
+        }
+        else {
+            setProfileName(localStorage.getItem("name"));
+        }
 
         makeDescriptionMeta();
         const videoTest = async () => {
@@ -48,27 +54,26 @@ const MainPage = () => {
         }
         videoTest();
 
-        if(localStorage.getItem('currentDate')){
+        if (localStorage.getItem('currentDate')) {
             setCurrentDate(localStorage.getItem('currentDate'));
         }
-        else{
+        else {
             localStorage.setItem('currentDate', 0);
         }
 
-        if(localStorage.getItem('currentVideo')){
+        if (localStorage.getItem('currentVideo')) {
             setCurrentVideo(localStorage.getItem('currentVideo'));
         }
-        else{
+        else {
             localStorage.setItem('currentVideo', 0);
         }
-        
+
     }, []);
     const goToLogin = () => {
         navigate("/login");
     };
     const goToDetail = (link) => {
-        if(link)
-{        navigate('/detail', { state: { link } });}
+        if (link) { navigate('/detail', { state: { link } }); }
     };
 
     const goToAdmin = () => {
@@ -76,11 +81,11 @@ const MainPage = () => {
     };
 
     const handleInputChange = (event) => {
-        if(event.target.value==="mimos123"){
+        if (event.target.value === "mimos123") {
             goToAdmin();
         }
         setCustomUrl(event.target.value);
-        
+
     };
 
     const handleSubmit = (event) => {
@@ -108,9 +113,8 @@ const MainPage = () => {
 
             {/* 프로필  */}
             <header className='main-header'>
-                <div className='profile'
-                    onClick={goToLogin}>
-                        <img src={pic} style={{borderRadius: "999px"}}></img>
+                <div className='profile'>
+                    <img src={pic} style={{ borderRadius: "999px" }}></img>
                 </div>
                 <div className='user-name'>반가워요, {profileName}님</div>
             </header>
@@ -124,8 +128,8 @@ const MainPage = () => {
                             <path d="M3 3.3275C3 2.87083 3.37083 2.5 3.8275 2.5H17.1725C17.6292 2.5 18 2.87083 18 3.3275V16.6725C17.9998 16.8919 17.9125 17.1022 17.7574 17.2574C17.6022 17.4125 17.3919 17.4998 17.1725 17.5H3.8275C3.60803 17.5 3.39756 17.4128 3.24237 17.2576C3.08718 17.1024 3 16.892 3 16.6725V3.3275ZM9.35167 7.0125C9.30151 6.97904 9.24322 6.95981 9.183 6.95685C9.12279 6.9539 9.06289 6.96733 9.00971 6.99572C8.95652 7.02411 8.91202 7.06639 8.88097 7.11807C8.84991 7.16974 8.83344 7.22888 8.83333 7.28917V12.7108C8.83344 12.7711 8.84991 12.8303 8.88097 12.8819C8.91202 12.9336 8.95652 12.9759 9.00971 13.0043C9.06289 13.0327 9.12279 13.0461 9.183 13.0431C9.24322 13.0402 9.30151 13.021 9.35167 12.9875L13.4175 10.2775C13.463 10.2469 13.5004 10.2056 13.5262 10.1572C13.552 10.1089 13.5655 10.0548 13.5655 10C13.5655 9.94515 13.552 9.89115 13.5262 9.84275C13.5004 9.79436 13.463 9.75306 13.4175 9.7225L9.35167 7.0125Z" fill="#913FF7" />
                         </svg>
 
-                        {currentVideo}                    
-                        </div>
+                        {currentVideo}
+                    </div>
                 </div>
 
                 <div className='studied-wrapper'>
@@ -143,47 +147,53 @@ const MainPage = () => {
 
             <div className='today-sentence-wrapper'>
                 <h2>오늘의 문장🔮</h2>
-                <h1 style={{marginBottom: "48px"}}>Good things don't come easy</h1>
+                <div className='today-sentence'>Good things don't come easy</div>
 
 
-                <LongButton width={"240px"} onClick={()=>goToDetail(videoList[0])}>관련 영상 보러 가기</LongButton>
+                <LongButton width={"240px"} onClick={() => goToDetail(videoList[0])}>관련 영상 보러 가기</LongButton>
 
 
             </div>
 
 
-{/* 비디오 */}
-<div className='explore-videos'>
-    {
-        Object.keys(groupByCategory(videoList)).map((category, key) => (
-            <div key={key} className='category-container'>
-                <div className='video-category'>{category}</div>
+            {/* 비디오 */}
+            <div className='explore-videos'>
                 {
-                    key===1? <div style={{display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px"}}><div ><Chip content="뉴진스"></Chip></div><div ><Chip content="블랙핑크"></Chip></div></div>:<></>
-                }
-                
-                <div className='explore-video-list'>
-                    {
-                        groupByCategory(videoList)[category].map((item, index) => (
-                            <div key={index} className='explore-video'>
-                                <div className='explore-video-content' onClick={() => goToDetail(item)}>
-                                    <img
-                                        src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
-                                        alt={item}
-                                        width="250"
-                                        height="165"
-                                        style={{ borderRadius: "20px" }}
-                                    />
-                                </div>
-                                <div className='explore-video-title'>{item.title}</div>
+                    Object.keys(groupByCategory(videoList)).map((category, key) => (
+                        <div key={key} className='category-container'>
+                            <div className='video-category'>{category}</div>
+                            {
+                                key === 1 ? <div style={{ display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px" }}>
 
-                                
+                                    <div > <Chip content="뉴진스"></Chip></div>
+
+                                    <div ><Chip content="블랙핑크"></Chip></div>
+
+                                    <div><Chip content="테일러스위프트"></Chip></div></div> : <></>
+                            }
+
+                            <div className='explore-video-list'>
+                                {
+                                    groupByCategory(videoList)[category].map((item, index) => (
+                                        <div key={index} className='explore-video'>
+                                            <div className='explore-video-content' onClick={() => goToDetail(item)}>
+                                                <img
+                                                    src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
+                                                    alt={item}
+                                                    width="250"
+                                                    height="165"
+                                                    style={{ borderRadius: "20px" }}
+                                                />
+                                            </div>
+                                            <div className='explore-video-title'>{item.title}</div>
+
+
+                                        </div>
+                                    ))
+                                }
                             </div>
-                        ))
-                    }
-                </div>
-                
-                {/* {key === 0 ?
+
+                            {/* {key === 0 ?
 
 
 <div className='form-wrapper'>
@@ -207,11 +217,11 @@ const MainPage = () => {
 </div>
 :
 <></>} */}
+                        </div>
+                    ))
+                }
+
             </div>
-        ))
-    }
-    
-</div>
 
 
 
@@ -225,10 +235,10 @@ const MainPage = () => {
 
                 </button>
 
-                <button className='bottom-navbar-btn'>
+                <button className='bottom-navbar-btn' onClick={() => goToLogin()}>
                     <object data={personOutlinedIcon}></object>
                     <span>마이페이지</span>
-                    </button>
+                </button>
             </footer>
         </div>
     )
