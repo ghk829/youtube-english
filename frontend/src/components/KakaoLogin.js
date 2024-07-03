@@ -1,23 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react';
 import kakaoLogin from '../img/kakao_login.png';
 
-const KakaoLogin = () =>{
-    const Rest_api_key = process.env.REACT_APP_REST_API_KAKAO;
-    const Redirect_uri =process.env.REACT_APP_REDIRECT_URI;
+import { useNavigate } from "react-router-dom";
 
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${Redirect_uri}&response_type=code`
+const KakaoLogin = () => {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState(null);
+  const goToMain = () => {
+      navigate("/");
+  };
 
-    const handleLogin = () =>{
-        window.location.href = kakaoURL;
+  const handleLogin = async () => {
+    try {
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KAKAO}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI }&response_type=code`;
+      window.location.href = kakaoURL;
+    } catch (err) {
+      setError(err);
     }
+  };
 
-    return(
-        
-        <img src={kakaoLogin}
-        alt='kakao-login'
-            onClick={handleLogin}
-            className="kakao-login-btn" />
-    )
-}
+  return (
+    <img
+      src={kakaoLogin}
+      alt="kakao-login"
+      onClick={handleLogin}
+      className="kakao-login-btn"
+    />
+  );
+};
 
-export default KakaoLogin
+export default KakaoLogin;
