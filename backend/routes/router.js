@@ -7,6 +7,7 @@ const title = require('./title')
 const getallvideo = require('./getallvideo')
 const addvideo = require('./addvideo')
 const adduser = require('./adduser')
+const kakao = require('./kakao')
 
 routes.use("/", quiz);
 routes.use("/", subtitle);
@@ -16,4 +17,5 @@ routes.use("/", title);
 routes.use("/", getallvideo);
 routes.use("/", addvideo);
 routes.use("/", adduser);
+routes.use("/", kakao);
 module.exports = routes;

@@ -4,7 +4,7 @@ import LoginPage from './page/LoginPage';
 import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
 import AddVideo from './page/AddVideo';
-import Auth from './page/Auth'
+import Redirect from './page/Redirect'
 
 function App() {
   return (
@@ -36,7 +36,7 @@ function App() {
 
           <Route
             path='/oauth'
-            element={<Auth />}
+            element={<Redirect />}
           />
 
 
