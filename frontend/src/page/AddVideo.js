@@ -6,22 +6,18 @@ const AddVideo = () => {
     const navigate = useNavigate();
     const [newVideo, setNewVideo] = useState({
         category: '',
+        subcategory: '',
         url: '',
         title: '',
-        subtitles: [],
+        subtitles: []
     });
+
     const [allData, setAllData] = useState([]);
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
     const [yesSub, setYesSub] = useState(true);
+    const [translated, setTranslated] = useState([]);
 
-
-    const handleAddCategory = () => {
-        if (newCategory.trim() !== '') {
-            setCategories([...categories, newCategory.trim()]);
-            setNewCategory('');
-        }
-    };
 
     const fetchAllData = async () => {
         try {
@@ -41,11 +37,15 @@ const AddVideo = () => {
     }, []);
 
 
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'newCategory') {
             setNewCategory(value);
+        } else if (name === 'subcategory') {
+            setNewVideo((prevState) => ({
+                ...prevState,
+                subcategory: value,
+            }));
         } else {
             setNewVideo((prevState) => ({
                 ...prevState,
@@ -53,6 +53,7 @@ const AddVideo = () => {
             }));
         }
     };
+
     const getTitle = async (url) => {
         console.log("제목 요청중")
         const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/title`, { videoUrl: url });
@@ -72,16 +73,20 @@ const AddVideo = () => {
         try {
             await getTitle(newVideo.url);
             await fetchSubtitles();
-
-            if(yesSub&&newVideo.title!="")
-{            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/addvideo`, { newVideo: newVideo });
-            if (response.status === 200) {
-                console.log('Video added successfully');
-                alert("비디오가 정상적으로 등록되었습니다.");
-            } else {
-                alert("비디오 등록에 실패하였습니다.");
-                console.error('Error adding video');
-            }}
+            setNewVideo((prevState) => ({
+                ...prevState,
+            }));
+    
+            if (yesSub && newVideo.title != "") {
+                const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/addvideo`, { newVideo: newVideo });
+                if (response.status === 200) {
+                    console.log('Video added successfully');
+                    alert("비디오가 정상적으로 등록되었습니다.");
+                } else {
+                    alert("비디오 등록에 실패하였습니다.");
+                    console.error('Error adding video');
+                }
+            }
         } catch (error) {
             console.error('Error:', error);
             alert("비디오 등록에 실패하였습니다.");
@@ -89,7 +94,6 @@ const AddVideo = () => {
             fetchAllData();
         }
     };
-
 
     const fetchSubtitles = async () => {
         try {
@@ -101,6 +105,9 @@ const AddVideo = () => {
 
             textArray = mergeTexts(textArray);
             setYesSub(true);
+            await fetchTransition(newVideo.url);
+
+            textArray = translated;
 
             setNewVideo((prevState) => ({
                 ...prevState,
@@ -113,6 +120,29 @@ const AddVideo = () => {
         }
     }
 
+    const fetchTransition = async (videoUrl) => {
+
+        try {
+
+            console.log("자막 요청 중... (/api/subtitles)");
+
+            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: videoUrl});
+            let textArray = response.data.slice(0, Math.min(response.data.length, 60));
+
+            textArray = mergeTexts(textArray);
+            const mergedTexts = mergeAllTexts(textArray);
+
+            const newScript = await translateSubtitle(mergedTexts);
+            const newTranslatedScripts = await mergeJsonArrays(textArray, newScript);
+            await setTranslated(newTranslatedScripts)
+            console.log(newTranslatedScripts)
+
+        } catch (error) {
+            console.error('자막을 가져오는 중 오류 발생:', error);
+            alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
+        }
+
+    }
 
     const mergeTexts = (data) => {
         const result = [];
@@ -134,6 +164,51 @@ const AddVideo = () => {
         return result;
     }
 
+    function mergeAllTexts(data) {
+        return data.map(item => item.text + '\n').join('');
+    }
+    const mergeJsonArrays = async (originalJson, newJson) => {
+        console.log("JSON 결합 중...")
+        const maxLength = Math.max(originalJson.length, newJson.length);
+
+        const mergedArray = [];
+
+        for (let i = 0; i < maxLength; i++) {
+            const originalItem = originalJson[i];
+            const additionalItem = newJson[i];
+
+            if (originalItem && additionalItem) {
+                mergedArray.push({ ...originalItem, ...additionalItem });
+            } else if (originalItem) {
+                mergedArray.push(originalItem);
+            } else if (additionalItem) {
+                mergedArray.push(additionalItem);
+            }
+
+        }
+        console.log(mergedArray)
+        return mergedArray;
+
+
+    }
+    const stringToJson = (str) => {
+        console.log("JSON 전환 중...")
+        console.log(str)
+
+        const lines = str.split('\n').filter(line => line !== '');
+        const json = lines.map((line) => ({ ko: line }));
+
+        return json;
+    }
+    const translateSubtitle = async (data) => {
+
+        console.log("번역 요청 중...  (/api/translator)")
+        const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/translator`, { subtitle: data });
+        const result = stringToJson(response.data);
+        console.log("번역 완료")
+        return result;
+    }
+
 
     return (
         <div className="add-video">
@@ -142,6 +217,7 @@ const AddVideo = () => {
                 <thead >
                     <tr >
                         <th>Category</th>
+                        <th>Sub</th>
                         <th>URL</th>
                         <th>Title</th>
                     </tr>
@@ -150,6 +226,7 @@ const AddVideo = () => {
                     {allData.map((item) => (
                         <tr key={item.id}>
                             <td>{item.category}</td>
+                            <td>{item.subcategory}</td>
                             <td>{item.url}</td>
                             <td>{item.title}</td>
                         </tr>
@@ -191,10 +268,18 @@ const AddVideo = () => {
                     placeholder="새 카테고리"
                     onChange={handleInputChange}
                 />
-                <button onClick={handleAddCategory}>새 카테고리 추가</button>
 
                 <br />
                 <br />
+                <input
+                    type="text"
+                    name="subcategory"
+                    placeholder="서브 카테고리"
+                    onChange={handleInputChange}
+                    value={newVideo.subcategory}
+                />
+
+
                 <button style={{ width: '100px' }} type='submit'>
                     <h3>등록</h3>
                 </button>
