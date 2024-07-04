@@ -19,6 +19,8 @@ const MainPage = () => {
     ]);
     const [pic, setPic] = useState("");
     const [profileName, setProfileName] = useState("");
+    const [visibleVideos, setVisibleVideos] = useState([]);
+    const [selectedSubcategories, setSelectedSubcategories] = useState({});
 
     const makeDescriptionMeta = () => {
         const meta = document.createElement('meta');
@@ -27,6 +29,7 @@ const MainPage = () => {
         meta.setAttribute('viewport', "minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no");
         document.getElementsByTagName('head')[0].appendChild(meta);
     }
+
 
 
     useEffect(() => {
@@ -99,15 +102,36 @@ const MainPage = () => {
     }
 
 
+    const handleChipClick = (category, subcategory) => {
+        setVisibleVideos({
+            ...visibleVideos,
+            [category]: groupByCategory(videoList)[category].subcategories[subcategory]
+        });
+
+        setSelectedSubcategories({
+            ...selectedSubcategories,
+            [category]: subcategory
+        });
+        
+    };
+
     const groupByCategory = (videoList) => {
         return videoList.reduce((acc, item) => {
-            if (!acc[item.category]) {
-                acc[item.category] = [];
-            }
-            acc[item.category].push(item);
-            return acc;
+          if (!acc[item.category]) {
+            acc[item.category] = {
+              subcategories: {},
+              items: [],
+            };
+          }
+          acc[item.category].items.push(item);
+          if (!acc[item.category].subcategories[item.subcategory]) {
+            acc[item.category].subcategories[item.subcategory] = [];
+          }
+          acc[item.category].subcategories[item.subcategory].push(item);
+          return acc;
         }, {});
-    }
+      };
+      
     return (
         <div className='main-page'>
 
@@ -157,71 +181,55 @@ const MainPage = () => {
 
 
             {/* 비디오 */}
-            <div className='explore-videos'>
-                {
-                    Object.keys(groupByCategory(videoList)).map((category, key) => (
-                        <div key={key} className='category-container'>
-                            <div className='video-category'>{category}</div>
-                            {
-                                key === 1 ? <div style={{ display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px" }}>
-
-                                    <div > <Chip content="뉴진스"></Chip></div>
-
-                                    <div ><Chip content="블랙핑크"></Chip></div>
-
-                                    <div><Chip content="테일러스위프트"></Chip></div></div> : <></>
-                            }
-
-                            <div className='explore-video-list'>
-                                {
-                                    groupByCategory(videoList)[category].map((item, index) => (
-                                        <div key={index} className='explore-video'>
-                                            <div className='explore-video-content' onClick={() => goToDetail(item)}>
-                                                <img
-                                                    src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
-                                                    alt={item}
-                                                    width="250"
-                                                    height="165"
-                                                    style={{ borderRadius: "20px" }}
-                                                />
-                                            </div>
-                                            <div className='explore-video-title'>{item.title}</div>
-
-
-                                        </div>
-                                    ))
-                                }
-                            </div>
-
-                            {/* {key === 0 ?
-
-
-<div className='form-wrapper'>
-    <form onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit(e);
-    }} style={{ marginTop: "10px" }}>
-        <div className='form-label'>공부하고 싶은 유튜브 영상 링크</div>
-        <input
-            className='form-input'
-            type="text"
-            id="youtubeLink"
-            value={customUrl}
-            placeholder='링크를 붙여 넣어주세요.'
-            onChange={handleInputChange}
-        />
-        <button
-            className='form-submit'
-            type="submit">제출</button>
-    </form>
-</div>
-:
-<></>} */}
-                        </div>
-                    ))
-                }
-
+            
+            <div className="explore-videos">
+  {Object.keys(groupByCategory(videoList)).map((category, key) => (
+    <div key={key} className="category-container">
+      <div className="video-category">{category}</div>
+      <div style={{ display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px" }}>
+        {Object.keys(groupByCategory(videoList)[category].subcategories).filter(subcategory => subcategory !== 'none').map((subcategory, index) => (
+          <div key={index}>
+<Chip
+                        content={subcategory}
+                        onClick={() => handleChipClick(category, subcategory)}
+                        clicked={selectedSubcategories[category] === subcategory || (selectedSubcategories[category] === undefined && index === 0)}
+                        filled={selectedSubcategories[category] === subcategory || (selectedSubcategories[category] === undefined && index === 0)}
+                        />
+          </div>
+        ))}
+      </div>
+      <div className="explore-video-list">
+        {visibleVideos[category] ? visibleVideos[category].map((item, index) => (
+          <div key={index} className="explore-video">
+            <div className="explore-video-content" onClick={() => goToDetail(item)}>
+              <img
+                src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
+                alt={item}
+                width="250"
+                height="165"
+                style={{ borderRadius: "20px" }}
+              />
             </div>
+            <div className="explore-video-title">{item.title}</div>
+          </div>
+        )) : groupByCategory(videoList)[category].subcategories[Object.keys(groupByCategory(videoList)[category].subcategories)[0]].map((item, index) => (
+          <div key={index} className="explore-video">
+            <div className="explore-video-content" onClick={() => goToDetail(item)}>
+              <img
+                src={`https://img.youtube.com/vi/${getVideoId(item.url)}/0.jpg`}
+                alt={item}
+                width="250"
+                height="165"
+                style={{ borderRadius: "20px" }}
+              />
+            </div>
+            <div className="explore-video-title">{item.title}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
 
 
 
@@ -242,6 +250,8 @@ const MainPage = () => {
             </footer>
         </div>
     )
+
+    
 
 }
 
