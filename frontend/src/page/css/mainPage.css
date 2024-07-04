@@ -225,6 +225,7 @@ color: #1C1C1C;
     background-color: var(--gray10);
     margin-bottom: 10px;
     cursor: pointer;
+    max-width: 250px;
     border-radius: 20px;
 }
 
@@ -234,6 +235,7 @@ font-family: 'Pretendard';
 font-style: normal;
 font-weight: 600;
 font-size: 16px;
+max-width: 250px;
 display: flex;
 align-items: center;
 
