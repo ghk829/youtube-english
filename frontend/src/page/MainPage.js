@@ -240,7 +240,7 @@ const MainPage = () => {
 
 
             {/* 푸터 */}
-            <footer className='bottom-navbar'>
+            {/* <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
 
 
@@ -253,7 +253,7 @@ const MainPage = () => {
                     <object data={personOutlinedIcon}></object>
                     <span>마이페이지</span>
                 </button>
-            </footer>
+            </footer> */}
         </div>
     )
 

@@ -87,6 +87,9 @@ const AddVideo = () => {
                     console.error('Error adding video');
                 }
             }
+            else{
+                
+            }
         } catch (error) {
             console.error('Error:', error);
             alert("비디오 등록에 실패하였습니다.");

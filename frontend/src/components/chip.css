@@ -7,31 +7,32 @@
     justify-content: center;
     align-items: center;
     padding: 8px 16px;
-    gap: 12px;
     border: 1px solid var(--gray30);
     border-radius: 100px;
     flex: none;
     order: 0;
     flex-grow: 0;
-
+    width: auto;
     height: 32px;
 
-font-family: 'Pretendard';
-font-style: normal;
-font-weight: 600;
-font-size: 14px;
-line-height: 16px;
-display: flex;
-align-items: center;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    align-items: center;
+    
+    color: #919191;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-color: #919191;
-
-
-flex: none;
-order: 0;
-flex-grow: 0;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
 
 }
+
 
 .chip.clicked {
     border: 1px solid #913FF7;
@@ -39,8 +40,8 @@ flex-grow: 0;
 
 }
 
-.chip.filled{
-background: #913FF7;
-border-radius: 100px;
-color: white;
+.chip.filled {
+    background: #913FF7;
+    border-radius: 100px;
+    color: white;
 }
