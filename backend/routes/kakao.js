@@ -35,20 +35,11 @@ kakao.post('/kakao', async (req, res) => {
 
 
     if(userData){
-
-      const addUser = async (user) => {
-          await axios.post(`${process.env.REACT_APP_MOD || ""}/api/adduser`, { user: user });
-      }
-
-      let userInfo = {
-          name: userData.name,
-          email: userData.email,
-          picture: userData.picture
-      }
-
-      addUser(userInfo);
+      res.json(userData);
   }
-    res.json(userData);
+  else{
+    res.status(500).json({ error: 'Invalid user data' });
+  }
 
     
   } catch (error) {

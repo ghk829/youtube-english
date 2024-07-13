@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import axios from "axios";
 
 export function Redirect() {
   const location = useLocation();
@@ -11,14 +12,28 @@ export function Redirect() {
 
   useEffect(() => {
     const fetchData = async () => {
+
+      const addUser = async (user) => {
+        await axios.post(`${process.env.REACT_APP_MOD || ""}/api/adduser`, { user: user });
+      }
+      
       try {
         const response = await fetch(`/api/kakao?code=${code}`, {
           method: "POST",
           headers: headers,
         });
         const userData = await response.json();
-        console.log(userData);
-        navigate("/");
+
+        let userInfo = {
+          name: userData.name,
+          email: userData.email||(userData.name+userData.picture),
+          picture: userData.picture
+        }
+
+        addUser(userInfo);
+        localStorage.setItem("name", userData.name);
+        navigate("/", { state: { user: userData } });
+
       } catch (error) {
         console.error("오류 발생", error);
       }

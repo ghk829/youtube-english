@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react'
-import TagManager from 'react-gtm-module';
+import ReactGA from "react-ga4";
 
 const GoogleTagManager = ({gtmId}) =>{
     useEffect(()=>{
-        TagManager.initialize({gtmId});
+
+        ReactGA.initialize(gtmId);
 
     }, [gtmId]);
 
