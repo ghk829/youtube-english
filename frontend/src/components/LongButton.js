@@ -6,7 +6,8 @@ const LongButton = ({ color, content, onClick, width, children}) => {
         black: "blackButton",
         white: "whiteButton",
         purple: "purpleButton",
-        inactive: "inactiveButton"
+        inactive: "inactiveButton",
+        purpleLine: "purpleLineButton"
     };
 
     const buttonClass = buttonStyles[color] || "purpleButton";

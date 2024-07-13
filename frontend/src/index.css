@@ -9,6 +9,7 @@ body {
   padding-top: 0;
   padding-bottom: 0;
   margin-right: auto;
+  overflow-y: auto;
   overflow-x: hidden;
   margin-left: auto;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
@@ -42,4 +43,20 @@ body {
 code {
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
+}
+
+body::-webkit-scrollbar {
+  max-width: 0px;
+}
+
+body::-webkit-scrollbar-track {
+  background: white;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: white;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: white;
 }

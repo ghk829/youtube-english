@@ -28,11 +28,11 @@ function App() {
             path='/detail'
             element={<DetailPage />}
           />
-          <Route
+          {/* <Route
             exact
             path='/video-add'
             element={<AddVideo />}
-          />
+          /> */}
 
           <Route
             path='/oauth'

@@ -31,16 +31,13 @@ const MainPage = () => {
         document.getElementsByTagName('head')[0].appendChild(meta);
     }
 
-    useEffect(() => {
-        const video = videoList.find(item => item.title.includes('Good Things'));
-        setTodayVideo(video);
-      }, []);
 
     useEffect(() => {
 
         if (!location.state?.user.name && !localStorage.getItem("name")) {
             const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
             localStorage.setItem("name", tempName);
+            localStorage.setItem("login", false);
             setProfileName(tempName)
 
         }
@@ -48,18 +45,27 @@ const MainPage = () => {
             localStorage.setItem("name", location.state?.user.name);
             setProfileName(location.state?.user.name);
             setPic(location.state?.user.picture);
+            localStorage.setItem("login", true);
         }
         else {
             setProfileName(localStorage.getItem("name"));
         }
 
         makeDescriptionMeta();
-        const videoTest = async () => {
-            const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
-            setVideoList(response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory)));
 
-            return response.data;
-        }
+        const videoTest = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
+                const sortedVideoList = response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
+                setVideoList(sortedVideoList);
+
+                const todayVideo = sortedVideoList.find(item => item.title.includes('Good Things'));
+                setTodayVideo(todayVideo);
+            } catch (error) {
+                console.error('Error fetching video data:', error);
+            }
+        };
+
         videoTest();
 
         if (localStorage.getItem('currentDate')) {
@@ -87,20 +93,6 @@ const MainPage = () => {
     const goToAdmin = () => {
         navigate("/video-add");
     };
-
-    const handleInputChange = (event) => {
-        if (event.target.value === "mimos123") {
-            goToAdmin();
-        }
-        setCustomUrl(event.target.value);
-
-    };
-
-    const handleSubmit = (event) => {
-        goToDetail(customUrl);
-
-    };
-
     const getVideoId = (url) => {
         const videoId = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1];
         return videoId;
@@ -180,7 +172,7 @@ const MainPage = () => {
                 <div className='today-sentence'>Good things don't come easy</div>
 
 
-                <LongButton width={"240px"} onClick={() => goToDetail(todayVideo||videoList[0])}>관련 영상 보러 가기</LongButton>
+                <LongButton width={"240px"} onClick={() => goToDetail(todayVideo)}>관련 영상 보러 가기</LongButton>
 
 
             </div>
@@ -240,7 +232,7 @@ const MainPage = () => {
 
 
             {/* 푸터 */}
-            <footer className='bottom-navbar'>
+            {/* <footer className='bottom-navbar'>
                 <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
 
 
@@ -253,7 +245,7 @@ const MainPage = () => {
                     <object data={personOutlinedIcon}></object>
                     <span>마이페이지</span>
                 </button>
-            </footer>
+            </footer> */}
         </div>
     )
 
