@@ -31,10 +31,6 @@ const MainPage = () => {
         document.getElementsByTagName('head')[0].appendChild(meta);
     }
 
-    useEffect(() => {
-        const video = videoList.find(item => item.title.includes('Good Things'));
-        setTodayVideo(video);
-      }, []);
 
     useEffect(() => {
 
@@ -56,12 +52,20 @@ const MainPage = () => {
         }
 
         makeDescriptionMeta();
-        const videoTest = async () => {
-            const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
-            setVideoList(response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory)));
 
-            return response.data;
-        }
+        const videoTest = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
+                const sortedVideoList = response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
+                setVideoList(sortedVideoList);
+
+                const todayVideo = sortedVideoList.find(item => item.title.includes('Good Things'));
+                setTodayVideo(todayVideo);
+            } catch (error) {
+                console.error('Error fetching video data:', error);
+            }
+        };
+
         videoTest();
 
         if (localStorage.getItem('currentDate')) {
@@ -89,20 +93,6 @@ const MainPage = () => {
     const goToAdmin = () => {
         navigate("/video-add");
     };
-
-    const handleInputChange = (event) => {
-        if (event.target.value === "mimos123") {
-            goToAdmin();
-        }
-        setCustomUrl(event.target.value);
-
-    };
-
-    const handleSubmit = (event) => {
-        goToDetail(customUrl);
-
-    };
-
     const getVideoId = (url) => {
         const videoId = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1];
         return videoId;
@@ -182,7 +172,7 @@ const MainPage = () => {
                 <div className='today-sentence'>Good things don't come easy</div>
 
 
-                <LongButton width={"240px"} onClick={() => goToDetail(todayVideo||videoList[0])}>관련 영상 보러 가기</LongButton>
+                <LongButton width={"240px"} onClick={() => goToDetail(todayVideo)}>관련 영상 보러 가기</LongButton>
 
 
             </div>
