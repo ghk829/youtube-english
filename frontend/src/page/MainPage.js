@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import './css/mainPage.css'
 import axios from 'axios'
 import LongButton from '../components/LongButton'
-import homeIcon from '../img/icon/homeIcon.svg'
-import personOutlinedIcon from '../img/icon/person_outlined.svg'
 import Chip from '../components/Chip'
 
 const MainPage = () => {
