@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import kakaoLogin from '../img/kakao_login.png';
 
-import { useNavigate } from "react-router-dom";
-
 const KakaoLogin = () => {
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const goToMain = () => {
-      navigate("/");
-  };
 
   const handleLogin = async () => {
     try {

@@ -42,8 +42,6 @@ const LoginPage = () => {
             }
     
             addUser(userInfo);
-    
-    
             goToMain(userObj);
         }
 
