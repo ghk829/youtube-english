@@ -41,6 +41,7 @@ const MainPage = () => {
         if (!location.state?.user.name && !localStorage.getItem("name")) {
             const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
             localStorage.setItem("name", tempName);
+            localStorage.setItem("login", false);
             setProfileName(tempName)
 
         }
@@ -48,6 +49,7 @@ const MainPage = () => {
             localStorage.setItem("name", location.state?.user.name);
             setProfileName(location.state?.user.name);
             setPic(location.state?.user.picture);
+            localStorage.setItem("login", true);
         }
         else {
             setProfileName(localStorage.getItem("name"));

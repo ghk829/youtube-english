@@ -15,6 +15,7 @@ const DetailPage = () => {
     const [step, setStep] = useState(0);
     const [isFetching, setIsFetching] = useState(false);
     const [subtitles, setSubtitles] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("login")||false);
 
     const stages = [
         { title: '쉐도잉하기', type: "title" },
@@ -41,7 +42,6 @@ const DetailPage = () => {
               localStorage.setItem('currentVideo', parseInt(localStorage.getItem('currentVideo')+1));
 
             }
-                        goToMain();
         }
     };
 
@@ -267,8 +267,7 @@ const DetailPage = () => {
                     step={step} setStep={setStep} isModalOpen={setIsModalOpen} ></VideoDetail>
                 }
             </div>
-            {isModalOpen && <Modal onClose={closeModal} step={step} onSelect={(index) => {
-            }} />}
+            {isModalOpen && <Modal onClose={closeModal} isLoggedIn={isLoggedIn}/>}
             {/* <button onClick={()=>fetchTransition(JSON.parse(localStorage.getItem('urlData') || '{"urls":[]}') , youtubeLink.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1])}>자막 재요청하기</button> */}
 
         </div>

@@ -1,4 +1,9 @@
-
+.modal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .modal-bg {
     background-color: black;
     opacity: 0.2;
@@ -14,60 +19,95 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px 20px;
+    padding: 24px 24px;
 
     position: fixed;
-    width: 320px;
-    height: 248px;
-    top: calc(50% - 300px/2);
+    width: 280px;
+    top: calc(50% - 500px/2);
     background: #FFFFFF;
     border-radius: 16px;
 
 }
 
 .modal-header {
-    width: 205px;
-    height: 28px;
+    width: 250px;
+    height: 56px;
 
     font-family: 'Pretendard';
     font-style: normal;
-    font-weight: 700;
-    margin-top: 32px;
+    font-weight: 800;
+    margin-top: 10px;
     font-size: 18px;
     line-height: 28px;
     text-align: center;
-    margin-bottom: 42px;
+    margin-bottom: 0;
 
     color: #1C1C1C;
 
-    flex: none;
-    order: 0;
-    flex-grow: 0;
 
 }
 
-.modal-icon{
-    margin: 0;
-    width: 67px;
-    height: 36px;
-    margin-bottom: 48px;
-}
 
 .modal-content {
     display: flex;
-    flex-direction: row;
+
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     align-content: flex-start;
     padding: 0px 20px;
 
-    width: 270px;
-    height: 76px;
 
 }
 
-.modal-btn{
+.modal-btns {
+    margin-bottom: 0;
+}
+
+.modal-btn {
+    margin: 12px;
+    margin-bottom: 0px;
+}
+
+.example-box {
+    display: flex;
+    justify-content: center;
+    margin: 48px;
+    margin-bottom: 32px;
+}
+.modal-studied-wrapper {
+    text-align: left;
+    padding: 12px;
+    width: 100px;
+    margin-top: 64px;
+    height: 56px;
+
+    background: #F7F0FE;
+    box-shadow: 0px 3.04762px 7.61905px rgba(0, 0, 0, 0.1);
+    border-radius: 6.09524px;
+    position: absolute;
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-size: 10.6667px;
+    line-height: 12px;
+    color: #5F5F5F;
+
+
+}
+.modal-studied-number{
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-size: 20px;
+    position: relative;
+    top: 26px;
+    text-align: right;
+    color: #913FF7;
     
-    margin-bottom: 24px;
-}
+    }
+
+    .modal-studied-number>svg{
+        margin-right: 8px;
+        position: relative;
+        top: 3px;
+    }
+
