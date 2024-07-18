@@ -1,9 +1,13 @@
-.modal{
+
+
+.modal {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    /* 모달 전체를 화면 가운데 정렬 */
 }
+
 .modal-bg {
     background-color: black;
     opacity: 0.2;
@@ -12,6 +16,7 @@
     position: fixed;
     top: 0;
     left: 0;
+    /* 모달 배경 설정 */
 }
 
 .modal-body {
@@ -19,54 +24,44 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 24px;
-
-    position: fixed;
+    padding: 24px;
     width: 280px;
-    top: calc(50% - 500px/2);
-    background: #FFFFFF;
+    position: fixed;
+    top: calc(50% - 250px);
+    background: var(--gray05);
     border-radius: 16px;
-
+    /* 모달 내용 설정 */
 }
 
 .modal-header {
-    width: 250px;
+    width: 100%;
     height: 56px;
-
     font-family: 'Pretendard';
-    font-style: normal;
     font-weight: 800;
-    margin-top: 10px;
     font-size: 18px;
     line-height: 28px;
     text-align: center;
-    margin-bottom: 0;
-
-    color: #1C1C1C;
-
-
+    color: var(--gray90);
+    /* 모달 헤더 설정 */
 }
-
 
 .modal-content {
     display: flex;
-
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     align-content: flex-start;
-    padding: 0px 20px;
-
-
+    padding: 0 20px;
+    /* 모달 내용 설정 */
 }
 
 .modal-btns {
-    margin-bottom: 0;
+    /* 모달 버튼 영역 설정 */
 }
 
 .modal-btn {
     margin: 12px;
-    margin-bottom: 0px;
+    /* 모달 내 버튼 설정 */
 }
 
 .example-box {
@@ -74,40 +69,41 @@
     justify-content: center;
     margin: 48px;
     margin-bottom: 32px;
+    /* 예시 박스 설정 */
 }
+
 .modal-studied-wrapper {
     text-align: left;
     padding: 12px;
     width: 100px;
     margin-top: 64px;
     height: 56px;
-
-    background: #F7F0FE;
-    box-shadow: 0px 3.04762px 7.61905px rgba(0, 0, 0, 0.1);
+    background: var(--purple05);
+    box-shadow: 0 3.04762px 7.61905px rgba(0, 0, 0, 0.1);
     border-radius: 6.09524px;
-    position: absolute;
     font-family: 'Pretendard';
     font-weight: 700;
     font-size: 10.6667px;
     line-height: 12px;
-    color: #5F5F5F;
-
-
+    color: var(--gray70);
+    position: absolute;
+    /* 학습 일수 표시 박스 설정 */
 }
-.modal-studied-number{
+
+.modal-studied-number {
     font-family: 'Pretendard';
     font-weight: 700;
     font-size: 20px;
     position: relative;
     top: 26px;
     text-align: right;
-    color: #913FF7;
-    
-    }
+    color: var(--purple60);
+    /* 학습 일수 숫자 설정 */
+}
 
-    .modal-studied-number>svg{
-        margin-right: 8px;
-        position: relative;
-        top: 3px;
-    }
-
+.modal-studied-number > object {
+    margin-right: 8px;
+    position: relative;
+    top: 3px;
+    /* 학습 일수 아이콘 설정 */
+}

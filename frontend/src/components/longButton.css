@@ -1,5 +1,4 @@
 .long-btn {
-
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -20,8 +19,7 @@
     font-weight: 700;
     font-size: 16px;
     line-height: 20px;
-    color: #FFFFFF;
-
+    color: var(--gray05);
 }
 
 .blackButton {
@@ -30,24 +28,23 @@
 }
 
 .whiteButton {
-    background-color: #FFFFFF;
-    color: #1C1C1C;
+    background-color: var(--gray05);
+    color: var(--gray90);
     border: 1px solid var(--gray30);
 }
 
 .purpleButton {
-    background-color: #913FF7;
-    color: #FFFFFF;
+    background-color: var(--purple60);
+    color: var(--gray05);
 }
 
-.inactiveButton{
+.inactiveButton {
     background-color: var(--gray10);
-    color: var(--gray40)
+    color: var(--gray40);
 }
 
-.purpleLineButton{
-
-    color: #913FF7;
-    border: 1px solid #913FF7;
-    background-color: white;
+.purpleLineButton {
+    color: var(--purple60);
+    border: 1px solid var(--purple60);
+    background-color: var(--gray05);
 }

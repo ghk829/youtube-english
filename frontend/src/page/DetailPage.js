@@ -13,7 +13,7 @@ const DetailPage = () => {
     const [youtubeLink, setYoutubeLink] = useState("");
     const [step, setStep] = useState(0);
     const [subtitles, setSubtitles] = useState([]);
-    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("login")||false);
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("login")==="true"||false);
 
     const stages = [
         { title: '쉐도잉하기', type: "title" },
