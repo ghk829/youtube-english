@@ -1,57 +1,55 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import './css/mainPage.css'
-import axios from 'axios'
-import LongButton from '../components/LongButton'
-import Chip from '../components/Chip'
+import './css/mainPage.css';
+import axios from 'axios';
+import LongButton from '../components/LongButton';
+import videoPlayer from '../img/icon/videoPlayer.svg';
+import fire from '../img/icon/purpleFire.svg';
+import Chip from '../components/Chip';
 
 const MainPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [customUrl, setCustomUrl] = useState('');
     const [currentVideo, setCurrentVideo] = useState(0);
     const [currentDate, setCurrentDate] = useState(0);
-    // const [autoPlay, setAutoplay] = useState(false);
-    const [videoList, setVideoList] = useState([
-    ]);
-    const [pic, setPic] = useState("");
-    const [profileName, setProfileName] = useState("");
-    const [visibleVideos, setVisibleVideos] = useState([]);
+    const [videoList, setVideoList] = useState([]);
+    const [pic, setPic] = useState('');
+    const [profileName, setProfileName] = useState('');
+    const [visibleVideos, setVisibleVideos] = useState({});
     const [selectedSubcategories, setSelectedSubcategories] = useState({});
     const [todayVideo, setTodayVideo] = useState();
 
+    // 메타 태그 생성 함수
     const makeDescriptionMeta = () => {
         const meta = document.createElement('meta');
         meta.setAttribute('apple-mobile-web-app-capable', 'yes');
         meta.setAttribute('referrer', 'no-referrer');
         meta.setAttribute('viewport', "minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no");
         document.getElementsByTagName('head')[0].appendChild(meta);
-    }
+    };
 
-
+    // 초기 데이터를 가져오고 페이지 설정하는 useEffect
     useEffect(() => {
+        // 프로필 이름 및 사진 설정 함수
+        const setProfile = () => {
+            if (!location.state?.user.name && !localStorage.getItem("name")) {
+                const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
+                localStorage.setItem("name", tempName);
+                localStorage.setItem("login", false);
+                setProfileName(tempName);
+            } else if (location.state?.user.name) {
+                localStorage.setItem("name", location.state?.user.name);
+                setProfileName(location.state?.user.name);
+                setPic(location.state?.user.picture);
+                localStorage.setItem("login", true);
+            } else {
+                setProfileName(localStorage.getItem("name"));
+            }
+        };
 
-        if (!location.state?.user.name && !localStorage.getItem("name")) {
-            const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
-            localStorage.setItem("name", tempName);
-            localStorage.setItem("login", false);
-            setProfileName(tempName)
-
-        }
-        else if (location.state?.user.name) {
-            localStorage.setItem("name", location.state?.user.name);
-            setProfileName(location.state?.user.name);
-            setPic(location.state?.user.picture);
-            localStorage.setItem("login", true);
-        }
-        else {
-            setProfileName(localStorage.getItem("name"));
-        }
-
-        makeDescriptionMeta();
-
-        const videoTest = async () => {
+        // 비디오 데이터를 가져와 초기화하는 함수
+        const fetchVideoData = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
                 const sortedVideoList = response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
@@ -60,43 +58,33 @@ const MainPage = () => {
                 const todayVideo = sortedVideoList.find(item => item.title.includes('Good Things'));
                 setTodayVideo(todayVideo);
             } catch (error) {
-                console.error('Error fetching video data:', error);
+                console.error('비디오 데이터를 가져오는 중 에러 발생:', error);
             }
         };
 
-        videoTest();
+        // 사용자 프로필 설정 및 비디오 데이터 초기화
+        setProfile();
+        makeDescriptionMeta();
+        fetchVideoData();
 
-        if (localStorage.getItem('currentDate')) {
-            setCurrentDate(localStorage.getItem('currentDate'));
-        }
-        else {
-            localStorage.setItem('currentDate', 0);
-        }
+        // 로컬 스토리지에서 현재 날짜와 비디오 초기화
+        setCurrentDate(localStorage.getItem('currentDate') || 0);
+        setCurrentVideo(localStorage.getItem('currentVideo') || 0);
 
-        if (localStorage.getItem('currentVideo')) {
-            setCurrentVideo(localStorage.getItem('currentVideo'));
-        }
-        else {
-            localStorage.setItem('currentVideo', 0);
-        }
+    }, [location.state]);
 
-    }, []);
-    const goToLogin = () => {
-        navigate("/login");
-    };
+    // 비디오 상세 페이지로 이동하는 함수
     const goToDetail = (link) => {
         if (link) { navigate('/detail', { state: { link } }); }
     };
 
-    const goToAdmin = () => {
-        navigate("/video-add");
-    };
+    // YouTube URL에서 비디오 ID를 추출하는 함수
     const getVideoId = (url) => {
         const videoId = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/)[1];
         return videoId;
-    }
+    };
 
-
+    // 칩 클릭 이벤트를 처리하고 비디오를 필터하는 함수
     const handleChipClick = (category, subcategory) => {
         setVisibleVideos({
             ...visibleVideos,
@@ -107,9 +95,9 @@ const MainPage = () => {
             ...selectedSubcategories,
             [category]: subcategory
         });
-
     };
 
+    // 비디오를 카테고리와 서브카테고리로 그룹화하는 함수
     const groupByCategory = (videoList) => {
         return videoList.reduce((acc, item) => {
             if (!acc[item.category]) {
@@ -131,23 +119,20 @@ const MainPage = () => {
     return (
         <div className='main-page'>
 
-            {/* 프로필  */}
+            {/* 프로필 섹션 */}
             <header className='main-header'>
                 <div className='profile'>
-                    <img src={pic} style={{ borderRadius: "999px" }}></img>
+                    <img src={pic} style={{ borderRadius: "999px" }} alt="프로필 사진" />
                 </div>
                 <div className='user-name'>반가워요, {profileName}님</div>
             </header>
 
-            {/* 유저 통계 */}
+            {/* 사용자 통계 섹션 */}
             <nav>
-                <div className='studied-wrapper' >
+                <div className='studied-wrapper'>
                     공부한 영상
                     <div className='studied-number'>
-                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 3.3275C3 2.87083 3.37083 2.5 3.8275 2.5H17.1725C17.6292 2.5 18 2.87083 18 3.3275V16.6725C17.9998 16.8919 17.9125 17.1022 17.7574 17.2574C17.6022 17.4125 17.3919 17.4998 17.1725 17.5H3.8275C3.60803 17.5 3.39756 17.4128 3.24237 17.2576C3.08718 17.1024 3 16.892 3 16.6725V3.3275ZM9.35167 7.0125C9.30151 6.97904 9.24322 6.95981 9.183 6.95685C9.12279 6.9539 9.06289 6.96733 9.00971 6.99572C8.95652 7.02411 8.91202 7.06639 8.88097 7.11807C8.84991 7.16974 8.83344 7.22888 8.83333 7.28917V12.7108C8.83344 12.7711 8.84991 12.8303 8.88097 12.8819C8.91202 12.9336 8.95652 12.9759 9.00971 13.0043C9.06289 13.0327 9.12279 13.0461 9.183 13.0431C9.24322 13.0402 9.30151 13.021 9.35167 12.9875L13.4175 10.2775C13.463 10.2469 13.5004 10.2056 13.5262 10.1572C13.552 10.1089 13.5655 10.0548 13.5655 10C13.5655 9.94515 13.552 9.89115 13.5262 9.84275C13.5004 9.79436 13.463 9.75306 13.4175 9.7225L9.35167 7.0125Z" fill="#913FF7" />
-                        </svg>
-
+                        <object data={videoPlayer}></object>
                         {currentVideo}
                     </div>
                 </div>
@@ -155,36 +140,30 @@ const MainPage = () => {
                 <div className='studied-wrapper'>
                     학습 일수
                     <div className='studied-number'>
-                        <svg width="13" height="19" viewBox="0 0 13 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.50044 18.1667C5.24807 18.1666 4.02461 17.7902 2.9887 17.0864C1.95279 16.3826 1.1522 15.3839 0.690733 14.2196C0.22927 13.0554 0.128218 11.7793 0.40068 10.5569C0.673142 9.33456 1.30655 8.22223 2.21878 7.36417C3.33711 6.31167 6.08378 4.41667 5.66711 0.25C10.6671 3.58333 13.1671 6.91667 8.16711 11.9167C9.00044 11.9167 10.2504 11.9167 12.3338 9.85833C12.5588 10.5025 12.7504 11.195 12.7504 11.9167C12.7504 13.5743 12.092 15.164 10.9199 16.3361C9.74776 17.5082 8.15805 18.1667 6.50044 18.1667Z" fill="#913FF7" />
-                        </svg>
-
-
+                        <object data={fire}></object>
                         {currentDate}
                     </div>
                 </div>
             </nav>
 
+            {/* 오늘의 문장 섹션 */}
             <div className='today-sentence-wrapper'>
                 <h2>오늘의 문장🔮</h2>
                 <div className='today-sentence'>Good things don't come easy</div>
-
-
                 <LongButton width={"240px"} onClick={() => goToDetail(todayVideo)}>관련 영상 보러 가기</LongButton>
-
-
             </div>
 
-
-            {/* 비디오 */}
-
+            {/* 비디오 탐색 섹션 */}
             <div className="explore-videos">
+                {/* 비디오 카테고리들을 매핑 */}
                 {Object.keys(groupByCategory(videoList)).map((category, key) => (
                     <div key={key} className="category-container">
                         <div className="video-category">{category}</div>
+                        {/* 각 카테고리 내 서브카테고리들을 매핑 */}
                         <div style={{ display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px" }}>
                             {Object.keys(groupByCategory(videoList)[category].subcategories).filter(subcategory => subcategory !== 'none').map((subcategory, index) => (
                                 <div key={index}>
+                                    {/* 각 서브카테고리에 대한 칩 컴포넌트 렌더링 */}
                                     <Chip
                                         content={subcategory}
                                         onClick={() => handleChipClick(category, subcategory)}
@@ -194,6 +173,8 @@ const MainPage = () => {
                                 </div>
                             ))}
                         </div>
+                        
+                        {/* 선택된 서브카테고리 또는 첫 번째 서브카테고리 기본으로 비디오 리스트 렌더링 */}
                         <div className="explore-video-list">
                             {visibleVideos[category] ? visibleVideos[category].map((item, index) => (
                                 <div key={index} className="explore-video">
@@ -227,28 +208,19 @@ const MainPage = () => {
                 ))}
             </div>
 
-
-
-            {/* 푸터 */}
+            {/*  푸터 섹션 */}
             {/* <footer className='bottom-navbar'>
-                <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
-
-
-                    <object data={homeIcon}></object>
-                    <span>홈</span>
-
-                </button>
-
-                <button className='bottom-navbar-btn' onClick={() => goToLogin()}>
-                    <object data={personOutlinedIcon}></object>
-                    <span>마이페이지</span>
-                </button>
-            </footer> */}
+          <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
+            <object data={homeIcon}></object>
+            <span>홈</span>
+          </button>
+          <button className='bottom-navbar-btn' onClick={() => goToLogin()}>
+            <object data={personOutlinedIcon}></object>
+            <span>마이페이지</span>
+          </button>
+        </footer> */}
         </div>
-    )
-
-
-
-}
+    );
+};
 
 export default MainPage;

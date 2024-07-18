@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
+// admin이 video 추가하는 용도의 페이지
+// 현재 사용하지 않음
 const AddVideo = () => {
     const navigate = useNavigate();
     const [newVideo, setNewVideo] = useState({
