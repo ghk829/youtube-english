@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import mainIllust from '../img/Illustration.png';
 import './css/reviewPage.css'
-import LongButton from '../components/LongButton'
+import LongButton from '../frontend/src/components/LongButton'
 
 const ReviewPage = () => {
     const buttons = ["0%", "30%", "50%", "70%", "90% 이상"];
