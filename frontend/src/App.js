@@ -40,12 +40,6 @@ function App() {
           />
 
 
-          {/* <Route
-        exact
-        path='/detail/:id'
-        element={<DetailPage/>}
-        /> */}
-
         </Routes>
       </BrowserRouter>
     </>
