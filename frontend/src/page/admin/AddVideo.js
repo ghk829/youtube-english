@@ -57,30 +57,29 @@ const AddVideo = () => {
     };
 
     const getTitle = async (url) => {
-        console.log("제목 요청중")
+        console.log("제목 요청중");
         const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/title`, { videoUrl: url });
-        console.log(`제목 요청 완료: ${response.data.title}`)
-
-
-        setNewVideo((prevState) => ({
-            ...prevState,
-            title: response.data.title
-        }));
-
+        console.log(`제목 요청 완료: ${response.data.title}`);
         return response.data.title;
-    }
-
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await getTitle(newVideo.url);
-            await fetchSubtitles();
-            setNewVideo((prevState) => ({
-                ...prevState,
-            }));
+            // 비디오 제목 가져오기
+            const title = await getTitle(newVideo.url);
     
-            if (yesSub && newVideo.title != "") {
-                const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/addvideo`, { newVideo: newVideo });
+            // 자막 가져오기
+            const subtitles = await fetchSubtitles(newVideo.url);
+    
+            // 새로운 비디오 상태 업데이트
+            const updatedVideo = {
+                ...newVideo,
+                title: title,
+                subtitles: subtitles,
+            };
+    
+            if (yesSub && title !== "") {
+                const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/addvideo`, { newVideo: updatedVideo });
                 if (response.status === 200) {
                     console.log('Video added successfully');
                     alert("비디오가 정상적으로 등록되었습니다.");
@@ -89,9 +88,6 @@ const AddVideo = () => {
                     console.error('Error adding video');
                 }
             }
-            else{
-                
-            }
         } catch (error) {
             console.error('Error:', error);
             alert("비디오 등록에 실패하였습니다.");
@@ -99,56 +95,54 @@ const AddVideo = () => {
             fetchAllData();
         }
     };
-
-    const fetchSubtitles = async () => {
+    
+    
+    const fetchSubtitles = async (url) => {
         try {
-            console.log("자막 요청 링크:", newVideo.url);
+            console.log("자막 요청 링크:", url);
             console.log("자막 요청 중... (/api/subtitles)");
-
-            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: newVideo.url });
+    
+            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: url });
             let textArray = response.data.slice(0, Math.min(response.data.length, 30));
-
+    
             textArray = mergeTexts(textArray);
             setYesSub(true);
-            await fetchTransition(newVideo.url);
-
-            textArray = translated;
-
-            setNewVideo((prevState) => ({
-                ...prevState,
-                subtitles: textArray
-            }));
+            const translatedSubtitles = await fetchTransition(url);
+    
+            textArray = translatedSubtitles;
+    
+            return textArray;
         } catch (error) {
             console.error('자막을 가져오는 중 오류 발생:', error);
             alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
             setYesSub(false);
+            return [];
         }
-    }
+    };
+    
 
     const fetchTransition = async (videoUrl) => {
-
         try {
-
             console.log("자막 요청 중... (/api/subtitles)");
-
-            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: videoUrl});
+    
+            const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/subtitles`, { videoUrl: videoUrl });
             let textArray = response.data.slice(0, Math.min(response.data.length, 60));
-
+    
             textArray = mergeTexts(textArray);
             const mergedTexts = mergeAllTexts(textArray);
-
+    
             const newScript = await translateSubtitle(mergedTexts);
             const newTranslatedScripts = await mergeJsonArrays(textArray, newScript);
-            await setTranslated(newTranslatedScripts)
-            console.log(newTranslatedScripts)
-
+    
+            setTranslated(newTranslatedScripts);
+            return newTranslatedScripts;
         } catch (error) {
             console.error('자막을 가져오는 중 오류 발생:', error);
             alert('자막이 없는 영상입니다. 다른 영상을 선택해 주세요.');
+            return [];
         }
-
-    }
-
+    };
+    
     const mergeTexts = (data) => {
         const result = [];
 
@@ -206,15 +200,13 @@ const AddVideo = () => {
         return json;
     }
     const translateSubtitle = async (data) => {
-
-        console.log("번역 요청 중...  (/api/translator)")
+        console.log("번역 요청 중...  (/api/translator)");
         const response = await axios.post(`${process.env.REACT_APP_MOD || ""}/api/translator`, { subtitle: data });
         const result = stringToJson(response.data);
-        console.log("번역 완료")
+        console.log("번역 완료");
         return result;
-    }
-
-
+    };
+    
     return (
         <div className="add-video">
             <h2>현재 비디오 목록</h2>

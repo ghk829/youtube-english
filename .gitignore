@@ -1,5 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# 더이상 쓰이지 않는 코드들
+/archive
+
+# 관리용 페이지
+/admin
+
 # dependencies
 /node_modules
 node_modules
