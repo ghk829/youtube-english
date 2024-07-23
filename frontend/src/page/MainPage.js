@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './css/mainPage.css';
 import axios from 'axios';
@@ -29,48 +29,58 @@ const MainPage = () => {
         document.getElementsByTagName('head')[0].appendChild(meta);
     };
 
-    // 초기 데이터를 가져오고 페이지 설정하는 useEffect
+    // 프로필 설정 함수
+    const setProfile = () => {
+        if (!location.state?.user.name && !localStorage.getItem("name")) {
+            const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
+            localStorage.setItem("name", tempName);
+            localStorage.setItem("login", false);
+            setProfileName(tempName);
+        } else if (location.state?.user.name) {
+            localStorage.setItem("name", location.state?.user.name);
+            setProfileName(location.state?.user.name);
+            setPic(location.state?.user.picture);
+            localStorage.setItem("login", true);
+        } else {
+            setProfileName(localStorage.getItem("name"));
+        }
+    };
+
+    // 비디오 데이터를 가져와 초기화하는 함수
+    const fetchVideoData = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
+            const sortedVideoList = response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
+            setVideoList(sortedVideoList);
+
+            const todayVideo = sortedVideoList.find(item => item.title.includes('Good Things'));
+            setTodayVideo(todayVideo);
+
+            // 데이터를 localStorage에 저장
+            localStorage.setItem('videoList', JSON.stringify(sortedVideoList));
+            localStorage.setItem('videoTimestamp', Date.now());
+        } catch (error) {
+            console.error('비디오 데이터를 가져오는 중 에러 발생:', error);
+        }
+    };
+
     useEffect(() => {
-        // 프로필 이름 및 사진 설정 함수
-        const setProfile = () => {
-            if (!location.state?.user.name && !localStorage.getItem("name")) {
-                const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
-                localStorage.setItem("name", tempName);
-                localStorage.setItem("login", false);
-                setProfileName(tempName);
-            } else if (location.state?.user.name) {
-                localStorage.setItem("name", location.state?.user.name);
-                setProfileName(location.state?.user.name);
-                setPic(location.state?.user.picture);
-                localStorage.setItem("login", true);
-            } else {
-                setProfileName(localStorage.getItem("name"));
-            }
-        };
-
-        // 비디오 데이터를 가져와 초기화하는 함수
-        const fetchVideoData = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_MOD || ""}/api/getallvideo`);
-                const sortedVideoList = response.data.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
-                setVideoList(sortedVideoList);
-
-                const todayVideo = sortedVideoList.find(item => item.title.includes('Good Things'));
-                setTodayVideo(todayVideo);
-            } catch (error) {
-                console.error('비디오 데이터를 가져오는 중 에러 발생:', error);
-            }
-        };
-
-        // 사용자 프로필 설정 및 비디오 데이터 초기화
         setProfile();
         makeDescriptionMeta();
-        fetchVideoData();
 
         // 로컬 스토리지에서 현재 날짜와 비디오 초기화
         setCurrentDate(localStorage.getItem('currentDate') || 0);
         setCurrentVideo(localStorage.getItem('currentVideo') || 0);
 
+        const videoTimestamp = localStorage.getItem('videoTimestamp');
+        const videoListCache = localStorage.getItem('videoList');
+        const cacheDuration = 1000 * 60 * 60 * 24; // 24시간
+
+        if (videoListCache && Date.now() - videoTimestamp < cacheDuration) {
+            setVideoList(JSON.parse(videoListCache));
+        } else {
+            fetchVideoData();
+        }
     }, [location.state]);
 
     // 비디오 상세 페이지로 이동하는 함수
@@ -98,7 +108,7 @@ const MainPage = () => {
     };
 
     // 비디오를 카테고리와 서브카테고리로 그룹화하는 함수
-    const groupByCategory = (videoList) => {
+    const groupByCategory = useMemo(() => (videoList) => {
         return videoList.reduce((acc, item) => {
             if (!acc[item.category]) {
                 acc[item.category] = {
@@ -114,11 +124,10 @@ const MainPage = () => {
             acc[item.category].subcategories[item.subcategory].sort();
             return acc;
         }, {});
-    };
+    }, [videoList]);
 
     return (
         <div className='main-page'>
-
             {/* 프로필 섹션 */}
             <header className='main-header'>
                 <div className='profile'>
@@ -207,18 +216,6 @@ const MainPage = () => {
                     </div>
                 ))}
             </div>
-
-            {/*  푸터 섹션 */}
-            {/* <footer className='bottom-navbar'>
-          <button className='bottom-navbar-btn' style={{ color: '#913FF7' }}>
-            <object data={homeIcon}></object>
-            <span>홈</span>
-          </button>
-          <button className='bottom-navbar-btn' onClick={() => goToLogin()}>
-            <object data={personOutlinedIcon}></object>
-            <span>마이페이지</span>
-          </button>
-        </footer> */}
         </div>
     );
 };

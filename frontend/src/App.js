@@ -3,7 +3,7 @@ import './App.css';
 import LoginPage from './page/LoginPage';
 import MainPage from './page/MainPage';
 import DetailPage from './page/DetailPage';
-import AddVideo from './page/AddVideo';
+import AddVideo from './page/admin/AddVideo';
 import Redirect from './page/Redirect'
 
 function App() {

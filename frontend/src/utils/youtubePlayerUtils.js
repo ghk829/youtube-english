@@ -1,6 +1,5 @@
-
 // YouTube 플레이어 초기화 함수
-export const initializePlayer = (url, videoRef, autoPlay, setPlayer, translations, onPlayerStateChange, setStep, stepRef, player) => {
+export const initializePlayer = (url, videoRef, autoPlay, setPlayer, translations, onPlayerStateChange) => {
     const onPlayerReady = (event) => {
       if (autoPlay) {
         event.target.playVideo();  // 자동 재생 설정 시 비디오 재생
@@ -52,7 +51,7 @@ export const initializePlayer = (url, videoRef, autoPlay, setPlayer, translation
   };
   
   // 스크립트 변경 및 진행 상태 처리 함수
-  export const handleScriptChange = (player, translations, activeScriptIndex, step, setStep, setActiveScriptIndex, setIsLast, scriptWrapperRef, refs, repeatCountRef, setProgress) => {
+  export const handleScriptChange = (player, translations, activeScriptIndex, step, setStep, setActiveScriptIndex, setIsLast, scriptWrapperRef, refs, repeatCountRef, setProgress, setIsShadowing, stepRef) => {
     let intervalId;
     let progressIntervalId;
   
