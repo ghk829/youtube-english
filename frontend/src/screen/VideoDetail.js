@@ -13,12 +13,31 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   const [isShadowing, setIsShadowing] = useState(false);
   const [progress, setProgress] = useState(100);
   const [isLast, setIsLast] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+
 
   const scriptWrapperRef = useRef(null);
   const repeatCountRef = useRef(1);
 
 
   const refs = useRef([]);  // 자막 항목을 참조하기 위한 배열 useRef
+
+
+  // 창 크기 변경 이벤트 처리
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+      if (player) {
+        player.setSize(window.innerWidth, 240); // 화면 너비에 맞게 설정
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [player]);
 
   // YouTube 플레이어 초기화 및 관리
   useEffect(() => {
@@ -36,7 +55,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
 
       // YouTube 플레이어 생성
       new window.YT.Player(videoRef.current, {
-        width: window.screen.width.toString(),  // 화면 너비에 맞게 너비 설정
+        width: window.innerWidth.toString(),  // 화면 너비에 맞게 너비 설정
         height: '240',
         videoId: videoId,  // 비디오 ID 설정
         playerVars: {

@@ -77,7 +77,12 @@ const MainPage = () => {
         const cacheDuration = 1000 * 60 * 60 * 24; // 24시간
 
         if (videoListCache && Date.now() - videoTimestamp < cacheDuration) {
-            setVideoList(JSON.parse(videoListCache));
+            const cachedVideoList = JSON.parse(videoListCache);
+            setVideoList(cachedVideoList);
+
+            // todayVideo를 캐시에서 설정
+            const todayVideo = cachedVideoList.find(item => item.title.includes('Good Things'));
+            setTodayVideo(todayVideo);
         } else {
             fetchVideoData();
         }
@@ -108,7 +113,7 @@ const MainPage = () => {
     };
 
     // 비디오를 카테고리와 서브카테고리로 그룹화하는 함수
-    const groupByCategory = useMemo(() => (videoList) => {
+    const groupByCategory = (videoList) => {
         return videoList.reduce((acc, item) => {
             if (!acc[item.category]) {
                 acc[item.category] = {
@@ -124,7 +129,10 @@ const MainPage = () => {
             acc[item.category].subcategories[item.subcategory].sort();
             return acc;
         }, {});
-    }, [videoList]);
+    };
+
+    // 메모이제이션된 그룹화된 비디오 리스트
+    const groupedVideoList = useMemo(() => groupByCategory(videoList), [videoList]);
 
     return (
         <div className='main-page'>
@@ -165,12 +173,12 @@ const MainPage = () => {
             {/* 비디오 탐색 섹션 */}
             <div className="explore-videos">
                 {/* 비디오 카테고리들을 매핑 */}
-                {Object.keys(groupByCategory(videoList)).map((category, key) => (
+                {Object.keys(groupedVideoList).map((category, key) => (
                     <div key={key} className="category-container">
                         <div className="video-category">{category}</div>
                         {/* 각 카테고리 내 서브카테고리들을 매핑 */}
                         <div style={{ display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px" }}>
-                            {Object.keys(groupByCategory(videoList)[category].subcategories).filter(subcategory => subcategory !== 'none').map((subcategory, index) => (
+                            {Object.keys(groupedVideoList[category].subcategories).filter(subcategory => subcategory !== 'none').map((subcategory, index) => (
                                 <div key={index}>
                                     {/* 각 서브카테고리에 대한 칩 컴포넌트 렌더링 */}
                                     <Chip
@@ -198,7 +206,7 @@ const MainPage = () => {
                                     </div>
                                     <div className="explore-video-title">{item.title}</div>
                                 </div>
-                            )) : groupByCategory(videoList)[category].subcategories[Object.keys(groupByCategory(videoList)[category].subcategories)[0]].map((item, index) => (
+                            )) : groupedVideoList[category].subcategories[Object.keys(groupedVideoList[category].subcategories)[0]].map((item, index) => (
                                 <div key={index} className="explore-video">
                                     <div className="explore-video-content" onClick={() => goToDetail(item)}>
                                         <img
