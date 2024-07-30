@@ -11,12 +11,13 @@
     background: #C9C9C9;
     border: 2.5px solid #EEEEEE;
     border-radius: 50px;
+    overflow: hidden; 
 }
 
 .profile>object {
     position: relative;
-    top: 13px;
-    clip-path: circle(55% at 50% 45%);
+    top: 8px;
+    clip-path: circle(50%);
 }
 
 /* 메인 헤더 스타일 */
@@ -146,11 +147,29 @@ nav {
 
 /* 비디오 탐색 wrapper 스타일 */
 .explore-videos {
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
     justify-content: center;
     align-items: center;
 }
+.subcategory-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    overflow-x: auto; 
+}
+
+.subcategory-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.subcategory-container::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.subcategory-container::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}
+
 
 /* 비디오 카테고리 스타일 */
 .video-category {

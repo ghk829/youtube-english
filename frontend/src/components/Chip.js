@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './chip.css';
+import React from 'react';
+import styled, { css } from 'styled-components';
 
 /**
  * Chip
@@ -13,14 +13,54 @@ import './chip.css';
 
 const Chip = ({ content, width, onClick, clicked, filled }) => {
     return (
-        <div
-            className={`chip ${clicked ? 'clicked' : ''} ${clicked&&filled? 'filled':''}`}
-            style={{width: width}}
-            onClick={onClick} 
+        <StyledChip
+            width={width}
+            onClick={onClick}
+            clicked={clicked}
+            filled={filled}
         >
             {content}
-        </div>
+        </StyledChip>
     );
 }
+
+const baseStyles = css`
+    user-select: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    border: 1px solid var(--gray30);
+    border-radius: 100px;
+    height: 32px;
+    font-family: 'Pretendard';
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    color: #919191;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+const clickedStyles = css`
+    border: 1px solid #913FF7;
+    color: #913FF7;
+`;
+
+const filledStyles = css`
+    background: #913FF7;
+    color: white;
+`;
+
+const StyledChip = styled.div`
+    ${baseStyles}
+    width: ${({ width }) => width || 'auto'};
+
+    ${({ clicked }) => clicked && clickedStyles}
+    ${({ clicked, filled }) => clicked && filled && filledStyles}
+`;
 
 export default Chip;

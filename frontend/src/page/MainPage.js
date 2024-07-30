@@ -6,6 +6,7 @@ import LongButton from '../components/LongButton';
 import videoPlayer from '../img/icon/videoPlayer.svg';
 import fire from '../img/icon/purpleFire.svg';
 import Chip from '../components/Chip';
+import person from '../img/icon/person.svg'
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -39,7 +40,7 @@ const MainPage = () => {
         } else if (location.state?.user.name) {
             localStorage.setItem("name", location.state?.user.name);
             setProfileName(location.state?.user.name);
-            setPic(location.state?.user.picture);
+            setPic(location.state?.user.picture || null);
             localStorage.setItem("login", true);
         } else {
             setProfileName(localStorage.getItem("name"));
@@ -139,7 +140,11 @@ const MainPage = () => {
             {/* 프로필 섹션 */}
             <header className='main-header'>
                 <div className='profile'>
-                    <img src={pic} style={{ borderRadius: "999px" }} alt="프로필 사진" />
+                    {
+                        pic ?
+                            <img src={pic || null} style={{ borderRadius: "999px" }} alt="Profile" /> :
+                            <object data={person}></object>
+                    }
                 </div>
                 <div className='user-name'>반가워요, {profileName}님</div>
             </header>
@@ -176,8 +181,9 @@ const MainPage = () => {
                 {Object.keys(groupedVideoList).map((category, key) => (
                     <div key={key} className="category-container">
                         <div className="video-category">{category}</div>
+                        
                         {/* 각 카테고리 내 서브카테고리들을 매핑 */}
-                        <div style={{ display: "flex", gap: "10px", marginTop: "10px", marginBottom: "16px" }}>
+                        <div className="subcategory-container">
                             {Object.keys(groupedVideoList[category].subcategories).filter(subcategory => subcategory !== 'none').map((subcategory, index) => (
                                 <div key={index}>
                                     {/* 각 서브카테고리에 대한 칩 컴포넌트 렌더링 */}
@@ -190,7 +196,7 @@ const MainPage = () => {
                                 </div>
                             ))}
                         </div>
-                        
+
                         {/* 선택된 서브카테고리 또는 첫 번째 서브카테고리 기본으로 비디오 리스트 렌더링 */}
                         <div className="explore-video-list">
                             {visibleVideos[category] ? visibleVideos[category].map((item, index) => (
