@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../page/css/detailPage.css';
 import LongButton from '../components/LongButton';
 import { useNavigate } from "react-router-dom";
+import ReactGA from "react-ga4";
 
 const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, setStep }) => {
   const videoRef = useRef(null);
@@ -14,6 +15,7 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
   const [progress, setProgress] = useState(100);
   const [isLast, setIsLast] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const [isFirstStart, setIsFirstStart] = useState(true); // 비디오가 처음 시작되었는지 여부 추적 (GA)
 
 
   const scriptWrapperRef = useRef(null);
@@ -160,7 +162,25 @@ const VideoDetail = ({ translations, url, step, autoPlay, onEnd, isModalOpen, se
 
   // 비디오 상태 변경 처리
   const onPlayerStateChange = (event) => {
+
+    if (event.data === window.YT.PlayerState.PLAYING) {
+      if (isFirstStart) {
+        ReactGA.event({
+          action: "first-video-start",
+          label: "first-video-start",
+        });
+        setIsFirstStart(false);  
+      }
+    }
     if (event.data === window.YT.PlayerState.ENDED) {
+
+      if(stepRef.current===0){
+        ReactGA.event({
+          action: "first-video-end",
+          label: "first-video-end",
+        });
+
+      }
       onEnd();
 
       if (stepRef.current === 1) {
