@@ -1,0 +1,21 @@
+  {
+    "compilerOptions": {
+      "target": "es6",                          // ECMAScript 버전
+      "module": "commonjs",                     // 모듈 시스템
+      "jsx": "react",                           // JSX 변환
+      "strict": true,                           // 모든 엄격한 타입 검사 활성화
+      "esModuleInterop": true,                  // ES 모듈과 CommonJS 모듈 간의 호환성
+      "skipLibCheck": true,                     // 라이브러리 파일 검사 건너뛰기
+      "forceConsistentCasingInFileNames": true // 파일 이름 대소문자 일관성 유지
+    },
+    "include": [
+      "src/**/*"       ,
+      "declarations.d.ts"  
+    ],
+    "exclude": [
+      "node_modules",                           // 노드 모듈 제외
+      "build",                                  // 빌드 폴더 제외
+      "public"                                  // 퍼블릭 폴더 제외
+    ]
+  }
+  

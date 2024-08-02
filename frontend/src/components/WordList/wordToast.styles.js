@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { CommonDivS } from "../../styles/DivS.styles";
 
 const DarkBg = styled.div`
   position: fixed;
@@ -20,7 +21,43 @@ const WhiteBg = styled.div`
   background-color: white;
 `;
 
+const WordBox = styled(CommonDivS.DivSpaceBetween)`
+  gap: 8px;
+
+  & .word {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 24px;
+  }
+
+  & .pronunciation {
+    font-size: 14px;
+    color: #5f5f5f;
+    line-height: 22px;
+  }
+`;
+
+const SpeakerBg = styled(CommonDivS.DivCenter)`
+  width: 40px;
+  height: 40px;
+  background-color: #f7f7f7;
+  border-radius: 50%;
+`;
+
+const BtnBox = styled(CommonDivS.DivSpaceBetween)`
+  min-width: 335px;
+  width: calc(100% - 40px);
+  gap: 16px;
+  position: fixed;
+  left: 0;
+  bottom: 40px;
+  padding: 0px 20px;
+`;
+
 export const WordToastS = {
   DarkBg,
   WhiteBg,
+  WordBox,
+  SpeakerBg,
+  BtnBox,
 };
