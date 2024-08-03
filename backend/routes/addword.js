@@ -1,6 +1,11 @@
-const addword = require("express").Router();
+const express = require("express");
 const { MongoClient } = require("mongodb");
 const mongoUri = process.env.MONGODB_URI;
+
+const addword = express.Router(); // express.Router()를 사용하여 라우터 생성
+
+// JSON 형식의 요청 본문을 파싱하기 위한 미들웨어 추가
+addword.use(express.json());
 
 addword.post("/addword", async function (req, res, next) {
   const client = new MongoClient(mongoUri, {});
@@ -17,7 +22,7 @@ addword.post("/addword", async function (req, res, next) {
       const { name, word, meaning } = req.body;
 
       // 데이터베이스에 단어 추가
-      await collection.insertOne({ name: name, word: word, meaning: meaning });
+      await collection.insertOne({ name, word, meaning });
       res.json({ message: "success!" });
     } catch (err) {
       console.log(err);
