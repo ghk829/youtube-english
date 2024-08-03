@@ -86,7 +86,7 @@ const MainPage = () => {
 
     const videoTimestamp = sessionStorage.getItem("videoTimestamp");
     const videoListCache = sessionStorage.getItem("videoList");
-    const cacheDuration = 1000 * 60 * 60 * 12;
+    const cacheDuration = 1000 * 60 * 60 * 6; // 6시간에 한 번 세션 스토리지 리프레시
 
     if (videoListCache && Date.now() - videoTimestamp < cacheDuration) {
       const cachedVideoList = JSON.parse(videoListCache);
