@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as IconHome } from "../../assets/iconHome.svg";
+import { ReactComponent as IconWordFill } from "../../assets/iconFilledWord.svg";
 import { ReactComponent as IconWord } from "../../assets/iconWord.svg";
 import { CommonDivS } from "../../styles/DivS.styles";
 
@@ -22,7 +23,11 @@ const BottomBar = () => {
         <StyledSpan color={homeColor}>홈</StyledSpan>
       </IconBox>
       <IconBox onClick={() => navigate("/word-list")}>
-        <IconWord fill={wordColor("#EDEDED")} />
+        {location.pathname === "/word-list" ? (
+          <IconWordFill fill={"var(--purple60)"} />
+        ) : (
+          <IconWord fill={"#EDEDED"} />
+        )}
         <StyledSpan color={wordColor("#ABABAB")}>단어장</StyledSpan>
       </IconBox>
     </BgWhite>
