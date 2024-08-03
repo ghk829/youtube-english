@@ -35,23 +35,24 @@ const MainPage = () => {
 
   // 프로필 설정 함수
   const setProfile = () => {
-    if (!location.state?.user.name && !localStorage.getItem("name")) {
+    if (!location.state?.user.name && !sessionStorage.getItem("name")) {
       const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
-      localStorage.setItem("name", tempName);
-      localStorage.setItem("login", false);
+      sessionStorage.setItem("name", tempName);
+      sessionStorage.setItem("login", false);
       setProfileName(tempName);
     } else if (location.state?.user.name) {
-      localStorage.setItem("name", location.state?.user.name);
+      sessionStorage.setItem("name", location.state?.user.name);
       setProfileName(location.state?.user.name);
       setPic(location.state?.user.picture || null);
-      localStorage.setItem("login", true);
+      sessionStorage.setItem("login", true);
     } else {
-      setProfileName(localStorage.getItem("name"));
+      setProfileName(sessionStorage.getItem("name"));
     }
   };
 
+
   // 비디오 데이터를 가져와 초기화하는 함수
-  const fetchVideoData = async () => {
+  const fetchVideoData = async (setVideoList, setTodayVideo) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_MOD || ""}/api/getallvideo`
@@ -66,9 +67,9 @@ const MainPage = () => {
       );
       setTodayVideo(todayVideo);
 
-      // 데이터를 localStorage에 저장
-      localStorage.setItem("videoList", JSON.stringify(sortedVideoList));
-      localStorage.setItem("videoTimestamp", Date.now());
+      // 데이터를 sessionStorage에 저장
+      sessionStorage.setItem("videoList", JSON.stringify(sortedVideoList));
+      sessionStorage.setItem("videoTimestamp", Date.now());
     } catch (error) {
       console.error("비디오 데이터를 가져오는 중 에러 발생:", error);
     }
@@ -78,13 +79,14 @@ const MainPage = () => {
     setProfile();
     makeDescriptionMeta();
 
-    // 로컬 스토리지에서 현재 날짜와 비디오 초기화
-    setCurrentDate(localStorage.getItem("currentDate") || 0);
-    setCurrentVideo(localStorage.getItem("currentVideo") || 0);
 
-    const videoTimestamp = localStorage.getItem("videoTimestamp");
-    const videoListCache = localStorage.getItem("videoList");
-    const cacheDuration = 1000 * 60 * 60 * 24; // 24시간
+    // sessionStorage에서 현재 날짜와 비디오 초기화
+    setCurrentDate(sessionStorage.getItem("currentDate") || 0);
+    setCurrentVideo(sessionStorage.getItem("currentVideo") || 0);
+
+    const videoTimestamp = sessionStorage.getItem("videoTimestamp");
+    const videoListCache = sessionStorage.getItem("videoList");
+    const cacheDuration = 1000 * 60 * 60 * 6; // 6시간에 한 번 세션 스토리지 리프레시
 
     if (videoListCache && Date.now() - videoTimestamp < cacheDuration) {
       const cachedVideoList = JSON.parse(videoListCache);
@@ -96,7 +98,7 @@ const MainPage = () => {
       );
       setTodayVideo(todayVideo);
     } else {
-      fetchVideoData();
+      fetchVideoData(setVideoList, setTodayVideo);
     }
   }, [location.state]);
 
@@ -236,45 +238,45 @@ const MainPage = () => {
             <div className="explore-video-list">
               {visibleVideos[category]
                 ? visibleVideos[category].map((item, index) => (
-                    <div key={index} className="explore-video">
-                      <div
-                        className="explore-video-content"
-                        onClick={() => goToDetail(item)}
-                      >
-                        <img
-                          src={`https://img.youtube.com/vi/${getVideoId(
-                            item.url
-                          )}/0.jpg`}
-                          alt={item}
-                          width="250"
-                          height="165"
-                          style={{ borderRadius: "20px" }}
-                        />
-                      </div>
-                      <div className="explore-video-title">{item.title}</div>
+                  <div key={index} className="explore-video">
+                    <div
+                      className="explore-video-content"
+                      onClick={() => goToDetail(item)}
+                    >
+                      <img
+                        src={`https://img.youtube.com/vi/${getVideoId(
+                          item.url
+                        )}/0.jpg`}
+                        alt={item}
+                        width="250"
+                        height="165"
+                        style={{ borderRadius: "20px" }}
+                      />
                     </div>
-                  ))
+                    <div className="explore-video-title">{item.title}</div>
+                  </div>
+                ))
                 : groupedVideoList[category].subcategories[
-                    Object.keys(groupedVideoList[category].subcategories)[0]
-                  ].map((item, index) => (
-                    <div key={index} className="explore-video">
-                      <div
-                        className="explore-video-content"
-                        onClick={() => goToDetail(item)}
-                      >
-                        <img
-                          src={`https://img.youtube.com/vi/${getVideoId(
-                            item.url
-                          )}/0.jpg`}
-                          alt={item}
-                          width="250"
-                          height="165"
-                          style={{ borderRadius: "20px" }}
-                        />
-                      </div>
-                      <div className="explore-video-title">{item.title}</div>
+                  Object.keys(groupedVideoList[category].subcategories)[0]
+                ].map((item, index) => (
+                  <div key={index} className="explore-video">
+                    <div
+                      className="explore-video-content"
+                      onClick={() => goToDetail(item)}
+                    >
+                      <img
+                        src={`https://img.youtube.com/vi/${getVideoId(
+                          item.url
+                        )}/0.jpg`}
+                        alt={item}
+                        width="250"
+                        height="165"
+                        style={{ borderRadius: "20px" }}
+                      />
                     </div>
-                  ))}
+                    <div className="explore-video-title">{item.title}</div>
+                  </div>
+                ))}
             </div>
           </div>
         ))}
