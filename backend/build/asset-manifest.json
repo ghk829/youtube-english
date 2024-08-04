@@ -1,24 +1,25 @@
 {
   "files": {
     "main.css": "/static/css/main.4a3325bb.css",
-    "main.js": "/static/js/main.1b690007.js",
+    "main.js": "/static/js/main.0e573bc3.js",
     "static/js/453.8ab44547.chunk.js": "/static/js/453.8ab44547.chunk.js",
     "static/media/Illustration.png": "/static/media/Illustration.94c69879561aa2bcd998.png",
     "static/media/videoPlayer.svg": "/static/media/videoPlayer.30e4cbc96c93911446bc13f9330cd5c8.svg",
     "static/media/person.svg": "/static/media/person.bd71fcee240208e10409519137871977.svg",
+    "index.html": "/index.html",
     "static/media/iconSpeaker.svg": "/static/media/iconSpeaker.5ed849bfaea413b68b08bc07cbb205e6.svg",
     "static/media/purpleFire.svg": "/static/media/purpleFire.65709a96f142bd085da68cae1a35e132.svg",
-    "index.html": "/index.html",
     "static/media/fire.svg": "/static/media/fire.9ad5c05291c5a53c76f30cb9edeb5214.svg",
     "static/media/iconHome.svg": "/static/media/iconHome.32af257bd3b1aa77a1732c72ff47f3a4.svg",
     "static/media/iconWord.svg": "/static/media/iconWord.faccdb200598bda886da18dc384d8144.svg",
+    "static/media/iconFilledWord.svg": "/static/media/iconFilledWord.130f3e41d8635c29f9d441361f6c2529.svg",
     "static/media/arrowLeft.svg": "/static/media/arrowLeft.10de20e18b6911f137b7dc63a198a470.svg",
     "main.4a3325bb.css.map": "/static/css/main.4a3325bb.css.map",
-    "main.1b690007.js.map": "/static/js/main.1b690007.js.map",
+    "main.0e573bc3.js.map": "/static/js/main.0e573bc3.js.map",
     "453.8ab44547.chunk.js.map": "/static/js/453.8ab44547.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4a3325bb.css",
-    "static/js/main.1b690007.js"
+    "static/js/main.0e573bc3.js"
   ]
 }
