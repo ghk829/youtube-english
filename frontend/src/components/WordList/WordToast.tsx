@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // Apis
 import { addWord } from "../../apis/wordList.ts";
@@ -17,6 +17,8 @@ interface WordToastProps {
 
 const WordToast: React.FC<WordToastProps> = ({ word }) => {
   const navigate = useNavigate();
+  const [meaning, setMeaning] = useState<string | null>(null); // 뜻을 저장할 상태
+  const [pronunciation, setPronunciation] = useState<string | null>(null); // 발음 기호를 저장할 상태
 
   const onClose = () => {
     navigate(-1);
@@ -28,12 +30,48 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
     window.speechSynthesis.speak(utterance); // 발음 재생
   };
 
-  const addWordToList = () => {
-    addWord(
-      word,
-      "뜻" // 뜻은 API 연결 후, 임시
-    );
+  // deepl API를 통해 단어의 뜻을 가져오는 함수
+  const fetchMeaning = async () => {
+    try {
+      const response = await fetch(
+        `https://api-free.deepl.com/v2/translate?auth_key=${
+          process.env.REACT_APP_DEEPL_API
+        }&text=${encodeURIComponent(word)}&target_lang=KO`
+      );
+      const data = await response.json();
+      if (data.translations && data.translations.length > 0) {
+        setMeaning(data.translations[0].text);
+      }
+    } catch (error) {
+      console.error("Error fetching meaning:", error);
+    }
   };
+
+  // 발음 기호를 가져오는 함수
+  const fetchPronunciation = async () => {
+    try {
+      const response = await fetch(
+        `https://www.dictionaryapi.com/api/v3/references/learners/json/${word}?key=${process.env.REACT_APP_MW_API}`
+      );
+      const data = await response.json();
+      if (data.length > 0 && data[0].hwi && data[0].hwi.prs) {
+        setPronunciation(data[0].hwi.prs[0].ipa); // 첫 번째 발음 기호를 가져옴
+      }
+    } catch (error) {
+      console.error("Error fetching pronunciation:", error);
+    }
+  };
+
+  const addWordToList = () => {
+    if (meaning) {
+      addWord(word, meaning);
+    }
+  };
+
+  useEffect(() => {
+    fetchMeaning();
+    fetchPronunciation();
+  }, [word]);
 
   return (
     <div>
@@ -42,13 +80,17 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
           <CommonDivS.DivSpaceBetween>
             <WordToastS.WordBox>
               <span className="word">{word}</span>
-              <span className="pronunciation">[ 발음 ]</span>
+              <span className="pronunciation">
+                {pronunciation
+                  ? `[ ${pronunciation} ]`
+                  : "[ 발음 기호 가져오는 중...]"}
+              </span>
             </WordToastS.WordBox>
             <WordToastS.SpeakerBg onClick={playPronunciation}>
               <IconSpeaker />
             </WordToastS.SpeakerBg>
           </CommonDivS.DivSpaceBetween>
-          <span>한글 뜻</span>
+          <span className="meaning">{meaning || "뜻을 가져오는 중..."}</span>
           <WordToastS.BtnBox>
             <LongButton
               color={"purpleLine"}
@@ -59,7 +101,7 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
             <LongButton
               content={"단어장에 추가하기"}
               onClick={addWordToList}
-              width={"calc(50%) - 10px"}
+              width={"calc(50% - 10px)"}
             />
           </WordToastS.BtnBox>
         </WordToastS.WhiteBg>

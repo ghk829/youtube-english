@@ -14,11 +14,17 @@ const DarkBg = styled.div`
 
 const WhiteBg = styled.div`
   width: 100%;
-  height: calc(23.438rem - 4.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  padding: 2rem 1.25rem 2.5rem 1.25rem;
+  padding: 32px 20px 124px 20px;
   background-color: white;
+
+  & .meaning {
+    color: var(--gray80);
+  }
 `;
 
 const WordBox = styled(CommonDivS.DivSpaceBetween)`

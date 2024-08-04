@@ -1,8 +1,6 @@
-const express = require("express");
+const addword = require("express").Router();
 const { MongoClient } = require("mongodb");
 const mongoUri = process.env.MONGODB_URI;
-
-const addword = express.Router(); // express.Router()를 사용하여 라우터 생성
 
 // JSON 형식의 요청 본문을 파싱하기 위한 미들웨어 추가
 addword.use(express.json());
