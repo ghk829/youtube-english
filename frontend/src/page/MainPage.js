@@ -33,26 +33,31 @@ const MainPage = () => {
     document.getElementsByTagName("head")[0].appendChild(meta);
   };
 
+
+  useEffect(() => {
+    makeDescriptionMeta();
+  }, [])
+
   // 프로필 설정 함수
   const setProfile = () => {
-    if (!location.state?.user.name && !sessionStorage.getItem("name")) {
+    if (!location.state?.user?.name && !localStorage.getItem("name")) {
       const tempName = `User${Math.floor(Math.random() * 100000 + 5000)}`;
-      sessionStorage.setItem("name", tempName);
-      sessionStorage.setItem("login", false);
+      localStorage.setItem("name", tempName);
+      localStorage.setItem("login", "false");
       setProfileName(tempName);
-    } else if (location.state?.user.name) {
-      sessionStorage.setItem("name", location.state?.user.name);
+    } else if (location.state?.user?.name) {
+      localStorage.setItem("name", location.state?.user.name);
       setProfileName(location.state?.user.name);
       setPic(location.state?.user.picture || null);
-      sessionStorage.setItem("login", true);
+      localStorage.setItem("login", "true");
     } else {
-      setProfileName(sessionStorage.getItem("name"));
+      setProfileName(localStorage.getItem("name"));
     }
   };
 
 
   // 비디오 데이터를 가져와 초기화하는 함수
-  const fetchVideoData = async (setVideoList, setTodayVideo) => {
+  const fetchVideoData = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_MOD || ""}/api/getallvideo`
@@ -75,32 +80,46 @@ const MainPage = () => {
     }
   };
 
+
   useEffect(() => {
     setProfile();
-    makeDescriptionMeta();
-
 
     // sessionStorage에서 현재 날짜와 비디오 초기화
     setCurrentDate(sessionStorage.getItem("currentDate") || 0);
     setCurrentVideo(sessionStorage.getItem("currentVideo") || 0);
 
-    const videoTimestamp = sessionStorage.getItem("videoTimestamp");
     const videoListCache = sessionStorage.getItem("videoList");
-    const cacheDuration = 1000 * 60 * 60 * 6; // 6시간에 한 번 세션 스토리지 리프레시
+    const cachedVideoList = JSON.parse(videoListCache || '[]');
+    setVideoList(cachedVideoList);
+    const todayVideo = cachedVideoList.find((item) =>
+      item.title.includes("Good Things")
+    );
+    setTodayVideo(todayVideo);
+    
 
-    if (videoListCache && Date.now() - videoTimestamp < cacheDuration) {
-      const cachedVideoList = JSON.parse(videoListCache);
-      setVideoList(cachedVideoList);
+    const fetchAndUpdateVideos = () => {
+      fetchVideoData(() => {
+        // 새로 가져온 비디오 리스트를 캐시된 비디오 리스트와 비교
+        const newVideoList = sessionStorage.getItem("videoList");
+        const isEqual = (JSON.stringify(newVideoList) === JSON.stringify(cachedVideoList));
 
-      // todayVideo를 캐시에서 설정
-      const todayVideo = cachedVideoList.find((item) =>
-        item.title.includes("Good Things")
-      );
-      setTodayVideo(todayVideo);
-    } else {
-      fetchVideoData(setVideoList, setTodayVideo);
-    }
+        if (!isEqual) {
+          sessionStorage.setItem("videoList", JSON.stringify(newVideoList));
+          sessionStorage.setItem("videoTimestamp", Date.now());
+          setVideoList(newVideoList);
+
+          // todayVideo를 새로 가져온 리스트에서 설정
+          const todayVideo = newVideoList.find((item) =>
+            item.title.includes("Good Things")
+          );
+          setTodayVideo(todayVideo);
+        } 
+      });
+    };
+
+    fetchAndUpdateVideos();
   }, [location.state]);
+
 
   // 비디오 상세 페이지로 이동하는 함수
   const goToDetail = (link) => {
@@ -175,23 +194,28 @@ const MainPage = () => {
       </header>
 
       {/* 사용자 통계 섹션 */}
-      <nav>
-        <div className="studied-wrapper">
-          공부한 영상
-          <div className="studied-number">
-            <object data={videoPlayer}></object>
-            {currentVideo}
-          </div>
-        </div>
 
-        <div className="studied-wrapper">
-          학습 일수
-          <div className="studied-number">
-            <object data={fire}></object>
-            {currentDate}
-          </div>
-        </div>
-      </nav>
+
+      {
+        localStorage.getItem("login") ?
+          <nav>
+            <div className="studied-wrapper">
+              공부한 영상
+              <div className="studied-number">
+                <object data={videoPlayer}></object>
+                {currentVideo}
+              </div>
+            </div>
+
+            <div className="studied-wrapper">
+              학습 일수
+              <div className="studied-number">
+                <object data={fire}></object>
+                {currentDate}
+              </div>
+            </div>
+          </nav> : <></>
+      }
 
       {/* 오늘의 문장 섹션 */}
       <div className="today-sentence-wrapper">
