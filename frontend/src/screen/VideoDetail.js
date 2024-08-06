@@ -24,6 +24,7 @@ const VideoDetail = ({
   const [isShadowing, setIsShadowing] = useState(false);
   const [progress, setProgress] = useState(100);
   const [isLast, setIsLast] = useState(false);
+  const [isFirstStart, setIsFirstStart] = useState(true);
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -194,19 +195,28 @@ const VideoDetail = ({
   // 비디오 상태 변경 처리
   const onPlayerStateChange = (event) => {
 
-    ReactGA.event({
-      category: "custom-event",
-      action: "first-video-start",
-      label: "first-video-start",
-    });
-    if (event.data === window.YT.PlayerState.ENDED) {
-      if (stepRef.current === 0) {
+    if (stepRef.current === 0) {
+      if (event.data === window.YT.PlayerState.PLAYING) {
+        if (isFirstStart) {
+
+          ReactGA.event({
+            category: "custom-event",
+            action: "first-video-start",
+            label: "first-video-start",
+          });
+
+          setIsFirstStart(false);
+        }
+      }
+      if (event.data === window.YT.PlayerState.ENDED) {
         ReactGA.event({
           category: "custom-event",
           action: "first-video-end",
           label: "first-video-end",
         });
       }
+    }
+
       onEnd();
 
       if (stepRef.current === 1) {
@@ -214,7 +224,6 @@ const VideoDetail = ({
         stepRef.current += 1;
         setStep(stepRef.current);
       }
-    }
   };
 
   // 자막 위치로 비디오 돌리기
