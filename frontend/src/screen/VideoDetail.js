@@ -28,7 +28,6 @@ const VideoDetail = ({
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [isFirstStart, setIsFirstStart] = useState(true); // 비디오가 처음 시작되었는지 여부 추적 (GA)
 
   const scriptWrapperRef = useRef(null);
   const repeatCountRef = useRef(1);
@@ -188,15 +187,11 @@ const VideoDetail = ({
 
   // 비디오 상태 변경 처리
   const onPlayerStateChange = (event) => {
-    if (event.data === window.YT.PlayerState.PLAYING) {
-      if (isFirstStart) {
-        ReactGA.event({
-          action: "first-video-start",
-          label: "first-video-start",
-        });
-        setIsFirstStart(false);
-      }
-    }
+
+    ReactGA.event({
+      action: "first-video-start",
+      label: "first-video-start",
+    });
     if (event.data === window.YT.PlayerState.ENDED) {
       if (stepRef.current === 0) {
         ReactGA.event({
