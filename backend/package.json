@@ -16,6 +16,7 @@
   "dependencies": {
     "@vercel/postgres": "^0.8.0",
     "axios": "^1.6.8",
+    "backend": "file:",
     "cors": "^2.8.5",
     "deepl-node": "^1.13.0",
     "dotenv": "^16.4.5",
