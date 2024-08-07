@@ -24,11 +24,11 @@ const VideoDetail = ({
   const [isShadowing, setIsShadowing] = useState(false);
   const [progress, setProgress] = useState(100);
   const [isLast, setIsLast] = useState(false);
+  const [isFirstStart, setIsFirstStart] = useState(true);
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [isFirstStart, setIsFirstStart] = useState(true); // 비디오가 처음 시작되었는지 여부 추적 (GA)
 
   const scriptWrapperRef = useRef(null);
   const repeatCountRef = useRef(1);
@@ -105,6 +105,8 @@ const VideoDetail = ({
   }, [url, autoPlay]);
 
   // 스크립트 변경 및 진행 상태 처리
+
+
   useEffect(() => {
     let intervalId;
     let progressIntervalId;
@@ -126,17 +128,18 @@ const VideoDetail = ({
 
         if (activeIndex !== activeScriptIndex) {
           setActiveScriptIndex(activeIndex); // 활성화된 자막 인덱스 업데이트
-
-          setIsLast(activeIndex === translations.length - 1); // 마지막 자막 여부 업데이트
+          setIsLast(activeIndex == translations.length - 1); // 마지막 자막 여부 업데이트
 
           if (activeIndex > 0) {
             setTimeout(() => {
-              scriptWrapperRef.current.scrollTo({
-                top:
-                  refs.current[activeIndex].offsetTop -
-                  scriptWrapperRef.current.offsetTop,
-                behavior: "smooth",
-              });
+              if (refs.current[activeIndex] && scriptWrapperRef.current) {
+                scriptWrapperRef.current.scrollTo({
+                  top:
+                    refs.current[activeIndex].offsetTop -
+                    scriptWrapperRef.current.offsetTop,
+                  behavior: 'smooth',
+                });
+              }
             }, 10);
           }
 
@@ -160,57 +163,67 @@ const VideoDetail = ({
             setIsShadowing(true);
             repeatCountRef.current -= 1;
 
+            clearInterval(progressIntervalId); // 기존 progressIntervalId 해제
+            progressIntervalId = setInterval(() => {
+              setProgress((prevProgress) => Math.max(0, prevProgress - 100 / ((scriptDur * 1.5 * 1000) / 80)));
+            }, 80);
+
             setTimeout(() => {
-              clearInterval(progressIntervalId);
+              clearInterval(progressIntervalId); // 타임아웃이 끝날 때 progressIntervalId 해제
               player.playVideo();
               setIsShadowing(false);
               setProgress(0);
 
-              if (activeIndex === translations.length - 1) {
+              if (activeIndex == translations.length - 1) {
+                console.log("sdvs")
                 stepRef.current = stepRef.current + 1;
+                player.seekTo(0);
                 setStep(stepRef.current); // 스텝 증가
               }
-            }, 1000 * scriptDur * 1.5 - 2.5);
-
-            const progressDecrement = 100 / ((1000 * scriptDur * 1.5) / 80);
-            progressIntervalId = setInterval(() => {
-              setProgress((prevProgress) =>
-                Math.max(0, prevProgress - progressDecrement)
-              );
-            }, 80);
+            }, scriptDur * 1.3 * 1000 - 2500);
           }
         }
       }, 200);
     }
 
-    return () => clearInterval(intervalId);
-  }, [player, translations, activeScriptIndex, step, setStep]);
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(progressIntervalId);
+    };
+  }, [player, activeScriptIndex, step, setStep]);
 
   // 비디오 상태 변경 처리
   const onPlayerStateChange = (event) => {
-    if (event.data === window.YT.PlayerState.PLAYING) {
-      if (isFirstStart) {
-        ReactGA.event({
-          action: "first-video-start",
-          label: "first-video-start",
-        });
-        setIsFirstStart(false);
+
+    if (stepRef.current === 0) {
+      if (event.data === window.YT.PlayerState.PLAYING) {
+        if (isFirstStart) {
+
+          ReactGA.event({
+            category: "custom-event",
+            action: "first-video-start",
+            label: "first-video-start",
+          });
+
+          setIsFirstStart(false);
+        }
       }
-    }
-    if (event.data === window.YT.PlayerState.ENDED) {
-      if (stepRef.current === 0) {
+      if (event.data === window.YT.PlayerState.ENDED) {
         ReactGA.event({
+          category: "custom-event",
           action: "first-video-end",
           label: "first-video-end",
         });
       }
+    }
+
       onEnd();
 
       if (stepRef.current === 1) {
+        player.seekTo(0);
         stepRef.current += 1;
         setStep(stepRef.current);
       }
-    }
   };
 
   // 자막 위치로 비디오 돌리기

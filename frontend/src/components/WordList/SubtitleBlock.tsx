@@ -4,7 +4,12 @@ const SubtitleBlock = ({ text, onWordClick }) => {
   const words = text.split(" ");
 
   return (
-    <div className="subtitle-block">
+    <div className="subtitle-block"
+      style={{
+
+        display: "flex",
+        flexWrap: "wrap"
+      }}>
       {words.map((word, index) => (
         <span
           key={index}
