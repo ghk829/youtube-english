@@ -1,5 +1,9 @@
 import axios from "axios";
 import { useEffect } from "react";
+// Components
+import Header from "../components/Common/Header.tsx";
+// Styles
+import { QMDetailS } from "./css/quickMenuDetail.styles.ts";
 
 const QuickMenuDetail = () => {
   // 'category' 파라미터의 값을 추출
@@ -28,7 +32,11 @@ const QuickMenuDetail = () => {
     fetchVideoData();
   });
 
-  return;
+  return (
+    <QMDetailS.Wrapper>
+      <Header title={`${category} 영어`} />
+    </QMDetailS.Wrapper>
+  );
 };
 
 export default QuickMenuDetail;

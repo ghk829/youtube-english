@@ -222,12 +222,12 @@ const MainPage = () => {
           { title: "셀러브리티 영어", category: "셀러브리티 영어" },
         ].map((item, index) => {
           return (
-            <Link to={`/video?catogory=${item.category}`}>
-              <div key={index} className="quick-menu-container">
-                <img src={quickMenuIcons[index]} alt={item.title} />
-                <span>{item.title}</span>
-              </div>
-            </Link>
+            // <Link to={`/video?category=${item.category}`}>
+            <div key={index} className="quick-menu-container">
+              <img src={quickMenuIcons[index]} alt={item.title} />
+              <span>{item.title}</span>
+            </div>
+            // </Link>
           );
         })}
       </div>

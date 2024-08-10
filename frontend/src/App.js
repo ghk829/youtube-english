@@ -9,6 +9,7 @@ import Redirect from "./page/Redirect";
 import WordListPage from "./page/WordListPage.tsx";
 // Components
 import BottomBar from "./components/Common/BottomBar.tsx";
+import QuickMenuDetail from "./page/QuickMenuDetail.js";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function Main() {
         <Route exact path="/login" element={<LoginPage />} />
         <Route exact path="/detail" element={<DetailPage />} />
         {/* <Route exact path='/video-add' element={<AddVideo />} /> */}
+        <Route exact path="/video" element={<QuickMenuDetail />} />
         <Route path="/word-list" element={<WordListPage />} />
         <Route path="/oauth" element={<Redirect />} />
       </Routes>
