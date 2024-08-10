@@ -60,3 +60,22 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-thumb:hover {
   background: white;
 }
+
+/* a 링크 스타일 리셋 */
+a {
+  color: inherit; /* 부모 요소의 색상 사용 */
+  text-decoration: none; /* 밑줄 제거 */
+  cursor: pointer; /* 커서를 포인터로 변경 */
+}
+
+a:hover {
+  text-decoration: underline; /* 호버 시 밑줄 추가 */
+}
+
+a:visited {
+  color: inherit; /* 방문한 링크 색상 유지 */
+}
+
+a:active {
+  color: inherit; /* 클릭 시 색상 유지 */
+}

@@ -25,7 +25,7 @@
     display: flex;
     max-width: 100%;
     margin-left: auto;
-    margin-bottom: 24px;
+    margin-bottom: 48px;
 }
 
 /* 사용자 이름 스타일 */
@@ -47,7 +47,39 @@ nav {
     margin: auto;
     justify-content: center;
     gap: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
+}
+
+/* 퀵 메뉴 wrapper 스타일 */
+.quick-menu-wrapper {
+    display: flex;
+    justify-content: space-between;
+    height: 104px;
+    width: 335px;
+    padding: 0px 9px;
+    margin: 0 auto;;
+    margin-bottom: 48px;
+}
+
+.quick-menu-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.quick-menu-container img {
+    min-height: 64px;
+    min-width: 64px;
+    height: 100%;
+    aspect-ratio: 1;
+}
+
+.quick-menu-container span {
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 16px;
 }
 
 /* 오늘의 문장 wrapper 스타일 */
