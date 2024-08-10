@@ -2,9 +2,6 @@ const addword = require("express").Router();
 const { MongoClient } = require("mongodb");
 const mongoUri = process.env.MONGODB_URI;
 
-// JSON 형식의 요청 본문을 파싱하기 위한 미들웨어 추가
-addword.use(express.json());
-
 addword.post("/addword", async function (req, res, next) {
   const client = new MongoClient(mongoUri, {});
 

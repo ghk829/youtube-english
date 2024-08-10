@@ -35,6 +35,8 @@
     "qs": "^6.12.2",
     "react-kakao-login": "^2.1.1",
     "sequelize": "^6.37.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "xml2js": "^0.6.2",
     "ytdl": "^1.4.1",
     "ytdl-core": "^4.11.5"
