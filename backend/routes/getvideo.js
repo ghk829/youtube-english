@@ -1,4 +1,4 @@
-const getcategorizedvideo = require("express").Router();
+const getvideo = require("express").Router();
 const { MongoClient } = require("mongodb");
 const mongoUri = process.env.MONGODB_URI;
 
@@ -43,7 +43,7 @@ const mongoUri = process.env.MONGODB_URI;
  *         description: Internal Server Error
  */
 
-getcategorizedvideo.get("/getvideo", async function (req, res, next) {
+getvideo.get("/getvideo", async function (req, res, next) {
   const { category, subcategory } = req.query; // 쿼리 파라미터 추출
   const client = new MongoClient(mongoUri, {});
 
@@ -77,4 +77,4 @@ getcategorizedvideo.get("/getvideo", async function (req, res, next) {
   run();
 });
 
-module.exports = getcategorizedvideo;
+module.exports = getvideo;

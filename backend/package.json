@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@vercel/postgres": "^0.8.0",
+    "@vercel/postgres": "^0.9.0",
     "axios": "^1.6.8",
     "backend": "file:",
     "cors": "^2.8.5",
