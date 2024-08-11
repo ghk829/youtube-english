@@ -15,18 +15,20 @@ const QuickMenuDetail: React.FC = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const category = urlParams.get("category");
   const [subcategories, setSubcategories] = useState<string[]>([]);
-  const [clickedChip, setClickedChip] = useState<string | null>(
-    subcategories[0]
-  );
+  const [clickedChip, setClickedChip] = useState<string | null>(null);
   const [videoList, setVideoList] = useState<IVideoData[]>([]);
 
   // 비디오 데이터를 가져와 초기화하는 함수
   const fetchVideoData = async () => {
     try {
+      const baseUrl = process.env.REACT_APP_MOD || "";
+      const categoryParam = category ? `category=${category}` : "";
+      const subcategoryParam = clickedChip ? `subcategory=${clickedChip}` : "";
+
       const response = await axios.get<IVideoData[]>(
-        `${
-          process.env.REACT_APP_MOD || ""
-        }/api/getvideo?category=${category}&subcategory=${clickedChip}`
+        `${baseUrl}/api/getvideo?${categoryParam}${
+          subcategoryParam ? `&${subcategoryParam}` : ""
+        }`
       );
 
       const sortedVideoList: IVideoData[] = response.data.sort((a, b) =>
@@ -44,6 +46,10 @@ const QuickMenuDetail: React.FC = () => {
       console.error("비디오 데이터를 가져오는 중 에러 발생:", error);
     }
   };
+
+  useEffect(() => {
+    setClickedChip(subcategories[0]);
+  }, [subcategories]);
 
   useEffect(() => {
     fetchVideoData();

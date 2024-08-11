@@ -44,7 +44,7 @@ const mongoUri = process.env.MONGODB_URI;
  */
 
 getvideo.get("/getvideo", async function (req, res, next) {
-  const { category, subcategory } = req.query; // 쿼리 파라미터 추출
+  const { category, subcategory } = req.query;
   const client = new MongoClient(mongoUri, {});
 
   async function run() {
