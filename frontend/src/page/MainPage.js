@@ -9,6 +9,7 @@ import person from "../img/icon/person.svg";
 import IconAccentEarth from "../assets/iconAccentEarth.svg";
 import IconInspire from "../assets/iconInspire.svg";
 import IconCeleb from "../assets/iconCeleb.svg";
+import { getVideoId } from "../utils/getVideoIdForYoutube.ts";
 
 const quickMenuIcons = [IconAccentEarth, IconInspire, IconCeleb];
 
@@ -128,14 +129,6 @@ const MainPage = () => {
     }
   };
 
-  // YouTube URL에서 비디오 ID를 추출하는 함수
-  const getVideoId = (url) => {
-    const videoId = url.match(
-      /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([^?&"'>]+)/
-    )[1];
-    return videoId;
-  };
-
   // 칩 클릭 이벤트를 처리하고 비디오를 필터하는 함수
   const handleChipClick = (category, subcategory) => {
     setVisibleVideos({
@@ -216,18 +209,14 @@ const MainPage = () => {
 
       {/* 카테고리별 퀵메뉴 섹션 */}
       <div className="quick-menu-wrapper">
-        {[
-          { title: "억양별 영어", category: "미국" },
-          { title: "동기부여 영어", category: "스타트업" },
-          { title: "셀러브리티 영어", category: "셀러브리티 영어" },
-        ].map((item, index) => {
+        {["억양별", "동기부여", "셀러브리티"].map((item, index) => {
           return (
-            // <Link to={`/video?category=${item.category}`}>
-            <div key={index} className="quick-menu-container">
-              <img src={quickMenuIcons[index]} alt={item.title} />
-              <span>{item.title}</span>
-            </div>
-            // </Link>
+            <Link to={`/video?category=${item}`}>
+              <div key={index} className="quick-menu-container">
+                <img src={quickMenuIcons[index]} alt={item} />
+                <span>{item} 영어</span>
+              </div>
+            </Link>
           );
         })}
       </div>

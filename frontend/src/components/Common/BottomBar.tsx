@@ -10,8 +10,12 @@ const BottomBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const pathWithHome = ["/", "/video"];
+
   // 각 아이콘의 색상 결정
-  const homeColor = location.pathname === "/" ? "var(--purple60)" : "#EDEDED";
+  const homeColor = pathWithHome.includes(location.pathname)
+    ? "var(--purple60)"
+    : "#EDEDED";
   const wordColor = (color) => {
     return location.pathname === "/word-list" ? "var(--purple60)" : color;
   };
@@ -44,6 +48,7 @@ const BgWhite = styled(CommonDivS.DivSpaceBetween)`
   left: 0;
   height: calc(64px - 23px);
   padding: 13px 77.75px 10px 77.5px;
+  border-top: 1px solid var(--gray05);
 `;
 
 const IconBox = styled.div`

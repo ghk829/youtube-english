@@ -9,7 +9,7 @@ import Redirect from "./page/Redirect";
 import WordListPage from "./page/WordListPage.tsx";
 // Components
 import BottomBar from "./components/Common/BottomBar.tsx";
-import QuickMenuDetail from "./page/QuickMenuDetail.js";
+import QuickMenuDetail from "./page/QuickMenuDetail.tsx";
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function Main() {
   const location = useLocation();
 
   // 바텀 바가 필요한 페이지의 경로를 배열로 정의
-  const pathsWithBottomBar = ["/", "/word-list"];
+  const pathsWithBottomBar = ["/", "/word-list", "/video"];
 
   // 현재 경로가 바텀 바가 필요한 경로에 포함되어 있는지 확인
   const showBottomBar = pathsWithBottomBar.includes(location.pathname);
