@@ -15,7 +15,9 @@ const QuickMenuDetail: React.FC = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const category = urlParams.get("category");
   const [subcategories, setSubcategories] = useState<string[]>([]);
-  const [clickedChip, setClickedChip] = useState<string | null>(null);
+  const [clickedChip, setClickedChip] = useState<string | null>(
+    subcategories[0]
+  );
   const [videoList, setVideoList] = useState<IVideoData[]>([]);
 
   // 비디오 데이터를 가져와 초기화하는 함수
