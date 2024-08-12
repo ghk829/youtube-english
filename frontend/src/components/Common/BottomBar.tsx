@@ -30,9 +30,9 @@ const BottomBar = () => {
         {location.pathname === "/word-list" ? (
           <IconWordFill fill={"var(--purple60)"} />
         ) : (
-          <IconWord fill={"#EDEDED"} />
+          <IconWord fill={"var(--gray40)"} />
         )}
-        <StyledSpan color={wordColor("#ABABAB")}>단어장</StyledSpan>
+        <StyledSpan color={wordColor("var(--gray40)")}>단어장</StyledSpan>
       </IconBox>
     </BgWhite>
   );

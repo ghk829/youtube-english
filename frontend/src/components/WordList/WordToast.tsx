@@ -17,7 +17,7 @@ interface WordToastProps {
 
 const WordToast: React.FC<WordToastProps> = ({ word }) => {
   const navigate = useNavigate();
-  const [meaning, setMeaning] = useState<string | null>(null); // 뜻을 저장할 상태
+  const [meaning, setMeaning] = useState<string[]>([]); // 뜻을 저장할 상태
   const [pronunciation, setPronunciation] = useState<string | null>(null); // 발음 기호를 저장할 상태
 
   const onClose = () => {
@@ -31,16 +31,42 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
   };
 
   // deepl API를 통해 단어의 뜻을 가져오는 함수
+  // const fetchMeaning = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://api-free.deepl.com/v2/translate?auth_key=${
+  //         process.env.REACT_APP_DEEPL_API
+  //       }&text=${encodeURIComponent(word)}&target_lang=KO`
+  //     );
+  //     const data = await response.json();
+  //     if (data.translations && data.translations.length > 0) {
+  //       setMeaning(data.translations[0].text);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching meaning:", error);
+  //   }
+  // };
+
+  // 단어의 뜻을 가져오는 함수 (Open Dictionary API 사용)
   const fetchMeaning = async () => {
     try {
       const response = await fetch(
-        `https://api-free.deepl.com/v2/translate?auth_key=${
-          process.env.REACT_APP_DEEPL_API
-        }&text=${encodeURIComponent(word)}&target_lang=KO`
+        `https://opendict.korean.go.kr/api/search?key=${
+          process.env.REACT_APP_OPEN_DICT_API
+        }&target_type=search&req_type=json&part=word&q=${encodeURIComponent(
+          word
+        )}&sort=dict`
       );
       const data = await response.json();
-      if (data.translations && data.translations.length > 0) {
-        setMeaning(data.translations[0].text);
+      if (
+        data &&
+        data.channel &&
+        data.channel.item &&
+        data.channel.item.length > 0
+      ) {
+        setMeaning(data.channel.item.map((item) => item.word));
+      } else {
+        setMeaning("뜻을 찾을 수 없습니다.");
       }
     } catch (error) {
       console.error("Error fetching meaning:", error);
@@ -95,7 +121,17 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
               <IconSpeaker />
             </WordToastS.SpeakerBg>
           </CommonDivS.DivSpaceBetween>
-          <span className="meaning">{meaning || "뜻을 가져오는 중..."}</span>
+          <WordToastS.MeaningBox>
+            {meaning
+              ? meaning.map((item, index) => {
+                  return (
+                    <span key={index}>
+                      {index + 1}. {item}
+                    </span>
+                  );
+                })
+              : "뜻을 가져오는 중..."}
+          </WordToastS.MeaningBox>
           <WordToastS.BtnBox>
             <LongButton
               color={"purpleLine"}

@@ -33,5 +33,9 @@ const StThumbnailWrapper = styled.div`
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 `;

@@ -21,10 +21,6 @@ const WhiteBg = styled.div`
   border-top-right-radius: 20px;
   padding: 32px 20px 124px 20px;
   background-color: white;
-
-  & .meaning {
-    color: var(--gray80);
-  }
 `;
 
 const WordBox = styled(CommonDivS.DivSpaceBetween)`
@@ -50,6 +46,15 @@ const SpeakerBg = styled(CommonDivS.DivCenter)`
   border-radius: 50%;
 `;
 
+const MeaningBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: var(--gray80);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+`;
+
 const BtnBox = styled(CommonDivS.DivSpaceBetween)`
   min-width: 335px;
   width: calc(100% - 40px);
@@ -65,5 +70,6 @@ export const WordToastS = {
   WhiteBg,
   WordBox,
   SpeakerBg,
+  MeaningBox,
   BtnBox,
 };
