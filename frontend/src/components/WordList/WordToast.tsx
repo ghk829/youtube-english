@@ -66,7 +66,7 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
       ) {
         setMeaning(data.channel.item.map((item) => item.word));
       } else {
-        setMeaning("뜻을 찾을 수 없습니다.");
+        setMeaning();
       }
     } catch (error) {
       console.error("Error fetching meaning:", error);
@@ -122,7 +122,7 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
             </WordToastS.SpeakerBg>
           </CommonDivS.DivSpaceBetween>
           <WordToastS.MeaningBox>
-            {meaning
+            {meaning && meaning.length > 0
               ? meaning.map((item, index) => {
                   return (
                     <span key={index}>
