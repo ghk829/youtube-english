@@ -66,7 +66,7 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
       ) {
         setMeaning(data.channel.item.map((item) => item.word));
       } else {
-        setMeaning();
+        setMeaning([]);
       }
     } catch (error) {
       console.error("Error fetching meaning:", error);
@@ -138,7 +138,7 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
               content={"닫기"}
               onClick={onClose}
               width={"calc(50% - 10px)"}
-            />
+            ></LongButton>
             <LongButton
               content={"단어장에 추가하기"}
               onClick={addWordToList}
