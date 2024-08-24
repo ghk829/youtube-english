@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   deploy:
@@ -21,3 +22,20 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev' 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel (dev)
+        run: vercel --prod --token ${{ secrets.VERCEL_DEV_TOKEN }}  
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_DEV_ORG_ID }}  
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_DEV_PROJECT_ID }}  
