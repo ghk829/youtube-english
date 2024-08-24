@@ -14,7 +14,7 @@ export const addWord = async (word, meaning) => {
     );
     console.log(res);
   } catch (error) {
-    console.error("단어를 추가하는 중 에러 발생:", error);
+    console.error("단어를 추가하는 중 에러 발생:", error.response || error);
   }
 };
 
