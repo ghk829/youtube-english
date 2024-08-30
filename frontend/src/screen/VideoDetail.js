@@ -14,6 +14,7 @@ const VideoDetail = ({
   isModalOpen,
   setStep,
   setSelectedWord,
+  setSelectedSentence,
 }) => {
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -106,7 +107,6 @@ const VideoDetail = ({
 
   // 스크립트 변경 및 진행 상태 처리
 
-
   useEffect(() => {
     let intervalId;
     let progressIntervalId;
@@ -137,7 +137,7 @@ const VideoDetail = ({
                   top:
                     refs.current[activeIndex].offsetTop -
                     scriptWrapperRef.current.offsetTop,
-                  behavior: 'smooth',
+                  behavior: "smooth",
                 });
               }
             }, 10);
@@ -165,7 +165,12 @@ const VideoDetail = ({
 
             clearInterval(progressIntervalId); // 기존 progressIntervalId 해제
             progressIntervalId = setInterval(() => {
-              setProgress((prevProgress) => Math.max(0, prevProgress - 100 / ((scriptDur * 1.5 * 1000) / 80)));
+              setProgress((prevProgress) =>
+                Math.max(
+                  0,
+                  prevProgress - 100 / ((scriptDur * 1.5 * 1000) / 80)
+                )
+              );
             }, 80);
 
             setTimeout(() => {
@@ -175,7 +180,7 @@ const VideoDetail = ({
               setProgress(0);
 
               if (activeIndex == translations.length - 1) {
-                console.log("sdvs")
+                console.log("sdvs");
                 stepRef.current = stepRef.current + 1;
                 player.seekTo(0);
                 setStep(stepRef.current); // 스텝 증가
@@ -194,11 +199,9 @@ const VideoDetail = ({
 
   // 비디오 상태 변경 처리
   const onPlayerStateChange = (event) => {
-
     if (stepRef.current === 0) {
       if (event.data === window.YT.PlayerState.PLAYING) {
         if (isFirstStart) {
-
           ReactGA.event({
             category: "custom-event",
             action: "first-video-start",
@@ -217,13 +220,13 @@ const VideoDetail = ({
       }
     }
 
-      onEnd();
+    onEnd();
 
-      if (stepRef.current === 1) {
-        player.seekTo(0);
-        stepRef.current += 1;
-        setStep(stepRef.current);
-      }
+    if (stepRef.current === 1) {
+      player.seekTo(0);
+      stepRef.current += 1;
+      setStep(stepRef.current);
+    }
   };
 
   // 자막 위치로 비디오 돌리기
@@ -237,8 +240,9 @@ const VideoDetail = ({
   };
 
   // 단어 클릭 => 단어 모달 열기
-  const handleWordClick = (word) => {
+  const handleWordClick = (word, words) => {
     setSelectedWord(word);
+    setSelectedSentence(words.join(" "));
     openWordToast();
   };
 

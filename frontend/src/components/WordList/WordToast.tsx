@@ -13,9 +13,10 @@ import { ReactComponent as IconSpeaker } from "../../assets/iconSpeaker.svg";
 
 interface WordToastProps {
   word: string;
+  sentence: string;
 }
 
-const WordToast: React.FC<WordToastProps> = ({ word }) => {
+const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
   const navigate = useNavigate();
   const [meaning, setMeaning] = useState<string[]>([]); // 뜻을 저장할 상태
   const [pronunciation, setPronunciation] = useState<string | null>(null); // 발음 기호를 저장할 상태
@@ -30,41 +31,35 @@ const WordToast: React.FC<WordToastProps> = ({ word }) => {
     window.speechSynthesis.speak(utterance); // 발음 재생
   };
 
-  // deepl API를 통해 단어의 뜻을 가져오는 함수
-  // const fetchMeaning = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://api-free.deepl.com/v2/translate?auth_key=${
-  //         process.env.REACT_APP_DEEPL_API
-  //       }&text=${encodeURIComponent(word)}&target_lang=KO`
-  //     );
-  //     const data = await response.json();
-  //     if (data.translations && data.translations.length > 0) {
-  //       setMeaning(data.translations[0].text);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching meaning:", error);
-  //   }
-  // };
-
-  // 단어의 뜻을 가져오는 함수 (Open Dictionary API 사용)
+  // 단어의 뜻을 가져오는 함수 (GPT API 사용)
   const fetchMeaning = async () => {
     try {
       const response = await fetch(
-        `https://opendict.korean.go.kr/api/search?key=${
-          process.env.REACT_APP_OPEN_DICT_API
-        }&target_type=search&req_type=json&part=word&q=${encodeURIComponent(
-          word
-        )}&sort=dict`
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_GPT_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: "You are a helpful assistant." },
+              {
+                role: "user",
+                content: `sentence: ${sentence}\wword: ${word}\nWhat's the meaning of the word?`,
+              },
+            ],
+            max_tokens: 50,
+          }),
+        }
       );
+
       const data = await response.json();
-      if (
-        data &&
-        data.channel &&
-        data.channel.item &&
-        data.channel.item.length > 0
-      ) {
-        setMeaning(data.channel.item.map((item) => item.word));
+      if (data && data.choices && data.choices.length > 0) {
+        const meanings = data.choices[0].text.trim().split("\n");
+        setMeaning(meanings);
       } else {
         setMeaning([]);
       }

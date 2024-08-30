@@ -20,6 +20,7 @@ const DetailPage = () => {
     localStorage.getItem("login") === "true" || false
   );
   const [selectedWord, setSelectedWord] = useState("");
+  const [selectedSentence, setSelectedSentence] = useState("");
 
   // 각 단계의 타이틀과 타입을 정의한 배열
   const stages = [
@@ -119,6 +120,7 @@ const DetailPage = () => {
             setStep={setStep}
             isModalOpen={setIsModalOpen}
             setSelectedWord={setSelectedWord}
+            setSelectedSentence={setSelectedSentence}
           ></VideoDetail>
         )}
       </div>
@@ -127,7 +129,7 @@ const DetailPage = () => {
       {isModalOpen && <Modal onClose={closeModal} isLoggedIn={isLoggedIn} />}
 
       {searchParams.get("modal") === "word-toast" && (
-        <WordToast word={selectedWord} />
+        <WordToast word={selectedWord} sentence={selectedSentence} />
       )}
     </div>
   );
