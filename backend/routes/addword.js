@@ -68,10 +68,10 @@ addword.post("/addword", async function (req, res, next) {
       const collection = db.collection("words");
 
       // 요청 본체에서 name, word, meaning을 추출
-      const { name, word, meaning } = req.body;
+      const { name, word, meaning, sentence } = req.body;
 
       // 데이터베이스에 단어 추가
-      await collection.insertOne({ name, word, meaning });
+      await collection.insertOne({ name, word, meaning, sentence });
       res.json({ message: "success!" });
     } catch (err) {
       console.log(err);

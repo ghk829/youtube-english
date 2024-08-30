@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // 단어장에 단어를 추가하는 함수
-export const addWord = async (word, meaning) => {
+export const addWord = async (word, meaning, sentence) => {
   const name = localStorage.getItem("name");
   try {
     const res = await axios.post(
@@ -10,6 +10,7 @@ export const addWord = async (word, meaning) => {
         name,
         word,
         meaning,
+        sentence,
       }
     );
     console.log(res);

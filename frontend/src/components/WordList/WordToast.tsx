@@ -87,7 +87,7 @@ const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
     const name = localStorage.getItem("name");
     if (name) {
       if (meaning) {
-        addWord(word, meaning);
+        addWord(word, meaning, sentence);
       }
     } else {
       navigate("/login");
