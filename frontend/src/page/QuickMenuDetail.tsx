@@ -9,8 +9,10 @@ import Chip from "../components/Chip.js";
 import { IVideoData } from "./types/common.types.ts";
 // Styles
 import { QMDetailS } from "./css/quickMenuDetail.styles.ts";
+import { useNavigate } from "react-router-dom";
 
 const QuickMenuDetail: React.FC = () => {
+  const navigate = useNavigate();
   // 'category' 파라미터의 값을 추출
   const urlParams = new URLSearchParams(window.location.search);
   const category = urlParams.get("category");
@@ -55,6 +57,12 @@ const QuickMenuDetail: React.FC = () => {
     fetchVideoData();
   }, [category, clickedChip]);
 
+  const goToDetail = (link) => {
+    if (link) {
+      navigate("/detail", { state: { link } });
+    }
+  };
+
   return (
     <QMDetailS.Wrapper>
       <Header title={`${category} 영어`} />
@@ -78,6 +86,7 @@ const QuickMenuDetail: React.FC = () => {
             key={video._id}
             title={video.title}
             videoId={video.videoid}
+            onClick={() => goToDetail(video.url)}
           />
         ))}
       </div>

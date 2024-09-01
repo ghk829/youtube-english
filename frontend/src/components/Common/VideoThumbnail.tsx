@@ -4,11 +4,16 @@ import styled from "styled-components";
 type VideoThumbnailProps = {
   title: string;
   videoId: string;
+  onclick: (event: React.MouseEvent<HTMLDivElement>) => void;
 };
 
-const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ title, videoId }) => {
+const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
+  title,
+  videoId,
+  onclick,
+}) => {
   return (
-    <StThumbnailWrapper>
+    <StThumbnailWrapper onClick={onclick}>
       <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt={title} />
       <span>{title}</span>
     </StThumbnailWrapper>
