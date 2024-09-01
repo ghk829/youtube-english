@@ -47,30 +47,30 @@ const WordListPage = () => {
           학습 후
         </WordListS.ToggleButton>
       </WordListS.ToggleContainer>
-      <WordListS.WordListWrapper>
-        <WordListS.EditContainer>
-          <WordListS.TotalCount>
-            총 {wordList && wordList.length}개
-          </WordListS.TotalCount>
-        </WordListS.EditContainer>
-        <LongButton content={"영단어 학습하기"} width={"100%"} />
-        <WordListS.ListContainer>
-          {wordList &&
-            wordList.map((word) => (
-              <WordListS.ListItem key={word._id}>
-                <div className="word-box">
-                  <span className="word">{word.word}</span>
-                  <span className="meaning">{word.meaning}</span>
-                </div>
-                <WordToastS.SpeakerBg
-                  onClick={() => playPronunciation(word.word)}
-                >
-                  <IconSpeaker />
-                </WordToastS.SpeakerBg>
-              </WordListS.ListItem>
-            ))}
-        </WordListS.ListContainer>
-      </WordListS.WordListWrapper>
+      {wordList && (
+        <WordListS.WordListWrapper>
+          <WordListS.EditContainer>
+            <WordListS.TotalCount>총 {wordList.length}개</WordListS.TotalCount>
+          </WordListS.EditContainer>
+          <LongButton content={"영단어 학습하기"} width={"100%"} />
+          <WordListS.ListContainer>
+            {wordList &&
+              wordList.map((word) => (
+                <WordListS.ListItem key={word._id}>
+                  <div className="word-box">
+                    <span className="word">{word.word}</span>
+                    <span className="meaning">{word.meaning}</span>
+                  </div>
+                  <WordToastS.SpeakerBg
+                    onClick={() => playPronunciation(word.word)}
+                  >
+                    <IconSpeaker />
+                  </WordToastS.SpeakerBg>
+                </WordListS.ListItem>
+              ))}
+          </WordListS.ListContainer>
+        </WordListS.WordListWrapper>
+      )}
     </WordListS.Wrapper>
   );
 };
