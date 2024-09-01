@@ -29,6 +29,7 @@ const ToggleButton = styled.button<{ active: boolean }>`
   font-weight: bold;
   transition: background 0.3s;
   color: ${(props) => (props.active ? "black" : "gray")}; /* 텍스트 색상 */
+  white-space: nowrap;
 
   &:hover {
     background: ${(props) => (props.active ? "white" : "#e0e0e0")};
@@ -42,34 +43,61 @@ const ToggleButton = styled.button<{ active: boolean }>`
   `}
 `;
 
+const WordListWrapper = styled.div``;
+
+const EditContainer = styled.div`
+  margin-bottom: 16px;
+`;
+
+const TotalCount = styled.span`
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--gray70);
+`;
+
 const ListContainer = styled.ul`
   list-style: none;
   margin: 0;
+  margin-top: 16px;
   padding: 0;
+  border: 1px solid var(--gray10);
+  border-radius: 16px;
 `;
 
 const ListItem = styled.li`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 17px;
   margin: 0;
-  padding: 0;
+  padding: 20px 25px;
   height: 22px;
-  padding: 15px 0px;
-  border-bottom: 1px solid var(--gray10);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--gray10);
+  }
+
+  & div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
   & span {
     width: 100%;
     font-size: 14px;
+    white-space: nowrap;
   }
 
   & .word {
     font-weight: bold;
+    font-size: 16px;
     line-height: 18px;
   }
 
   & .meaning {
     line-height: 22px;
+    color: var(--gray50);
   }
 `;
 
@@ -77,6 +105,9 @@ export const WordListS = {
   Wrapper,
   ToggleContainer,
   ToggleButton,
+  WordListWrapper,
+  EditContainer,
+  TotalCount,
   ListContainer,
   ListItem,
 };

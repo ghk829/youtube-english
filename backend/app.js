@@ -7,9 +7,9 @@ const routes = require("./routes/router");
 const { swaggerUi, specs } = require("./modules/swagger");
 
 app.use(cors());
+app.use(express.json());
 app.use("/", routes);
 app.use(express.static(path.join(__dirname, "./build")));
-app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.listen(8000, () => {

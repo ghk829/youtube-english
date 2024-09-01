@@ -19,6 +19,7 @@ interface WordToastProps {
 const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
   const navigate = useNavigate();
   const [meaning, setMeaning] = useState<string[]>([]); // 뜻을 저장할 상태
+  const [translation, setTranslation] = useState<string[]>([]); // 문장 해석을 저장할 상태
   const [pronunciation, setPronunciation] = useState<string | null>(null); // 발음 기호를 저장할 상태
 
   const onClose = () => {
@@ -32,6 +33,7 @@ const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
   };
 
   // 단어의 뜻을 가져오는 함수 (GPT API 사용)
+  // TODO: 프롬프트 질문 수정 필요
   const fetchMeaning = async () => {
     try {
       const response = await fetch(
@@ -45,13 +47,13 @@ const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
             messages: [
-              { role: "system", content: "You are a helpful assistant." },
               {
                 role: "user",
-                content: `sentence: ${sentence}\wword: ${word}\nWhat's the meaning of the word?`,
+                content: `다음 문장은 불명확하거나 불완전할 수 있습니다. 문맥상 단어 '${word}'의 뜻이 '${sentence}' 문장 안에서 한 단어로 무엇인지(미사어구 없이), 그리고 문장의 전체적인 의미가 무엇인지 해석해 주세요: '${sentence}'`,
               },
             ],
             max_tokens: 50,
+            n: 2,
           }),
         }
       );
@@ -60,8 +62,10 @@ const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
       if (data && data.choices && data.choices.length > 0) {
         const meanings = data.choices[0].text.trim().split("\n");
         setMeaning(meanings);
+        setTranslation(meanings);
       } else {
         setMeaning([]);
+        setTranslation([]);
       }
     } catch (error) {
       console.error("Error fetching meaning:", error);
@@ -87,7 +91,7 @@ const WordToast: React.FC<WordToastProps> = ({ word, sentence }) => {
     const name = localStorage.getItem("name");
     if (name) {
       if (meaning) {
-        addWord(word, meaning, sentence);
+        addWord(word, meaning, sentence, translation);
       }
     } else {
       navigate("/login");

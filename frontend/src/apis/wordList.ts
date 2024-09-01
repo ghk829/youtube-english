@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // 단어장에 단어를 추가하는 함수
-export const addWord = async (word, meaning, sentence) => {
+export const addWord = async (word, meaning, sentence, translation) => {
   const name = localStorage.getItem("name");
   try {
     const res = await axios.post(
@@ -11,6 +11,7 @@ export const addWord = async (word, meaning, sentence) => {
         word,
         meaning,
         sentence,
+        translation,
       }
     );
     console.log(res);
@@ -24,15 +25,19 @@ export interface Word {
   name: string;
   word: string;
   meaning: string;
+  sentence: string;
+  translation: string;
 }
 
 // 내가 저장한 단어를 불러오는 함수
-export const getWords = async (): Promise<Word[]> => {
+export const getWords = async (studied): Promise<Word[]> => {
   // 반환 타입을 명시
   const name = localStorage.getItem("name");
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_MOD || ""}/api/getwords?name=${name}`
+      `${
+        process.env.REACT_APP_MOD || ""
+      }/api/getwords?name=${name}&studied=${studied}`
     );
     console.log(res);
     return res.data;

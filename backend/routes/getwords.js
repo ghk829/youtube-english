@@ -60,9 +60,16 @@ getwords.get("/getwords", async function (req, res, next) {
 
       // 쿼리 파라미터에서 name을 가져옵니다.
       const name = req.query.name;
+      const studied = req.query.studied;
 
+      let filter = {};
       // name이 존재하면 필터링하여 가져오기
-      const filter = name ? { name: name } : {}; // name이 주어지면 필터링, 아니면 전체 가져오기
+      if (name) {
+        filter.name = name; // name이 주어지면 필터링
+      }
+      if (studied) {
+        filter.studied = parseInt(studied, 10); // studied가 주어지면 필터링 (정수로 변환)
+      }
       const result = await collection.find(filter).toArray();
 
       // 결과를 클라이언트에 반환

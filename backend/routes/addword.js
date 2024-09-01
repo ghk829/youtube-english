@@ -1,7 +1,6 @@
 const addword = require("express").Router();
 const { MongoClient } = require("mongodb");
 const mongoUri = process.env.MONGODB_URI;
-
 /**
  * @swagger
  * /addword:
@@ -67,11 +66,21 @@ addword.post("/addword", async function (req, res, next) {
       const db = client.db("english");
       const collection = db.collection("words");
 
+      if (!req.body) {
+        return res.status(400).json({ message: "요청 본문이 필요합니다." });
+      }
       // 요청 본체에서 name, word, meaning을 추출
-      const { name, word, meaning, sentence } = req.body;
+      const { name, word, meaning, sentence, translation } = req.body;
 
       // 데이터베이스에 단어 추가
-      await collection.insertOne({ name, word, meaning, sentence });
+      await collection.insertOne({
+        name,
+        word,
+        meaning,
+        sentence,
+        translation,
+        studied: 0,
+      });
       res.json({ message: "success!" });
     } catch (err) {
       console.log(err);
